@@ -1,10 +1,16 @@
 package fr.intech.roomies.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 public class Roomie {
 
-    private int userName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int userId;
+
     private String firstName;
     String lastName;
     private Date birthDay;
@@ -18,11 +24,11 @@ public class Roomie {
     public Roomie() {}
 
     public int getUserName() {
-        return userName;
+        return userId;
     }
 
-    public void setUserName(int userName) {
-        this.userName = userName;
+    public void setUserName(int userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
