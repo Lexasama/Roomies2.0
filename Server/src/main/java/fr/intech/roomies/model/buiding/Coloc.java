@@ -1,4 +1,4 @@
-package fr.intech.roomies.model;
+package fr.intech.roomies.model.buiding;
 
 public class Coloc {
 }

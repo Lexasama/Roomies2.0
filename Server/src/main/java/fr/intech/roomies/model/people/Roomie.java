@@ -1,4 +1,4 @@
-package fr.intech.roomies.model;
+package fr.intech.roomies.model.people;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
