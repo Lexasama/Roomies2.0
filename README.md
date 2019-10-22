@@ -1,5 +1,10 @@
 # Roomies2.0
 
+Roomies is a  flatsharing manager.
+
+Living together has never been easier.
+Updated version of Roomies
+
 ## Getting Started
 
 ## Built With
