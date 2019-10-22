@@ -1,18 +1,17 @@
 package fr.intech.roomies.model.people;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class Roomie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
 
     private String firstName;
-    String lastName;
+    private String lastName;
     private Date birthDay;
     private Boolean sex;
     private String mail;
