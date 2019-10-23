@@ -1,4 +1,4 @@
-import fr.intech.roomies.model.grocery.Item;
+package fr.intech.roomies.model.grocery;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

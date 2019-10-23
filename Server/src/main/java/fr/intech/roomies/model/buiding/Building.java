@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Batiment {
+public class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,7 +13,7 @@ public class Batiment {
     @ElementCollection
     private List<Coloc> colocs;
 
-    public Batiment() {    }
+    public Building() {    }
 
     public int getBuildingId() {
         return buildingId;

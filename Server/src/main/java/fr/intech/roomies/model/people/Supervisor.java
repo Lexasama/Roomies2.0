@@ -1,27 +1,27 @@
 package fr.intech.roomies.model.people;
 
-import fr.intech.roomies.model.buiding.Batiment;
+import fr.intech.roomies.model.buiding.Building;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Superviser {
+public class Supervisor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
 
     private String lastName;
     private String firstName;
     private Date birthDate;
 
-    @ElementCollection
-    private List<Batiment> buildings;
 
-    public Superviser() {
+    @ElementCollection
+    private List<Building> buildings;
+
+    public Supervisor() {
     }
 
     public int getUserId() {
@@ -56,11 +56,11 @@ public class Superviser {
         this.birthDate = birthDate;
     }
 
-    public List<Batiment> getBuildings() {
+    public List<Building> getBuildings() {
         return buildings;
     }
 
-    public void setBuildings(List<Batiment> buildings) {
+    public void setBuildings(List<Building> buildings) {
         this.buildings = buildings;
     }
 }
