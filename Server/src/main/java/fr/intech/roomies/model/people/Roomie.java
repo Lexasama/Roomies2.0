@@ -2,15 +2,11 @@ package fr.intech.roomies.model.people;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
-public class Roomie {
-
-    @Id
-    private int userId;
+public class Roomie extends User {
 
     @Column(nullable = false)
     private String firstName;
@@ -25,10 +21,11 @@ public class Roomie {
     private Boolean sex;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
     private String mail;
 
     @Column(nullable = false)
-    @Pattern(regexp="(^$|[0-9]{10})")
+    @Pattern(regexp = "(^$|[0-9]{10})")
     private int phone;
 
     private String desc;
@@ -39,13 +36,6 @@ public class Roomie {
 
     public Roomie() {}
 
-    public int getUserName() {
-        return userId;
-    }
-
-    public void setUserName(int userId) {
-        this.userId = userId;
-    }
 
     public String getFirstName() {
         return firstName;

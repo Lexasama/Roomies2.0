@@ -10,11 +10,7 @@ import java.util.List;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
         columnNames = {"userName" }))
-public class Supervisor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int userId;
+public class Supervisor extends User{
 
     @Column(nullable = false)
     private String userName;
@@ -34,14 +30,6 @@ public class Supervisor {
     private List<Building> buildings;
 
     public Supervisor() {
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {

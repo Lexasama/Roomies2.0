@@ -15,6 +15,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true)
+    private String googleToken;
 
+    @Column(nullable = true)
+    private String facebookToken;
 
 }
