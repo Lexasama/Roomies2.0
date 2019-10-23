@@ -1,25 +1,27 @@
 package fr.intech.roomies.model.finance;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.*;
 
 @Entity
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int categoriesId;
+    private int categoryId;
+
+    @Column(nullable = false)
     private String categoryName;
+
+    @Column(nullable = false)
     private String pic;
 
     public Category(){}
 
-    public int getCategoriesId() {
-        return categoriesId;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoriesId(int categoriesId) {
-        this.categoriesId = categoriesId;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategoryName() {

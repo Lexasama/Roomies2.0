@@ -11,10 +11,15 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(nullable = false)
     private String name;
+
     private String desc;
+
+    @Column(nullable = false)
     private Boolean state;
 
+    @Column(nullable = false)
     @ElementCollection
     private List<Roomie> roomies;
 

@@ -1,7 +1,9 @@
 package fr.intech.roomies.model.people;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
@@ -10,13 +12,28 @@ public class Roomie {
     @Id
     private int userId;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private Date birthDay;
+
+    @Column(nullable = false)
     private Boolean sex;
+
+    @Column(nullable = false)
     private String mail;
+
+    @Column(nullable = false)
+    @Pattern(regexp="(^$|[0-9]{10})")
     private int phone;
+
     private String desc;
+
+    @Column(nullable = false)
     private String pic;
 
 

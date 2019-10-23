@@ -1,7 +1,6 @@
 package fr.intech.roomies.model.finance;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -10,8 +9,13 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int budgetId;
 
+    @Column(nullable = false)
     private int amount;
+
+    @Column(nullable = false)
     private Date d1;
+
+    @Column(nullable = false)
     private Date d2;
 
     public Budget(){}

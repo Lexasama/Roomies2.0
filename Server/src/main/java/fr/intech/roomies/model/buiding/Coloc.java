@@ -15,10 +15,16 @@ public class Coloc {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int colocId;
 
-    private String name;
+    @Column(nullable = false)
+    private String colocName;
+
+    @Column(nullable = false)
     private String photo;
+
+    @Column(nullable = false)
     private Date creationDate;
-    private Roomie admin;
+
+    private int adminId;
 
     @ElementCollection
     private List<Roomie> roomies;
@@ -29,70 +35,6 @@ public class Coloc {
     @ElementCollection
     private List<Category> categories;
 
-    public Coloc() {
-    }
+    public Coloc() { }
 
-    public int getColocId() {
-        return colocId;
-    }
-
-    public void setColocId(int colocId) {
-        this.colocId = colocId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Roomie getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Roomie admin) {
-        this.admin = admin;
-    }
-
-    public List<Roomie> getRoomies() {
-        return roomies;
-    }
-
-    public void setRoomies(List<Roomie> roomies) {
-        this.roomies = roomies;
-    }
-
-    public List<Item> getSavedItems() {
-        return savedItems;
-    }
-
-    public void setSavedItems(List<Item> savedItems) {
-        this.savedItems = savedItems;
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
 }

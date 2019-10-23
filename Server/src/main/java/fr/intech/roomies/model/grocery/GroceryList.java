@@ -1,9 +1,6 @@
 package fr.intech.roomies.model.grocery;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +11,12 @@ public class GroceryList {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(nullable = false)
     private String Name;
+
     private Date date;
-    private List<Item> items;
+
+    @ElementCollection
+    List<Item> items;
 
 }

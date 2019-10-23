@@ -1,7 +1,6 @@
 package fr.intech.roomies.model.finance;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -10,9 +9,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int transactionId;
     private String Descriptionn;
+
+    @Column(nullable = false)
     private int receiver;
+
+    @Column(nullable = false)
     private int sender;
+
+    @Column(nullable = false)
     private Date date;
+
+    @Column(nullable = false)
     private int amount;
 
     public Transaction(){}

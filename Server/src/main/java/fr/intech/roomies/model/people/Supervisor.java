@@ -1,20 +1,32 @@
 package fr.intech.roomies.model.people;
 
 import fr.intech.roomies.model.buiding.Building;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(
+        columnNames = {"userName" }))
 public class Supervisor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
 
+    @Column(nullable = false)
+    private String userName;
+
+    @Column(nullable = false, length = 25)
     private String lastName;
+
+    @Column(nullable = false, length = 25)
     private String firstName;
+
+    @Column(nullable = false)
+    @Type(type = "date")
     private Date birthDate;
 
 
@@ -30,6 +42,14 @@ public class Supervisor {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getLastName() {

@@ -1,8 +1,8 @@
 package fr.intech.roomies.model.finance;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Spending {
@@ -13,8 +13,11 @@ public class Spending {
     @ElementCollection
     private List<Budget> budgets;
 
+    @Column(nullable = false)
     private Date date;
+    @Column(nullable = false)
     private int amount;
+
     private String description;
 
     public Spending(){}
