@@ -1,4 +1,7 @@
 package fr.intech.roomies.database.grocery;
 
-public interface ItemRepository {
+import fr.intech.roomies.model.grocery.Item;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ItemRepository extends CrudRepository<Item, Integer> {
 }

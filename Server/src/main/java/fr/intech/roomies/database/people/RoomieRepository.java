@@ -1,4 +1,4 @@
-package fr.intech.roomies.database;
+package fr.intech.roomies.database.people;
 
 import fr.intech.roomies.model.people.Roomie;
 import org.springframework.data.repository.CrudRepository;

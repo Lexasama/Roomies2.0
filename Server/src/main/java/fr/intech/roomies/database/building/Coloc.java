@@ -1,4 +1,7 @@
 package fr.intech.roomies.database.building;
 
-public interface Coloc {
+import org.springframework.data.repository.CrudRepository;
+
+public interface Coloc extends CrudRepository<Coloc, Integer> {
+
 }
