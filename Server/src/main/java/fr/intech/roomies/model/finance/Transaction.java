@@ -3,11 +3,13 @@ package fr.intech.roomies.model.finance;
 import javax.persistence.*;
 import java.util.Date;
 
+
 @Entity
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int transactionId;
+
     private String Descriptionn;
 
     @Column(nullable = false)
@@ -71,4 +73,5 @@ public class Transaction {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
-        columnNames = {"userName" }))
+        columnNames = {"userName", "email" }))
 public class Supervisor extends User{
 
     @Column(nullable = false)
@@ -25,6 +25,8 @@ public class Supervisor extends User{
     @Type(type = "date")
     private Date birthDate;
 
+    @Column(nullable = false)
+    private String email;
 
     @ElementCollection
     private List<Building> buildings;

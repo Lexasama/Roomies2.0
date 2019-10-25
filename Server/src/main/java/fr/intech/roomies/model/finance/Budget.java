@@ -18,6 +18,9 @@ public class Budget {
     @Column(nullable = false)
     private Date d2;
 
+    @Column(nullable = false)
+    private int  categoryId;
+
     public Budget(){}
 
     public void setBudgetId(int budgetId) {

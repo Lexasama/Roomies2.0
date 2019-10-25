@@ -1,9 +1,14 @@
 package fr.intech.roomies.model.people;
 
+import fr.intech.roomies.model.Task;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Roomie extends User {
@@ -28,6 +33,10 @@ public class Roomie extends User {
     @Pattern(regexp = "(^$|[0-9]{10})")
     private int phone;
 
+
+    @ManyToMany
+    private List<Task> tasks;
+
     private String desc;
 
     @Column(nullable = false)
@@ -35,7 +44,6 @@ public class Roomie extends User {
 
 
     public Roomie() {}
-
 
     public String getFirstName() {
         return firstName;
@@ -83,6 +91,14 @@ public class Roomie extends User {
 
     public void setPhone(int phone) {
         this.phone = phone;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public String getDesc() {
