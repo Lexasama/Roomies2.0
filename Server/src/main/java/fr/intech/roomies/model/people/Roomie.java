@@ -1,11 +1,10 @@
 package fr.intech.roomies.model.people;
 
 import fr.intech.roomies.model.Task;
+import fr.intech.roomies.model.finance.Transaction;
+import fr.intech.roomies.model.grocery.Item;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
@@ -33,15 +32,19 @@ public class Roomie extends User {
     @Pattern(regexp = "(^$|[0-9]{10})")
     private int phone;
 
-
-    @ManyToMany
+    @ElementCollection
     private List<Task> tasks;
+
+    @ElementCollection
+    private List<Transaction> transactions;
+
+    @ElementCollection
+    private List<Item> items;
 
     private String desc;
 
     @Column(nullable = false)
     private String pic;
-
 
     public Roomie() {}
 
@@ -99,6 +102,22 @@ public class Roomie extends User {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public String getDesc() {

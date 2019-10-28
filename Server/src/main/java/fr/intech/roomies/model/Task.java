@@ -1,9 +1,6 @@
 package fr.intech.roomies.model;
 
-import fr.intech.roomies.model.people.Roomie;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Task {
@@ -18,11 +15,6 @@ public class Task {
 
     @Column(nullable = false)
     private Boolean state;
-
-    @Column(nullable = false)
-    @ElementCollection
-    @ManyToMany
-    private List<Roomie> roomies;
 
     public Task() {    }
 

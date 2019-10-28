@@ -2,7 +2,6 @@ package fr.intech.roomies.model.finance;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Spending {
@@ -10,11 +9,9 @@ public class Spending {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int spendingId;
 
-    @ElementCollection
-    private List<Budget> budgets;
-
     @Column(nullable = false)
     private Date date;
+
     @Column(nullable = false)
     private int amount;
 
@@ -28,14 +25,6 @@ public class Spending {
 
     public void setSpendingId(int spendingId) {
         this.spendingId = spendingId;
-    }
-
-    public List<Budget> getBudgets() {
-        return budgets;
-    }
-
-    public void setBudgets(List<Budget> budgets) {
-        this.budgets = budgets;
     }
 
     public Date getDate() {

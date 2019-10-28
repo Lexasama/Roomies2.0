@@ -1,5 +1,7 @@
 package fr.intech.roomies.model.finance;
 
+import fr.intech.roomies.model.buiding.Coloc;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -43,5 +45,13 @@ public class Category {
 
     public void setPic(String pic) {
         this.pic = pic;
+    }
+
+    public List<Budget> getBudgets() {
+        return budgets;
+    }
+
+    public void setBudgets(List<Budget> budgets) {
+        this.budgets = budgets;
     }
 }

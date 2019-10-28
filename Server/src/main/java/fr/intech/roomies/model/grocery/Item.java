@@ -3,6 +3,7 @@ package fr.intech.roomies.model.grocery;
 import fr.intech.roomies.model.people.Roomie;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Item {
@@ -18,6 +19,4 @@ public class Item {
     private double price;
 
     private int quantity;
-
-    private int roomieId;
 }

@@ -2,6 +2,7 @@ package fr.intech.roomies.model.finance;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Budget {
@@ -18,10 +19,14 @@ public class Budget {
     @Column(nullable = false)
     private Date d2;
 
-    @Column(nullable = false)
-    private int  categoryId;
+   @ElementCollection
+   private List<Spending> spendings;
 
     public Budget(){}
+
+    public int getBudgetId() {
+        return budgetId;
+    }
 
     public void setBudgetId(int budgetId) {
         this.budgetId = budgetId;
@@ -51,7 +56,11 @@ public class Budget {
         this.d2 = d2;
     }
 
-    public int getBudgetId() {
-        return budgetId;
+    public List<Spending> getSpendings() {
+        return spendings;
+    }
+
+    public void setSpendings(List<Spending> spendings) {
+        this.spendings = spendings;
     }
 }

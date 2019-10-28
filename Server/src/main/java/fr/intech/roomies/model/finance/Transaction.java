@@ -1,5 +1,7 @@
 package fr.intech.roomies.model.finance;
 
+import fr.intech.roomies.model.people.Roomie;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,12 +13,6 @@ public class Transaction {
     private int transactionId;
 
     private String Descriptionn;
-
-    @Column(nullable = false)
-    private int receiver;
-
-    @Column(nullable = false)
-    private int sender;
 
     @Column(nullable = false)
     private Date date;
@@ -42,22 +38,6 @@ public class Transaction {
         Descriptionn = descriptionn;
     }
 
-    public int getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(int receiver) {
-        this.receiver = receiver;
-    }
-
-    public int getSender() {
-        return sender;
-    }
-
-    public void setSender(int sender) {
-        this.sender = sender;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -73,5 +53,4 @@ public class Transaction {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
 }

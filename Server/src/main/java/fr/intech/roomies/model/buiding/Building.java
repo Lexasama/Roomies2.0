@@ -14,7 +14,6 @@ public class Building {
     private String buildingName;
 
     @ElementCollection
-    @OneToMany
     private List<Coloc> colocs;
 
     public Building() {    }
@@ -27,19 +26,19 @@ public class Building {
         this.buildingId = buildingId;
     }
 
-    public List<Coloc> getColocs() {
-        return colocs;
-    }
-
-    public void setColocs(List<Coloc> colocs) {
-        this.colocs = colocs;
-    }
-
     public String getBuildingName() {
         return buildingName;
     }
 
     public void setBuildingName(String buildingName) {
         this.buildingName = buildingName;
+    }
+
+    public List<Coloc> getColocs() {
+        return colocs;
+    }
+
+    public void setColocs(List<Coloc> colocs) {
+        this.colocs = colocs;
     }
 }

@@ -66,6 +66,14 @@ public class Supervisor extends User{
         this.birthDate = birthDate;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public List<Building> getBuildings() {
         return buildings;
     }
