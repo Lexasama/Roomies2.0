@@ -1,0 +1,9 @@
+spring.security.oauth2.client.registration.google.clientId=
+spring.security.oauth2.client.registration.google.clientSecret=
+
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/Roomies
+spring.datasource.username=postgres
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
