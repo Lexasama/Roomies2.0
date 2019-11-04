@@ -1,0 +1,20 @@
+{
+  "ConnectionStrings": {
+    "Roomies2DB": "Server=.\\SQLEXPRESS;Database=Roomies2;Trusted_Connection=True;"
+  },
+  "JwtBearer": {
+    "SigningKey": "",
+    "Audience": "htttp://localhost:5000",
+    "Issuer": "htttp://localhost:5000"
+  },
+  "Authentication": {
+    "Google": {
+      "ClientId": "",
+      "ClientSecret": ""
+    }
+
+  },
+  "Spa": {
+    "Host": "http://localhost:8080"
+  }
+}
