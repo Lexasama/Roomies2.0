@@ -1,0 +1,10 @@
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\appsettings.json
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\Roomies2.DB.deps.json
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\Roomies2.DB.runtimeconfig.json
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\Roomies2.DB.runtimeconfig.dev.json
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\Roomies2.DB.dll
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\bin\Debug\netcoreapp2.2\Roomies2.DB.pdb
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\obj\Debug\netcoreapp2.2\Roomies2.DB.AssemblyInfoInputs.cache
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\obj\Debug\netcoreapp2.2\Roomies2.DB.AssemblyInfo.cs
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\obj\Debug\netcoreapp2.2\Roomies2.DB.dll
+D:\Roomies 2.0\Roomies2.0\src\Roomies2.DB\obj\Debug\netcoreapp2.2\Roomies2.DB.pdb
