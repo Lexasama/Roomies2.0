@@ -2,6 +2,7 @@
 using Roomies2.DAL;
 using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Roomies2.DAL.People;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -22,7 +23,7 @@ namespace Roomies2.WebApp.Authentication
             }
         }
 
-        protected override Task<UserData> FindUser(GoogleUserInfo userInfo)
+        protected override Task<IAccountData> FindUser(GoogleUserInfo userInfo)
         {
             return _userGateway.FindByGoogleId(userInfo.GoogleId);
         }

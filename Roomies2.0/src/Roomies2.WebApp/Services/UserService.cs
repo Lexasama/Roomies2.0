@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Roomies2.DAL;
+using Roomies2.DAL.People;
 
 namespace Roomies2.WebApp.Services
 {
@@ -19,12 +20,12 @@ namespace Roomies2.WebApp.Services
             return _userGateway.CreatePasswordUser(email, _passwordHasher.HashPassword(password));
         }
 
-        public async Task<UserData> FindUser(string email, string password)
+        public async Task<IAccountData> FindUser(string email, string password)
         {
-            UserData user = await _userGateway.FindByEmail(email);
-            if (user != null && _passwordHasher.VerifyHashedPassword(user.Password, password) == PasswordVerificationResult.Success)
+            IAccountData account = await _userGateway.FindByEmail(email);
+            if (account != null && _passwordHasher.VerifyHashedPassword(account.Password, password) == PasswordVerificationResult.Success)
             {
-                return user;
+                return account;
             }
 
             return null;

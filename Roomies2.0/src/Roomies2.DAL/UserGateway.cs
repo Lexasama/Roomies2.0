@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
+using Roomies2.DAL.People;
 
 namespace Roomies2.DAL
 {
@@ -16,21 +17,21 @@ namespace Roomies2.DAL
             _connectionString = connectionString;
         }
 
-        public async Task<UserData> FindById(int userId)
+        public async Task<IAccountData> FindById(int userId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
+                return await con.QueryFirstOrDefaultAsync<IAccountData>(
                     "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.UserId = @UserId",
                     new { UserId = userId });
             }
         }
 
-        public async Task<Result<UserData>> FindGitHubUser(int userId)
+        public async Task<Result<IAccountData>> FindGitHubUser(int userId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                UserData user = await con.QueryFirstOrDefaultAsync<UserData>(
+                IAccountData account = await con.QueryFirstOrDefaultAsync<IAccountData>(
                     @"select u.UserId,
                              u.Email,
                              u.[Password],
@@ -42,37 +43,37 @@ namespace Roomies2.DAL
                       where u.UserId = @UserId;",
                     new { UserId = userId });
 
-                if (user == null) return Result.Failure<UserData>(Status.BadRequest, "Unknown user.");
+                if (account == null) return Result.Failure<IAccountData>(Status.BadRequest, "Unknown account.");
 
-                return Result.Success(user);
+                return Result.Success(account);
             }
         }
 
-        public async Task<UserData> FindByEmail(string email)
+        public async Task<IAccountData> FindByEmail(string email)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
+                return await con.QueryFirstOrDefaultAsync<IAccountData>(
                     "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.Email = @Email",
                     new { Email = email });
             }
         }
 
-        public async Task<UserData> FindByGoogleId(string googleId)
+        public async Task<IAccountData> FindByGoogleId(string googleId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
+                return await con.QueryFirstOrDefaultAsync<IAccountData>(
                     "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.GoogleId = @GoogleId",
                     new { GoogleId = googleId });
             }
         }
 
-        public async Task<UserData> FindByGithubId(int githubId)
+        public async Task<IAccountData> FindByGithubId(int githubId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
+                return await con.QueryFirstOrDefaultAsync<IAccountData>(
                     "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.GithubId = @GithubId",
                     new { GithubId = githubId });
             }

@@ -1,4 +1,4 @@
-create table rm2.tUser
+create table RoomiesV2.rm2.tUser
 (
     UserId int identity(0, 1),
     Email  nvarchar(64) collate Latin1_General_CI_AI not null,
@@ -7,4 +7,4 @@ create table rm2.tUser
     constraint UK_tUser_Email unique(Email)
 );
 
-insert into rm2.tUser(Email) values(N'');
+insert into RoomiesV2.rm2.tUser(Email) values(N'');

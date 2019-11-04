@@ -13,7 +13,7 @@
     <script>
         (function () {
             var origin = window.opener || window.parent;
-            var isPopup = origin == window.opener;
+            var isPopup = origin === window.opener;
 
             origin.postMessage({
                 type: 'signedOut'

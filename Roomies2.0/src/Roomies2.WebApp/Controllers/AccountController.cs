@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using Roomies2.DAL.People;
 using Roomies2.WebApp.Models.AccountViewModels;
 
 namespace Roomies2.WebApp.Controllers
@@ -46,13 +47,13 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserData user = await _userService.FindUser(model.Email, model.Password);
-                if (user == null)
+                IAccountData account = await _userService.FindUser(model.Email, model.Password);
+                if (account == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
-                await SignIn(user.Email, user.UserId.ToString());
+                await SignIn(account.Email, account.UserId.ToString());
                 return RedirectToAction(nameof(Authenticated));
             }
 
