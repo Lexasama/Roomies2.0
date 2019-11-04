@@ -1,6 +1,7 @@
 {
   "name": "iti-roomies-spa",
   "version": "0.1.0",
+  "description": "Client-side Vue application for Roomies2.0.",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

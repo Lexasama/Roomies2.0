@@ -9,7 +9,28 @@
 </template>
 
 <script>
+import AuthService from "../services/AuthService";
+
 export default {
-  methods: {}
+  mounted() {
+    AuthService.registerSignedOutCallback(() => this.onSignedOut());
+  },
+
+  beforeDestroy() {
+    AuthService.removeSignedOutCallback(() => this.onSignedOut());
+  },
+
+  computed: {
+    logoutEndpoint: () => AuthService.logoutEndpoint
+  },
+
+  methods: {
+    onSignedOut() {
+      this.$router.replace("/");
+    }
+  }
 };
 </script>
+
+<style lang="scss">
+</style>
