@@ -460,3 +460,6 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/vuejs,jetbrains,visualstudio,visualstudiocode
+
+**/.idea/
+**/.vs/
