@@ -1,7 +1,0 @@
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\bin\Debug\netstandard1.3\Roomies2.DAL.deps.json
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\bin\Debug\netstandard1.3\Roomies2.DAL.dll
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\bin\Debug\netstandard1.3\Roomies2.DAL.pdb
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\obj\Debug\netstandard1.3\Roomies2.DAL.AssemblyInfoInputs.cache
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\obj\Debug\netstandard1.3\Roomies2.DAL.AssemblyInfo.cs
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\obj\Debug\netstandard1.3\Roomies2.DAL.dll
-D:\Roomies 2.0\Roomies2.0\src\Roomies2.DAL\obj\Debug\netstandard1.3\Roomies2.DAL.pdb
