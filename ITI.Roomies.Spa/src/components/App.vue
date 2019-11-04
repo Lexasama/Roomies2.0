@@ -1,115 +1,105 @@
 <template>
   <div id="app">
-    <!-- Menu de navigation -->
-    App
-    <div id="app">
-      <div id="centered_container">
-        <h2 class="centered">Bienvenue</h2>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <router-link class="navbar-brand" to="/">ROOMIES</router-link>
 
-        <div>
-          <img
-            src="https://i.ibb.co/wc1n3HF/Roomies-logo-long.png"
-            alt="Roomies-logo-long"
-            border="0"
-          />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <button
-            style="margin-top:16px"
-            id="centered_container"
-            @click="login('Google')"
-            class="btn btn-lg btn-block btn-primary"
-          >
-            <i class="fa fa-google" aria-hidden="true"></i> Se connecter
-          </button>
-          <br />
-          <button
-            id="centered_container"
-            @click="login('Base')"
-            class="btn btn-block btn-lg btn-dark"
-          >Se connecter</button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-if="auth.isConnected">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/classes">Gestion des classes</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/students">Gestion des élèves</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/teachers">Gestion des professeurs</router-link>
+            </li>
+            <li class="nav-item" v-required-providers="['GitHub']">
+              <router-link class="nav-link" to="/github/following">Elèves suivis sur GitHub</router-link>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav my-2 my-md-0">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >{{ auth.email }}</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <router-link class="dropdown-item" to="/logout">Se déconnecter</router-link>
+              </div>
+            </li>
+          </ul>
         </div>
+      </nav>
+
+      <div class="progress" v-if="isLoading">
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated"
+          role="progressbar"
+          style="width: 100%"
+        ></div>
       </div>
-      <div style="padding-top: 3rem;"></div>
-    </div>
+    </header>
+
+    <main role="main" class="p-3 p-md-4 p-lg-5">
+      <router-view class="child"></router-view>
+    </main>
   </div>
 </template>
 
 <script>
-import Login from "../components/Login";
+import AuthService from "../services/AuthService";
+import "../directives/requiredProviders";
+import { state } from "../state";
 
 export default {
-  components: {
-    Login
+  data() {
+    return {
+      state
+    };
+  },
+
+  computed: {
+    auth: () => AuthService,
+
+    isLoading() {
+      return this.state.isLoading;
+    }
   }
 };
 </script>
 
+<style lang="scss" scoped>
+.progress {
+  margin: 0px;
+  padding: 0px;
+  height: 5px;
+}
+
+a.router-link-active {
+  font-weight: bold;
+}
+</style>
 
 <style lang="scss">
 @import "../styles/global.scss";
-</style>
-
-<style lang="scss" scoped>
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 12rem;
-  max-width: 12rem;
-  border-right: 1px solid #000000;
-  float: left;
-  margin-top: 0;
-}
-.el-menu-vertical-demo {
-  float: left;
-  min-height: 100vh;
-  max-height: 100vh;
-  border-right: 1px solid #000000;
-  position: fixed;
-  margin-top: 0;
-}
-
-.el-menu-item i,
-.el-submenu i,
-.el-menu-item.is-active,
-.el-submenu-item.is-active {
-  color: black;
-}
-.el-submenu-item,
-.el-submenu-item.is-active {
-  min-width: 12rem !important;
-}
-.el-button {
-  background: rgb(102, 102, 102);
-  border: 1px solid #000000;
-  color: #000000;
-}
-
-#footer {
-  bottom: 0;
-  width: 100%;
-  height: 8.5rem; /* Footer height */
-
-  top: 2.5rem;
-  padding-left: 12rem;
-}
-
-.form-control {
-  padding: 0;
-  margin-left: 0.5rem;
-}
-iframe {
-  width: 50%;
-  height: 600px;
-}
-#centered_container {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 40em;
-}
-.centered {
-  text-align: center;
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-.btn-block {
-  max-width: 30em;
-}
 </style>
