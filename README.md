@@ -3,7 +3,7 @@
 Roomies is a  flatsharing manager.
 
 Living together has never been easier.
-Updated version of Roomies
+Updated version of [Roomies](https://github.com/Lexasama/Roomies)
 
 ## Getting Started
 
