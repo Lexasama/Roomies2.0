@@ -17,14 +17,14 @@
           class="btn btn-lg btn-block btn-primary"
         >
           <i class="fa fa-google" aria-hidden="true"></i>
-          connectvia2
+          connect Google
         </button>
         <br />
         <button
           id="centered_container"
-          @click="login('Base')"
+          @click="login('Facebook')"
           class="btn btn-block btn-lg btn-dark"
-        >connectvia2</button>
+        >connect Facebook</button>
       </div>
     </div>
     <div style="padding-top: 3rem;"></div>

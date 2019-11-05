@@ -27,6 +27,7 @@ namespace Roomies2.WebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+          
             services.AddOptions();
 
             services.AddMvc();
@@ -35,10 +36,14 @@ namespace Roomies2.WebApp
             services.AddSingleton<UserService>();
             services.AddSingleton<TokenService>();
             services.AddSingleton<GoogleAuthenticationManager>();
+            services.AddSingleton<FacebookAuthenticationManager>();
 
+
+           
             string secretKey = Configuration["JwtBearer:SigningKey"];
             SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
+          
             services.Configure<TokenProviderOptions>(o =>
             {
                 o.Audience = Configuration["JwtBearer:Audience"];
@@ -86,6 +91,18 @@ namespace Roomies2.WebApp
                         OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>().OnCreatingTicket(ctx)
                     };
                     o.AccessType = "offline";
+                })
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.SignInScheme = CookieAuthentication.AuthenticationScheme;
+                                         
+                   facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                   facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                    facebookOptions.Events = new OAuthEvents
+                    {
+                        OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<FacebookAuthenticationManager>().OnCreatingTicket(ctx)
+                    };
+                    
                 });
         }
 

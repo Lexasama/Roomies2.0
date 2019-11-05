@@ -20,8 +20,8 @@ AuthService.providers = {
   Google: {
     endpoint: host + "/Account/ExternalLogin?provider=Google"
   },
-  GitHub: {
-    endpoint: host + "/Account/ExternalLogin?provider=GitHub"
+  Facebook: {
+    endpoint: host + "/Account/ExternalLogin?provider=Facebook"
   }
 };
 
