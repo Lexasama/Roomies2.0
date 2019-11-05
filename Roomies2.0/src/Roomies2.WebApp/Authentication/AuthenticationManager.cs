@@ -2,8 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Roomies2.DAL;
-using Roomies2.DAL.People;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -25,12 +24,12 @@ namespace Roomies2.WebApp.Authentication
 
         ClaimsPrincipal CreatePrincipal(IAccountData account)
         {
-            List<Claim> claims = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim( ClaimTypes.NameIdentifier, account.UserId.ToString(), ClaimValueTypes.String ),
                 new Claim( ClaimTypes.Email, account.Email )
             };
-            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email, string.Empty));
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email, string.Empty));
             return principal;
         }
     }

@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "Roomies2DB": "Server=.\\SQLEXPRESS;Database=Roomies2;Trusted_Connection=True;"
+    "Roomies2DB": "Server=;Database=RoomiesV2;Trusted_Connection=True;"
   },
   "JwtBearer": {
     "SigningKey": "",

@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Roomies2.DAL;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using Roomies2.DAL.People;
+using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Services;
 using Roomies2.WebApp.Models.AccountViewModels;
 
 namespace Roomies2.WebApp.Controllers
@@ -149,7 +150,7 @@ namespace Roomies2.WebApp.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim( ClaimTypes.Email, email, ClaimValueTypes.String ),
-                new Claim( ClaimTypes.NameIdentifier, userId.ToString(), ClaimValueTypes.String )
+                new Claim( ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String )
             };
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email, string.Empty);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);

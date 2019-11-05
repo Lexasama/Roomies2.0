@@ -4,11 +4,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Roomies2.DAL;
+using Roomies2.DAL.Gateways;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Controllers;
 using Roomies2.WebApp.Services;
@@ -106,17 +105,17 @@ namespace Roomies2.WebApp
                 c.WithOrigins(Configuration["Spa:Host"]);
             });
 
-            string secretKey = Configuration["JwtBearer:SigningKey"];
-            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var secretKey = Configuration["JwtBearer:SigningKey"];
+            SymmetricSecurityKey unused = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
             app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Account", action = "Login" });
+                    "default",
+                    "{controller}/{action}/{id?}",
+                    new { controller = "Account", action = "Login" });
             });
 
             app.UseStaticFiles();

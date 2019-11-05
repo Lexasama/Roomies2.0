@@ -21,7 +21,7 @@ namespace Roomies2.WebApp.Services
 
             // Specifically add the iat (issued timestamp), and sub (subject/user) claims.
             // You can add other claims here, if you want:
-            var claims = new Claim[]
+            var claims = new[]
             {
                 new Claim( JwtRegisteredClaimNames.Sub, userId ),
                 new Claim( JwtRegisteredClaimNames.Email, email ),

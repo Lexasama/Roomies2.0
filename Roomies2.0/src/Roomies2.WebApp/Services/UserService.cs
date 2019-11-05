@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Roomies2.DAL;
-using Roomies2.DAL.People;
+using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Services;
 
 namespace Roomies2.WebApp.Services
 {

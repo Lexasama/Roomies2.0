@@ -2,6 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+// ReSharper disable InvalidXmlDocComment
+// ReSharper disable UnusedMember.Local
+// ReSharper disable ShiftExpressionRealShiftCountIsZero
 
 namespace Roomies2.WebApp
 {
@@ -9,7 +12,7 @@ namespace Roomies2.WebApp
     /// Implements the standard Identity password hashing.
     /// </summary>
     /// <typeparam name="TUser">The type used to represent a user.</typeparam>
-    public class PasswordHasher
+    public sealed class PasswordHasher
     {
         /* =======================
          * HASHED PASSWORD FORMATS
@@ -65,7 +68,7 @@ namespace Roomies2.WebApp
         /// <param name="userId">The user whose password is to be hashed.</param>
         /// <param name="password">The password to hash.</param>
         /// <returns>A hashed representation of the supplied <paramref name="password"/> for the specified <paramref name="user"/>.</returns>
-        public virtual byte[] HashPassword(string password)
+        public byte[] HashPassword(string password)
         {
             if (password == null)
             {
@@ -77,20 +80,20 @@ namespace Roomies2.WebApp
 
         private static byte[] HashPasswordV2(string password, RandomNumberGenerator rng)
         {
-            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
-            const int Pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
-            const int Pbkdf2SubkeyLength = 256 / 8; // 256 bits
-            const int SaltSize = 128 / 8; // 128 bits
+            const KeyDerivationPrf pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
+            const int pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
+            const int pbkdf2SubkeyLength = 256 / 8; // 256 bits
+            const int saltSize = 128 / 8; // 128 bits
 
             // Produce a version 2 (see comment above) text hash.
-            byte[] salt = new byte[SaltSize];
+            byte[] salt = new byte[saltSize];
             rng.GetBytes(salt);
-            byte[] subkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
+            byte[] subkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
 
-            var outputBytes = new byte[1 + SaltSize + Pbkdf2SubkeyLength];
+            var outputBytes = new byte[1 + saltSize + pbkdf2SubkeyLength];
             outputBytes[0] = 0x00; // format marker
-            Buffer.BlockCopy(salt, 0, outputBytes, 1, SaltSize);
-            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, Pbkdf2SubkeyLength);
+            Buffer.BlockCopy(salt, 0, outputBytes, 1, saltSize);
+            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + saltSize, pbkdf2SubkeyLength);
             return outputBytes;
         }
 
@@ -125,7 +128,7 @@ namespace Roomies2.WebApp
             return ((uint)(buffer[offset + 0]) << 24)
                 | ((uint)(buffer[offset + 1]) << 16)
                 | ((uint)(buffer[offset + 2]) << 8)
-                | ((uint)(buffer[offset + 3]));
+                | buffer[offset + 3];
         }
 
         /// <summary>
@@ -136,7 +139,7 @@ namespace Roomies2.WebApp
         /// <param name="providedPassword">The password supplied for comparison.</param>
         /// <returns>A <see cref="PasswordVerificationResult"/> indicating the result of a password hash comparison.</returns>
         /// <remarks>Implementations of this method should be time consistent.</remarks>
-        public virtual PasswordVerificationResult VerifyHashedPassword(byte[] hashedPassword, string providedPassword)
+        public PasswordVerificationResult VerifyHashedPassword(byte[] hashedPassword, string providedPassword)
         {
             if (hashedPassword == null)
             {
@@ -167,8 +170,7 @@ namespace Roomies2.WebApp
                     }
 
                 case 0x01:
-                    int embeddedIterCount;
-                    if (VerifyHashedPasswordV3(hashedPassword, providedPassword, out embeddedIterCount))
+                    if (VerifyHashedPasswordV3(hashedPassword, providedPassword, out var embeddedIterCount))
                     {
                         // If this hasher was configured with a higher iteration count, change the entry now.
                         return (embeddedIterCount < _iterCount)
@@ -187,31 +189,31 @@ namespace Roomies2.WebApp
 
         private static bool VerifyHashedPasswordV2(byte[] hashedPassword, string password)
         {
-            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
-            const int Pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
-            const int Pbkdf2SubkeyLength = 256 / 8; // 256 bits
-            const int SaltSize = 128 / 8; // 128 bits
+            const KeyDerivationPrf pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
+            const int pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
+            const int pbkdf2SubkeyLength = 256 / 8; // 256 bits
+            const int saltSize = 128 / 8; // 128 bits
 
             // We know ahead of time the exact length of a valid hashed password payload.
-            if (hashedPassword.Length != 1 + SaltSize + Pbkdf2SubkeyLength)
+            if (hashedPassword.Length != 1 + saltSize + pbkdf2SubkeyLength)
             {
                 return false; // bad size
             }
 
-            byte[] salt = new byte[SaltSize];
+            byte[] salt = new byte[saltSize];
             Buffer.BlockCopy(hashedPassword, 1, salt, 0, salt.Length);
 
-            byte[] expectedSubkey = new byte[Pbkdf2SubkeyLength];
+            byte[] expectedSubkey = new byte[pbkdf2SubkeyLength];
             Buffer.BlockCopy(hashedPassword, 1 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 
             // Hash the incoming password and verify it
-            byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
+            byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
             return ByteArraysEqual(actualSubkey, expectedSubkey);
         }
 
         private static bool VerifyHashedPasswordV3(byte[] hashedPassword, string password, out int iterCount)
         {
-            iterCount = default(int);
+            iterCount = default;
 
             try
             {

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <EmbeddedResource Include="Scripts\20170123160900.0003.Install-tPasswordUser.sql" />
     <EmbeddedResource Include="Scripts\old\20170123160900.0004.Install-vUser.sql" />
     <EmbeddedResource Include="Scripts\old\20170123160900.0005.Install-vAuthenticationProvider.sql" />
     <EmbeddedResource Include="Scripts\old\20170123160900.0006.Install-sGithubUserCreateOrUpdate.sql" />
@@ -16,12 +15,6 @@
     <EmbeddedResource Include="Scripts\old\20170123160900.0009.Install-sPasswordUserUpdate.sql" />
     <EmbeddedResource Include="Scripts\old\20170123160900.0010.Install-sUserDelete.sql" />
     <EmbeddedResource Include="Scripts\old\20170123160900.0011.Install-sUserUpdate.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

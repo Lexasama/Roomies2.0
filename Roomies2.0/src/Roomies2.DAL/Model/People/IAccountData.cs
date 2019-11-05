@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
 
-namespace Roomies2.DAL.People
+using System;
+
+#endregion
+
+namespace Roomies2.DAL.Model.People
 {
     public interface IAccountData
     {

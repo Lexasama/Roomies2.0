@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Roomies2.DAL;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using Roomies2.DAL.Gateways;
 
 namespace Roomies2.WebApp.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using System;
-using Roomies2.DAL;
 using Microsoft.AspNetCore.Mvc;
+using Roomies2.DAL.Services;
 
 namespace Roomies2.WebApp.Controllers
 {
