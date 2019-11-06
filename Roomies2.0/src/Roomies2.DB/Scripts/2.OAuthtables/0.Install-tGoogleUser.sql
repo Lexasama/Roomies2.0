@@ -1,8 +1,8 @@
 CREATE TABLE RoomiesV2.rm2.tGoogleUser
 (
     UserId       INT,
-    GoogleId     VARCHAR(32) COLLATE Latin1_General_BIN2 NOT NULL,
-    RefreshToken VARCHAR(64) COLLATE Latin1_General_BIN2 NOT NULL,
+    GoogleId     NVARCHAR(32) COLLATE Latin1_General_BIN2 NOT NULL,
+    RefreshToken NVARCHAR(64) COLLATE Latin1_General_BIN2 NOT NULL,
 
     CONSTRAINT PK_tGoogleUser PRIMARY KEY (UserId),
 
