@@ -19,5 +19,6 @@ namespace Roomies2.DAL.Model.People
         string Phone { get; }
         bool Sex { get; }
         DateTime BirthDate { get; }
+        bool IsSu { get; }
     }
 }
