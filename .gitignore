@@ -474,5 +474,5 @@ src/Roomies2.DB/appsettings.json
 src/Roomies2.WebApp\wwwroot\Pictures
 
 Roomies2.0/src/Roomies2.DB/appsettings.json
-
+Roomies2.DAL.Tests/appsettings.json
 Roomies2.0/src/Roomies2.WebApp/appsettings.json

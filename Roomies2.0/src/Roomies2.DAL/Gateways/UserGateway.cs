@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Roomies2.DAL.Model.People;
@@ -23,7 +24,17 @@ namespace Roomies2.DAL.Gateways
             throw new System.NotImplementedException();
         }
 
-        public Task<IAccountData> FindByFacebookId(string userInfoFacebookId)
+        public Task<IAccountData> FindByFacebookId(string facebookId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateOrUpdateFacebookUser(string email, string facebookId, string refreshToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Result<IAccountData>> FindGitHubUser(int userId)
         {
             throw new System.NotImplementedException();
         }

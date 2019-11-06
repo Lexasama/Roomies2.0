@@ -11,6 +11,10 @@
     "Google": {
       "ClientId": "",
       "ClientSecret": ""
+    },
+    "Facebook": {
+      "AppId": "",
+      "AppSecret": ""
     }
 
   },

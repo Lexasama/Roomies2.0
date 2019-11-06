@@ -3,6 +3,8 @@ using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Model.People.OAuth;
 
 namespace Roomies2.WebApp.Authentication
@@ -28,6 +30,7 @@ namespace Roomies2.WebApp.Authentication
 
         protected override Task<IAccountData> FindUser(OAuthFacebook userInfo)
         {
+            return _userGateway.FindByFacebookId(userInfo.FacebookId);
             return Gateway.FindByFacebookId(userInfo.FacebookId);
         }
 
