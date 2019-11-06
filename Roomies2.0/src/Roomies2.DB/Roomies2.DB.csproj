@@ -7,6 +7,16 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <EmbeddedResource Include="Scripts\0.CreateDatabase\0.CreateDatabase.sql" />
+    <EmbeddedResource Include="Scripts\0.CreateDatabase\1.CreateSchema.sql" />
+    <EmbeddedResource Include="Scripts\1.CreateMainTables\2.Install-tRoomie.sql" />
+    <EmbeddedResource Include="Scripts\1.CreateMainTables\3.Install-tSupervisor.sql" />
+    <EmbeddedResource Include="Scripts\1.CreateMainTables\1.Install-tPasswordUser.sql" />
+    <EmbeddedResource Include="Scripts\1.CreateMainTables\0.Install-tUser.sql" />
+    <EmbeddedResource Include="Scripts\2.OAuthtables\0.Install-tGoogleUser.sql" />
+    <EmbeddedResource Include="Scripts\3.Views\0.Install-vUser.sql" />
+    <EmbeddedResource Include="Scripts\3.Views\1.Install-vRoomie.sql" />
+    <EmbeddedResource Include="Scripts\3.Views\2.Install-vSupervisor.sql" />
   </ItemGroup>
 
   <ItemGroup>

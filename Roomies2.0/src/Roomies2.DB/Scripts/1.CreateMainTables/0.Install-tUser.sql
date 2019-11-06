@@ -13,14 +13,10 @@ CREATE TABLE RoomiesV2.rm2.tUser
 
     CONSTRAINT PK_tUser PRIMARY KEY (UserId),
 
-    CONSTRAINT FK_tUser_tAccount
-        FOREIGN KEY (UserId)
-            REFERENCES rm2.tAccount (AccoundId),
-
     CONSTRAINT UK_tUser_Email UNIQUE (Email),
     CONSTRAINT UK_tUser_UserName UNIQUE (UserName),
 
 );
 
-INSERT INTO RoomiesV2.rm2.tUser (UserName, Email, HashedPassword, FirstName, LastName, Phone, Sex, BirthDate)
-    VALUES (N'', N'', 0, N'', N'', N'', 0, N'');
+INSERT INTO RoomiesV2.rm2.tUser (UserName, Email, FirstName, LastName, Phone, Sex, BirthDate)
+    VALUES (N'', N'', N'', N'', N'', 0, N'');

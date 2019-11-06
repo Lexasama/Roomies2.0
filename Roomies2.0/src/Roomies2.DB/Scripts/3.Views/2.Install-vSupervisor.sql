@@ -1,8 +1,7 @@
 ﻿CREATE VIEW rm2.vSupervisor AS
-SELECT tU.UserId,
+SELECT UserId,
        UserName,
        Email,
-       HashedPassword,
        FirstName,
        LastName,
        Phone,
