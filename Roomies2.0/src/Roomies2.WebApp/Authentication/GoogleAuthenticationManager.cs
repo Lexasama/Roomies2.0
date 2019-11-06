@@ -3,10 +3,11 @@ using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Model.People.OAuth;
 
 namespace Roomies2.WebApp.Authentication
 {
-    public class GoogleAuthenticationManager : AuthenticationManager<GoogleUserInfo>
+    public class GoogleAuthenticationManager : AuthenticationManager<OAuthGoogle>
     {
         public UserService UserService { get; }
         public UserGateway Gateway { get; }
@@ -17,7 +18,7 @@ namespace Roomies2.WebApp.Authentication
             Gateway = userGateway;
         }
 
-        protected override async Task CreateOrUpdateUser(GoogleUserInfo userInfo)
+        protected override async Task CreateOrUpdateUser(OAuthGoogle userInfo)
         {
             if (userInfo.RefreshToken != null)
             {
@@ -25,28 +26,19 @@ namespace Roomies2.WebApp.Authentication
             }
         }
 
-        protected override Task<IAccountData> FindUser(GoogleUserInfo userInfo)
+        protected override Task<IAccountData> FindUser(OAuthGoogle userInfo)
         {
             return Gateway.FindByGoogleId(userInfo.GoogleId);
         }
 
-        protected override Task<GoogleUserInfo> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
+        protected override Task<OAuthGoogle> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
-            return Task.FromResult(new GoogleUserInfo
+            return Task.FromResult(new OAuthGoogle
             {
                 RefreshToken = ctx.RefreshToken,
                 Email = ctx.GetEmail(),
                 GoogleId = ctx.GetGoogleId()
             });
         }
-    }
-
-    public class GoogleUserInfo
-    {
-        public string RefreshToken { get; set; }
-
-        public string Email { get; set; }
-
-        public string GoogleId { get; set; }
     }
 }

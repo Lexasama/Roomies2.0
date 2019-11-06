@@ -1,51 +1,44 @@
 ﻿using System.Threading.Tasks;
-using Roomies2.DAL;
 using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Roomies2.DAL.People;
+using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Model.People.OAuth;
 
 namespace Roomies2.WebApp.Authentication
 {
-    public class FacebookAuthenticationManager : AuthenticationManager<FacebookUserInfo>
+    public class FacebookAuthenticationManager : AuthenticationManager<OAuthFacebook>
     {
-        readonly UserGateway _userGateway;
+        public UserService UserService { get; }
+        public UserGateway Gateway { get; }
 
         public FacebookAuthenticationManager(UserService userService, UserGateway userGateway)
         {
-            _userGateway = userGateway;
+            UserService = userService;
+            Gateway = userGateway;
         }
 
-        protected override async Task CreateOrUpdateUser(FacebookUserInfo userInfo)
+        protected override async Task CreateOrUpdateUser(OAuthFacebook userInfo)
         {
             if(userInfo.RefreshToken != null)
             {
-                await _userGateway.CreateOrUpdateFacebookUser(userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
+                await Gateway.CreateOrUpdateFacebookUser(userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
             }
         }
 
-        protected override Task<IAccountData> FindUser(FacebookUserInfo userInfo)
+        protected override Task<IAccountData> FindUser(OAuthFacebook userInfo)
         {
-            return _userGateway.FindByFaceBookId(userInfo.FacebookId);
+            return Gateway.FindByFacebookId(userInfo.FacebookId);
         }
 
-        protected override Task<FacebookUserInfo> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
+        protected override Task<OAuthFacebook> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
-            return Task.FromResult(new FacebookUserInfo
+            return Task.FromResult(new OAuthFacebook
             {
                 RefreshToken = ctx.RefreshToken,
                 Email = ctx.GetEmail(),
                 FacebookId = ctx.GetFacebookId()
             });
-            
         }
-       
-    }
-    public class FacebookUserInfo
-    {
-        public string RefreshToken { get; set; }
-
-        public string Email { get; set; }
-
-        public string FacebookId { get; set; }
     }
 }
