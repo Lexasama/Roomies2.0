@@ -1,8 +1,8 @@
 ﻿CREATE TABLE RoomiesV2.rm2.tFacebookUser
 (
     UserId       INT,
-    FacebookId   VARCHAR(32) COLLATE Latin1_General_BIN2 NOT NULL,
-    RefreshToken VARCHAR(64) COLLATE Latin1_General_BIN2 NOT NULL,
+    FacebookId   NVARCHAR(32) COLLATE Latin1_General_BIN2 NOT NULL,
+    RefreshToken NVARCHAR(64) COLLATE Latin1_General_BIN2 NOT NULL,
 
     CONSTRAINT PK_tFacebookUser PRIMARY KEY (UserId),
 
