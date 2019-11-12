@@ -90,6 +90,7 @@ namespace Roomies2.WebApp
                     {
                         OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>().OnCreatingTicket(ctx)
                     };
+                    
                     o.AccessType = "offline";
                 })
                 .AddFacebook(facebookOptions =>

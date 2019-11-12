@@ -1,15 +1,9 @@
 CREATE TABLE RoomiesV2.rm2.tUser
 (
     UserId    INT IDENTITY (0, 1)                       NOT NULL,
-
     UserName  NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
     Email     NVARCHAR(64) COLLATE Latin1_General_CI_AI NOT NULL,
-
-    FirstName NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
-    LastName  NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
-    Phone     NVARCHAR(12)                              NOT NULL,
-    Sex       INT                                       NOT NULL,
-    BirthDate DATETIME2                                 NOT NULL,
+                      
 
     CONSTRAINT PK_tUser PRIMARY KEY (UserId),
 
@@ -18,5 +12,5 @@ CREATE TABLE RoomiesV2.rm2.tUser
 
 );
 
-INSERT INTO RoomiesV2.rm2.tUser (UserName, Email, FirstName, LastName, Phone, Sex, BirthDate)
-    VALUES (N'', N'', N'', N'', N'', 0, N'');
+INSERT INTO RoomiesV2.rm2.tUser (UserName, Email)
+    VALUES (N'', N'');

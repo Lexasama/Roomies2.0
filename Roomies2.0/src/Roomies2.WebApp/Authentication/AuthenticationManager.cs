@@ -11,8 +11,11 @@ namespace Roomies2.WebApp.Authentication
         public async Task OnCreatingTicket(OAuthCreatingTicketContext ctx)
         {
             TUserInfo userInfo = await GetUserInfoFromContext(ctx);
+            
+           // await CreateOrUpdateUser2(userInfo)
+           
             await CreateOrUpdateUser(userInfo);
-            IAccountData account = await FindUser(userInfo);
+            UserData account = await FindUser(userInfo);
             ctx.Principal = CreatePrincipal(account);
         }
 
@@ -20,9 +23,9 @@ namespace Roomies2.WebApp.Authentication
 
         protected abstract Task CreateOrUpdateUser(TUserInfo userInfo);
 
-        protected abstract Task<IAccountData> FindUser(TUserInfo userInfo);
+        protected abstract Task<UserData> FindUser(TUserInfo userInfo);
 
-        ClaimsPrincipal CreatePrincipal(IAccountData account)
+        ClaimsPrincipal CreatePrincipal(UserData account)
         {
             var claims = new List<Claim>
             {

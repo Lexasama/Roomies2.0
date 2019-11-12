@@ -3,44 +3,46 @@ using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Model.People.OAuth;
+using System;
 
 namespace Roomies2.WebApp.Authentication
 {
     public class FacebookAuthenticationManager : AuthenticationManager<OAuthFacebook>
     {
         public UserService UserService { get; }
-        public UserGateway Gateway { get; }
+        public UserGateway UserGateway { get; }
 
         public FacebookAuthenticationManager(UserService userService, UserGateway userGateway)
         {
             UserService = userService;
-            Gateway = userGateway;
+            UserGateway = userGateway;
         }
 
         protected override async Task CreateOrUpdateUser(OAuthFacebook userInfo)
         {
-            if(userInfo.RefreshToken != null)
+            if (userInfo.RefreshToken != null)
             {
-                await Gateway.CreateOrUpdateFacebookUser(userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
+                userInfo.UserName = $"User"+ Guid.NewGuid().ToString().Substring(10);
+
+                await UserGateway.CreateOrUpdateFacebookUser(userInfo.UserName, userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
             }
         }
 
-        protected override Task<IAccountData> FindUser(OAuthFacebook userInfo)
+
+        protected override Task<UserData> FindUser(OAuthFacebook userInfo)
         {
-            return _userGateway.FindByFacebookId(userInfo.FacebookId);
-            return Gateway.FindByFacebookId(userInfo.FacebookId);
+            return UserGateway.FindByFacebookId(userInfo.FacebookId);
         }
 
         protected override Task<OAuthFacebook> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
             return Task.FromResult(new OAuthFacebook
             {
-                RefreshToken = ctx.RefreshToken,
+                RefreshToken = ctx.AccessToken,
                 Email = ctx.GetEmail(),
-                FacebookId = ctx.GetFacebookId()
+                FacebookId = ctx.GetFacebookId(),
+                
             });
         }
     }

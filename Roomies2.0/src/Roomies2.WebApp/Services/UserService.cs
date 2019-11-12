@@ -16,14 +16,14 @@ namespace Roomies2.WebApp.Services
             Hasher = passwordHasher;
         }
 
-        public Task<Result<int>> CreatePasswordUser(string email, string password)
+        public Task<Result<int>> CreatePasswordUser(string userName, string email, string password)
         {
-            return Gateway.CreatePasswordUser(email, Hasher.HashPassword(password));
+            return Gateway.CreatePasswordUser(userName,email, Hasher.HashPassword(password));
         }
 
-        public async Task<IAccountData> FindUser(string email, string password)
+        public async Task<UserData> FindUser(string email, string password)
         {
-            IAccountData account = await Gateway.FindByEmail(email);
+            UserData account = await Gateway.FindByEmail(email);
             if (account != null && Hasher.VerifyHashedPassword(account.Password, password) == PasswordVerificationResult.Success)
             {
                 return account;

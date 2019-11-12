@@ -22,11 +22,11 @@ namespace Roomies2.WebApp.Authentication
         {
             if (userInfo.RefreshToken != null)
             {
-                await Gateway.CreateOrUpdateGoogleUser(userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken);
+                await Gateway.CreateOrUpdateGoogleUser(userInfo.UserName, userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 
             }
         }
 
-        protected override Task<IAccountData> FindUser(OAuthGoogle userInfo)
+        protected override Task<UserData> FindUser(OAuthGoogle userInfo)
         {
             return Gateway.FindByGoogleId(userInfo.GoogleId);
         }

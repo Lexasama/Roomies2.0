@@ -17,21 +17,21 @@ namespace Roomies2.WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        public UserGateway Gateway { get; }
-        public UserService Service { get; }
-        public TokenService TokenService { get; }
-        public IAuthenticationSchemeProvider AuthenticationSchemeProvider { get; }
-        public Random Random { get; }
-        public IOptions<SpaOptions> SpaOptions { get; }
+        public UserGateway _userGateway { get; }
+        public UserService _userService { get; }
+        public TokenService _tokenService { get; }
+        public IAuthenticationSchemeProvider _authenticationSchemeProvider { get; }
+        public Random _random { get; }
+        public IOptions<SpaOptions> _spaOptions { get; }
 
         public AccountController(UserGateway userGateway, UserService userService, TokenService tokenService, IAuthenticationSchemeProvider authenticationSchemeProvider, IOptions<SpaOptions> spaOptions)
         {
-            Gateway = userGateway;
-            Service = userService;
-            TokenService = tokenService;
-            AuthenticationSchemeProvider = authenticationSchemeProvider;
-            SpaOptions = spaOptions;
-            Random = new Random();
+            _userGateway = userGateway;
+            _userService = userService;
+            _tokenService = tokenService;
+            _authenticationSchemeProvider = authenticationSchemeProvider;
+            _spaOptions = spaOptions;
+            _random = new Random();
         }
 
         [HttpGet]
@@ -48,7 +48,7 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                IAccountData account = await Service.FindUser(model.Email, model.Password);
+                UserData account = await _userService.FindUser(model.Email, model.Password);
                 if (account == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -75,7 +75,7 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                Result<int> result = await Service.CreatePasswordUser(model.Email, model.Password);
+                Result<int> result = await _userService.CreatePasswordUser(model.UserName, model.Email, model.Password);
                 if (result.HasError)
                 {
                     ModelState.AddModelError(string.Empty, result.ErrorMessage);
@@ -93,7 +93,7 @@ namespace Roomies2.WebApp.Controllers
         public async Task<IActionResult> LogOff()
         {
             await HttpContext.SignOutAsync(CookieAuthentication.AuthenticationScheme);
-            ViewData["SpaHost"] = SpaOptions.Value.Host;
+            ViewData["SpaHost"] = _spaOptions.Value.Host;
             ViewData["NoLayout"] = true;
             return View();
         }
@@ -109,7 +109,7 @@ namespace Roomies2.WebApp.Controllers
                 return BadRequest();
             }
 
-            if (await AuthenticationSchemeProvider.GetSchemeAsync(provider) == null)
+            if (await _authenticationSchemeProvider.GetSchemeAsync(provider) == null)
             {
                 return BadRequest();
             }
@@ -134,9 +134,9 @@ namespace Roomies2.WebApp.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            Token token = TokenService.GenerateToken(userId, email);
-            IEnumerable<string> providers = await Gateway.GetAuthenticationProviders(userId);
-            ViewData["SpaHost"] = SpaOptions.Value.Host;
+            Token token = _tokenService.GenerateToken(userId, email);
+            IEnumerable<string> providers = await _userGateway.GetAuthenticationProviders(userId);
+            ViewData["SpaHost"] = _spaOptions.Value.Host;
             ViewData["BreachPadding"] = GetBreachPadding(); // Mitigate BREACH attack. See http://www.breachattack.com/
             ViewData["Token"] = token;
             ViewData["Email"] = email;
@@ -159,8 +159,8 @@ namespace Roomies2.WebApp.Controllers
 
         string GetBreachPadding()
         {
-            byte[] data = new byte[Random.Next(64, 256)];
-            Random.NextBytes(data);
+            byte[] data = new byte[_random.Next(64, 256)];
+            _random.NextBytes(data);
             return Convert.ToBase64String(data);
         }
     }

@@ -1,16 +1,20 @@
-﻿CREATE VIEW rm2.vUser AS
-SELECT tU.UserId,
-       tU.Email,
-       tU.UserName,
-       tPU.PasswordId,
-       tPU.HashedPassword,
-       tGU.GoogleId,
-       tGU.RefreshToken AS GRefreshToken,
-       tFU.FacebookId,
-       tFU.RefreshToken AS FRefreshToken
-    FROM tUser                       tU
-             LEFT JOIN tPasswordUser tPU ON tU.UserId = tPU.UserId
-             LEFT JOIN tGoogleUser   tGU ON tU.UserId = tGU.UserId
-             LEFT JOIN tFacebookUser tFU ON tU.UserId = tFU.UserId
+﻿CREATE VIEW rm2.vUser 
+AS
+	SELECT
+			UserId =  u.UserId,
+			Email = u.Email,
+			UserName = u.UserName,
+		    [Password] = CASE WHEN p.[Password] IS NULL THEN 0x ELSE p.[Password] END,
+			
+			FacebookRefreshToken = CASE WHEN f.RefreshToken IS NULL THEN '' ELSE f.RefreshToken END,
+			FacebookId = CASE WHEN f.FacebookId IS NULL THEN '' ELSE f.FacebookId END,
 
-    WHERE tU.UserId <> 0;
+			GoogleRefreshToken = case when gl.RefreshToken is null then '' else gl.RefreshToken end,
+            GoogleId = case when gl.GoogleId is null then '' else gl.GoogleId end
+    
+	FROM rm2.tUser u
+             LEFT JOIN rm2.tPasswordUser p  ON p.UserId  = u.UserId
+             LEFT JOIN tGoogleUser		 gl ON gl.UserId = u.UserId
+             LEFT JOIN tFacebookUser	 f  ON f.UserId  = u.UserId
+
+    WHERE u.UserId <> 0;

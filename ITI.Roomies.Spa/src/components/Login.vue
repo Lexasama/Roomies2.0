@@ -1,33 +1,45 @@
 <template>
-  <div id="app">
+  <div>
     <div id="centered_container">
-      <h2 class="centered">Welcome</h2>
-
-      <div>
+      <!-- <div>
         <img
           src="https://i.ibb.co/wc1n3HF/Roomies-logo-long.png"
           alt="Roomies-logo-long"
           border="0"
         />
+        <div style="padding-top: 3rem;"></div>
+      </div>-->
+      <div class="container p-3">
+        <div class="text-center">
+          <h1 class="my-4">Bienvenue sur Roomies</h1>
+          <b-card-group deck>
+            <b-card header="Connexion" class="text-center">
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="login('Google')"
+              >
+                <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="login('Facebook')"
+              >
+                <i class="fa fa-facebook" aria-hidden="true"></i> Se connecter via Facebook
+              </button>
 
-        <button
-          style="margin-top:16px"
-          id="centered_container"
-          @click="login('Google')"
-          class="btn btn-lg btn-block btn-primary"
-        >
-          <i class="fa fa-google" aria-hidden="true"></i>
-          connect Google
-        </button>
-        <br />
-        <button
-          id="centered_container"
-          @click="login('Facebook')"
-          class="btn btn-block btn-lg btn-dark"
-        >connect Facebook</button>
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-default"
+                @click="login('Base')"
+              >Se Connecter via Roomies</button>
+            </b-card>
+            <b-card header="Creer un compte"></b-card>
+          </b-card-group>
+        </div>
       </div>
     </div>
-    <div style="padding-top: 3rem;"></div>
   </div>
 </template>
 

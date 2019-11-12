@@ -1,13 +1,9 @@
-﻿CREATE PROCEDURE sPasswordUserCreate
-( @UserName       NVARCHAR(20),
-  @Email          NVARCHAR(64),
-  @HashedPassword VARBINARY(128),
-  @FirstName      NVARCHAR(20),
-  @LastName       NVARCHAR(20),
-  @Phone          NVARCHAR(12),
-  @Sex            INT,
-  @BirthDate      DATETIME2,
-  @UserId         INT OUT
+﻿CREATE PROCEDURE rm2.sPasswordUserCreate
+(
+	@UserName       NVARCHAR(20),
+	@Email          NVARCHAR(64),
+	@Password VARBINARY(168),
+	@UserId         INT OUT
 )
 AS
 BEGIN
@@ -17,19 +13,27 @@ BEGIN
     BEGIN TRAN;
 
     IF EXISTS(
-            SELECT * FROM RoomiesV2.rm2.vUser vU WHERE vU.Email LIKE @Email
+            SELECT * FROM RoomiesV2.rm2.tUser u WHERE u.Email = @Email
         )
             BEGIN
                 ROLLBACK
                 RETURN 1
             END
 
-    INSERT INTO rm2.tUser (UserName, Email, FirstName, LastName, Phone, Sex, BirthDate)
-        VALUES (@UserName, @Email, @FirstName, @LastName, @Phone, @Sex, @BirthDate)
+	   IF EXISTS(
+            SELECT * FROM RoomiesV2.rm2.tUser u WHERE u.UserName = @UserName
+        )
+            BEGIN
+                ROLLBACK
+                RETURN 2
+            END
+
+    INSERT INTO rm2.tUser (UserName, Email)
+        VALUES (@UserName, @Email)
 
     SET @UserId = scope_identity()
 
-    INSERT INTO rm2.tPasswordUser (UserId, HashedPassword) VALUES (@UserId, @HashedPassword)
+    INSERT INTO rm2.tPasswordUser (UserId, [Password]) VALUES (@UserId, @Password)
 
     COMMIT
     RETURN 0;
