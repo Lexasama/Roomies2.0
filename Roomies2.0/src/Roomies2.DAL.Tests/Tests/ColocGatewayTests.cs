@@ -1,47 +1,51 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.BuildingManagement;
 using Roomies2.DAL.Services;
-namespace Roomies2.DAL.Tests
+
+namespace Roomies2.DAL.Tests.Tests
 {
     [TestFixture]
     class ColocGatewayTests
     {
-        readonly Random _random = new Random();
+        public ColocGatewayTests()
+        {
+            Sut = new ColocGateway(TestHelpers.ConnectionString);
+        }
 
+        private ColocGateway Sut { get; }
+
+        [Test]
         public async Task can_create_update_and_delete_a_coloc()
         {
-            ColocGateway sut = new ColocGateway(TestHelpers.ConnectionString);
-
             string name = TestHelpers.RandomTestName();
             string picPath = "awsome picture ;)";
 
-            Result<int> result = await sut.Create(name, picPath);
+            Result<int> result = await Sut.Create(name, picPath);
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
             int colocId = result.Content;
 
             Result<ColocData> colocData;
             {
-                colocData = await sut.FindById(colocId);
+                colocData = await Sut.FindById(colocId);
                 CheckColoc(colocData, name, picPath);
             }
 
             {
                 name = TestHelpers.RandomTestName();
                 picPath = "an other awesome picture ;)";
-                await sut.Update(name, picPath);
+                await Sut.Update(name, picPath);
 
-                colocData = await sut.FindById(colocId);
+                colocData = await Sut.FindById(colocId);
                 CheckColoc(colocData, name, picPath);
             }
 
             {
-                Result c = await sut.Delete(colocId);
+                Result c = await Sut.Delete(colocId);
                 Assert.That(c.Status, Is.EqualTo(Status.Ok));
-                colocData = await sut.FindById(colocId);
+                colocData = await Sut.FindById(colocId);
                 Assert.That(c.Status, Is.EqualTo(Status.NotFound));
             }
         }

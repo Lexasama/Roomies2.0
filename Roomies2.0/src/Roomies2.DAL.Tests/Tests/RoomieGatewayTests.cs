@@ -5,7 +5,7 @@ using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 
-namespace Roomies2.DAL.Tests
+namespace Roomies2.DAL.Tests.Tests
 {
     [TestFixture]
     internal class RoomieGatewayTests
