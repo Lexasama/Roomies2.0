@@ -8,6 +8,7 @@ CREATE TABLE RoomiesV2.rm2.tPasswordUser
     CONSTRAINT FK_tPasswordUser_tUser
         FOREIGN KEY (UserId)
             REFERENCES RoomiesV2.rm2.tUser (UserId)
+            ON DELETE CASCADE
 );
 
 INSERT INTO rm2.tPasswordUser (UserId, [Password])
