@@ -1,14 +1,13 @@
 ﻿CREATE PROCEDURE rm2.sPasswordUserCreate
-(
-	@UserName       NVARCHAR(20),
-	@Email          NVARCHAR(64),
-	@Password VARBINARY(168),
-	@UserId         INT OUT
+( @UserName NVARCHAR(20),
+  @Email    NVARCHAR(64),
+  @Password VARBINARY(168),
+  @UserId   INT OUT
 )
 AS
 BEGIN
     -- body of the stored procedure
-
+    SET XACT_ABORT ON;
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
@@ -16,26 +15,25 @@ BEGIN
             SELECT * FROM RoomiesV2.rm2.tUser u WHERE u.Email = @Email
         )
             BEGIN
-                ROLLBACK
-                RETURN 1
-            END
+                ROLLBACK;
+                RETURN 1;
+            END;
 
-	   IF EXISTS(
+    IF EXISTS(
             SELECT * FROM RoomiesV2.rm2.tUser u WHERE u.UserName = @UserName
         )
             BEGIN
-                ROLLBACK
-                RETURN 2
-            END
+                ROLLBACK;
+                RETURN 2;
+            END;
 
     INSERT INTO rm2.tUser (UserName, Email)
-        VALUES (@UserName, @Email)
+        VALUES (@UserName, @Email);
 
-    SET @UserId = scope_identity()
+    SET @UserId = scope_identity();
 
-    INSERT INTO rm2.tPasswordUser (UserId, [Password]) VALUES (@UserId, @Password)
-
-    COMMIT
+    INSERT INTO rm2.tPasswordUser (UserId, [Password]) VALUES (@UserId, @Password);
+    COMMIT;
     RETURN 0;
-END
-GO
+END;
+GO;

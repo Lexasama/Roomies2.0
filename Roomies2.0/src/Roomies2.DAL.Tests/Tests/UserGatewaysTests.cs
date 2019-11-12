@@ -5,13 +5,11 @@ using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 
-namespace Roomies2.DAL.Tests
+namespace Roomies2.DAL.Tests.Tests
 {
     [TestFixture]
-    class UserGatewaysTests
+    internal class UserGatewaysTests
     {
-        readonly Random random = new Random();
-
         [Test]
         public async Task can_create_find_update_and_delete_user() 
         {
