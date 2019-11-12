@@ -8,7 +8,8 @@ CREATE TABLE RoomiesV2.rm2.tGoogleUser
 
     CONSTRAINT FK_tGoogleUser_UserId
         FOREIGN KEY (UserId)
-            REFERENCES RoomiesV2.rm2.tUser (UserId),
+            REFERENCES RoomiesV2.rm2.tUser (UserId)
+            ON DELETE CASCADE,
 
     CONSTRAINT UK_tGoogleUser_GoogleId UNIQUE (GoogleId)
 );
