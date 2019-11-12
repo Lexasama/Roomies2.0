@@ -26,7 +26,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result<int>> Create(string name, string picPath)
         {
-            if (!IsNameValid(name)) return Result.Failure<int>(Status.BadRequest, "The Name is not valid");
+            if (!IsNameValid(name)) return Result.Failure<int>(Status.BadRequest, "The name is not valid");
             throw new NotImplementedException();
         }
 

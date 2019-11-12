@@ -70,7 +70,7 @@ namespace Roomies2.DAL.Gateways
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select    rm2.vUser u where u.GoogleId = @GoogleId",
+                    "select  * FROM  rm2.vUser u WHERE u.GoogleId = @GoogleId",
                     new { GoogleId = googleId });
             }
         }

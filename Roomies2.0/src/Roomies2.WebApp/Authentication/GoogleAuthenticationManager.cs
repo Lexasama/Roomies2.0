@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Model.People.OAuth;
+using System;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -20,9 +21,10 @@ namespace Roomies2.WebApp.Authentication
 
         protected override async Task CreateOrUpdateUser(OAuthGoogle userInfo)
         {
+            string userName = Guid.NewGuid().ToString();
             if (userInfo.RefreshToken != null)
             {
-                await Gateway.CreateOrUpdateGoogleUser(userInfo.UserName, userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 
+                await Gateway.CreateOrUpdateGoogleUser(userName, userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 
             }
         }
 

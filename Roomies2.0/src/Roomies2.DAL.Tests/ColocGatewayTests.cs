@@ -16,7 +16,7 @@ namespace Roomies2.DAL.Tests
             ColocGateway sut = new ColocGateway(TestHelpers.ConnectionString);
 
             string name = TestHelpers.RandomTestName();
-            string picPath = "awsome picture ;)";
+            string picPath = "awesome picture ;)";
 
             Result<int> result = await sut.Create(name, picPath);
             Assert.That(result.Status, Is.EqualTo(Status.Created));
