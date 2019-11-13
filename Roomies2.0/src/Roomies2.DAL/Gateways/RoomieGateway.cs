@@ -1,6 +1,5 @@
 ﻿using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -61,7 +60,7 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public async Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        public  Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
             throw new NotImplementedException();
         }
