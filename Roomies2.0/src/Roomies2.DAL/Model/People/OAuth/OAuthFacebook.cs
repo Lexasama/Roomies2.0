@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roomies2.DAL.Model.People.OAuth
+﻿namespace Roomies2.DAL.Model.People.OAuth
 {
     public class OAuthFacebook
     {

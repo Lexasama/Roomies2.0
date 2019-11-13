@@ -22,7 +22,7 @@ namespace Roomies2.DAL.Tests.Tests
             string name = TestHelpers.RandomTestName();
             string picPath = "awesome picture ;)";
 
-            Result<int> result = await Sut.Create(name, picPath);
+            Result<int> result =  Sut.Create(name, picPath);
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
             int colocId = result.Content;
@@ -36,7 +36,7 @@ namespace Roomies2.DAL.Tests.Tests
             {
                 name = TestHelpers.RandomTestName();
                 picPath = "an other awesome picture ;)";
-                await Sut.Update(name, picPath);
+                 Sut.Update(name, picPath);
 
                 colocData = await Sut.FindById(colocId);
                 CheckColoc(colocData, name, picPath);
