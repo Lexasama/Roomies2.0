@@ -466,6 +466,8 @@ MigrationBackup/
 
 
 # Roomies project
+
+**/appsettings.json
 src/Roomies2.WebApp/wwwroot/assets/
 src/Roomies2.WebApp/wwwroot/dist/
 src/Roomies2.DAL.Tests/appsettings.json
