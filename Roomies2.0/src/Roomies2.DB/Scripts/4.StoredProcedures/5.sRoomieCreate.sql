@@ -22,7 +22,7 @@ BEGIN
                      BirthDate = @BirthDate
     WHERE UserId = @RoomieId;
 
-    INSERT INTO rm2.tRoomie(RoomieId, Description, PicturePath)
+    INSERT INTO rm2.tRoomie(RoomieId, [Description], PicturePath)
         VALUES (@RoomieId, @Description, @PicturePath);
     COMMIT;
     RETURN 0;

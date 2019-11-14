@@ -8,7 +8,8 @@
 
     CONSTRAINT FK_tFacebookUser_UserId
         FOREIGN KEY (UserId)
-            REFERENCES RoomiesV2.rm2.tUser (UserId),
+            REFERENCES RoomiesV2.rm2.tUser (UserId)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO RoomiesV2.rm2.tFacebookUser(UserId, FacebookId, RefreshToken)
