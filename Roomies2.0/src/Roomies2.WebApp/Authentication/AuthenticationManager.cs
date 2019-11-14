@@ -11,9 +11,7 @@ namespace Roomies2.WebApp.Authentication
         public async Task OnCreatingTicket(OAuthCreatingTicketContext ctx)
         {
             TUserInfo userInfo = await GetUserInfoFromContext(ctx);
-            
-           // await CreateOrUpdateUser2(userInfo)
-           
+
             await CreateOrUpdateUser(userInfo);
             UserData account = await FindUser(userInfo);
             ctx.Principal = CreatePrincipal(account);
