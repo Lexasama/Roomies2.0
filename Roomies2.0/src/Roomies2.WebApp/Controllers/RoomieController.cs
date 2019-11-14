@@ -2,7 +2,6 @@
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Controllers
@@ -22,7 +21,6 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet("{roomieId}", Name = "GetRoomie")]
         public async Task<IActionResult> GetRoomie(int roomieId)
         {
-            string id = HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
             Result<RoomieData> result = await _roomieGateway.FindById(roomieId);
             return this.CreateResult(result);
         }

@@ -1,12 +1,15 @@
-create procedure rm2.sUserDelete
+CREATE PROCEDURE rm2.sUserDelete
 (
-    @UserId int
+    @UserId INT
 )
-as
-begin
-    delete from rm2.tPasswordUser where UserId = @UserId;
-    delete from rm2.tGoogleUser where UserId = @UserId;
-    delete from rm2.tFacebookUser where UserId = @UserId;
-    delete from rm2.tUser where UserId = @UserId;
-    return 0;
-end;
+AS
+BEGIN
+    SET XACT_ABORT ON;
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+    BEGIN TRAN;
+
+    DELETE FROM rm2.itColRoom WHERE RoomieId = @UserId;
+    DELETE FROM rm2.tRoomie WHERE RoomieId = @UserId;
+    DELETE FROM rm2.tUser WHERE UserId = @UserId;
+    RETURN 0;
+END;
