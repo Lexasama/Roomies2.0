@@ -120,11 +120,12 @@ namespace Roomies2.DAL.Gateways
                 : Result.Failure<int>(Status.BadRequest, "User already exists");
         }
 
-        public async Task<Result<int>> CreateOrUpdateFacebookUser(string userName, string email, string facebookId,
+        public async Task CreateOrUpdateFacebookUser(string userName, string email, string facebookId,
             string refreshToken)
         {
-            var r = FindByEmail(email).Result;
+            UserData r = FindByEmail(email).Result;
 
+            // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
             int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
 
             await using var con = new SqlConnection(ConnectionString);
@@ -136,23 +137,24 @@ namespace Roomies2.DAL.Gateways
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
             await con.ExecuteAsync("rm2.sFacebookUserCreateOrUpdate", p, commandType: CommandType.StoredProcedure);
-
-            var status = p.Get<int>("@Status");
-
-            if (status == 0) Result.Success(userId);
-
-            return Result.Failure<int>(Status.BadRequest, "User already exists");
         }
 
         public async Task CreateOrUpdateGoogleUser(string userName, string email, string googleId, string refreshToken)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                await con.ExecuteAsync(
-                    "rm2.sGoogleUserCreateOrUpdate",
-                    new {UserName = userName, Email = email, GoogleId = googleId, RefreshToken = refreshToken},
-                    commandType: CommandType.StoredProcedure);
-            }
+            UserData r = FindByEmail(email).Result;
+
+            // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
+            int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
+
+            await using var con = new SqlConnection(ConnectionString);
+
+            var p = new DynamicParameters();
+            p.Add("@UserId", userId);
+            p.Add("@GoogleId", googleId);
+            p.Add("@RefreshToken", refreshToken);
+            p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+
+            await con.ExecuteAsync("rm2.sGoogleUserCreateOrUpdate", p, commandType: CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<string>> GetAuthenticationProviders(string userId)

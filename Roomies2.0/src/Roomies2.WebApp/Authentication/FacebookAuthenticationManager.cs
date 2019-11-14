@@ -23,7 +23,7 @@ namespace Roomies2.WebApp.Authentication
         {
             if (userInfo.RefreshToken != null)
             {
-                userInfo.UserName = $"User"+ Guid.NewGuid().ToString().Substring(10);
+                userInfo.UserName = "User"+ Guid.NewGuid().ToString().Substring(10);
 
                 await UserGateway.CreateOrUpdateFacebookUser(userInfo.UserName, userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
             }
