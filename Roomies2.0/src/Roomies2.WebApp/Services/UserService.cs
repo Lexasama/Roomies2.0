@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
@@ -16,9 +17,9 @@ namespace Roomies2.WebApp.Services
             Hasher = passwordHasher;
         }
 
-        public Task<Result<int>> CreatePasswordUser(string userName, string email, string password)
+        public Task<Result<int>> CreatePasswordUser(string userName, string email, string lastName, string FirstName, string phone, int sex, DateTime BithDate, string password)
         {
-            return Gateway.CreatePasswordUser(userName,email, Hasher.HashPassword(password));
+            return Gateway.CreatePasswordUser(userName,email, lastName, FirstName, phone, sex, BithDate, Hasher.HashPassword(password));
         }
 
         public async Task<UserData> FindUser(string email, string password)

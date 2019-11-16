@@ -5,6 +5,7 @@ using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Model.People.OAuth;
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -39,8 +40,9 @@ namespace Roomies2.WebApp.Authentication
             {
                 RefreshToken = ctx.RefreshToken,
                 Email = ctx.GetEmail(),
-                GoogleId = ctx.GetGoogleId()
-            });
+                GoogleId = ctx.GetGoogleId(),
+                
+            }); ;
         }
     }
 }
