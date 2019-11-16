@@ -10,6 +10,30 @@
           <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
               <b-nav-item href="#">Link</b-nav-item>
+              <!-- <b-nav-item>
+                <div>
+                  <b-button v-b-toggle.collapse-1 variant="outline-*">Coloc</b-button>
+                  <b-collapse id="collapse-1" class="mt-2">
+                   
+                    <b-card>create coloc</b-card>
+                  </b-collapse>
+                </div>
+              </b-nav-item>-->
+              <b-nav-item>
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    Coloc
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="c in colocList">{{c}}</el-dropdown-item>
+                    <el-dropdown-item divided>
+                      Create
+                      <i class="el-icon-circle-plus"></i>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </b-nav-item>
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
@@ -17,7 +41,7 @@
               <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                  <em>User</em>
+                  <em>{{auth.email}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item href="#">Settings</b-dropdown-item>
@@ -61,7 +85,8 @@ export default {
       state,
       themeIdx: 0,
       state: true,
-      styles: []
+      styles: [],
+      colocList: ["coloc1", "coloc2", "coloc3"]
     };
   },
 
@@ -140,6 +165,14 @@ export default {
 a.router-link-active {
   font-weight: bold;
 }
+
+// .el-dropdown-link {
+//   cursor: pointer;
+//   color: #409eff;
+// }
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 </style>
 
 <style lang="scss">
@@ -147,5 +180,3 @@ a.router-link-active {
 </style>
 
 //  id="globalContainer"
-
-//

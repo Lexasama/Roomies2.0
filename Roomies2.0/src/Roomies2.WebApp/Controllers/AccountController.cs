@@ -75,7 +75,8 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                Result<int> result = await UserService.CreatePasswordUser(model.UserName, model.Email, model.Password);
+
+                Result<int> result = await UserService.CreatePasswordUser(model.UserName, model.Email, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Password);
                 if (result.HasError)
                 {
                     ModelState.AddModelError(string.Empty, result.ErrorMessage);

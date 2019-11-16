@@ -60,7 +60,7 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public  Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        public  async Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
             throw new NotImplementedException();
         }
