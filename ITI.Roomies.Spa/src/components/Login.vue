@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="centered_container">
+    <div>
       <!-- <div>
         <img
           src="https://i.ibb.co/wc1n3HF/Roomies-logo-long.png"

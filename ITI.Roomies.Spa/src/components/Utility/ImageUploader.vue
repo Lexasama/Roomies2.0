@@ -1,19 +1,35 @@
 <template>
   <div>
-    <form enctype="multipart/form-data">
-      <input type="file" name="image" accept="image/x-png, image/jpg,
-      image/jpeg"/>
-    </form>
-    
+    <!-- <form enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/x-png, image/jpg, image/jpeg" />
+    </form>-->
+
+    <!-- <b-form-file
+      accept="image/*"
+      v-model="fileList"
+      :state="Boolean(fileList[0])"
+      placeholder="Choose a file or drop it here..."
+      drop-placeholder="Drop file here..."
+    ></b-form-file>
+
     <el-button
       style="margin-left: 10px;"
       size="small"
       type="success"
       @click="submitUpload"
-      >upload to server</el-button
-    >
-    <div class="el-upload__tip" slot="tip">
-      jpg/png files with a size less than 500kb
+    >upload to server</el-button>
+    <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>-->
+    <div>
+      <form action="POST" enctype="multipart/form-data">
+        <input
+          type="file"
+          name="file"
+          id="file"
+          accept="image/x-png, image/jpg, image/jpeg"
+          @change="handleFileUpload($event.target.files)"
+        />>
+        <el-button type="button" @click="submitFile()">Importer une photo</el-button>
+      </form>
     </div>
   </div>
 </template>
@@ -23,26 +39,31 @@
 import axios from "axios";
 import AuthService from "../../services/AuthService";
 export default {
+  props: {
+    id: {
+      type: Number,
+      required: true
+    },
+    isRoomie: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
-    props: ["id", "isRoomie"];
     return {
-      dialogImageUrl: "",
-      dialogVisible: false,
-      fileList: null,
-      id: 1,
-      isRoomie: true,
-      file: null
+      files: new FormData(),
+      model: {},
+      env: process.env.VUE_APP_BACKEND,
+      sizeMax: 5000000,
+      file: new FormData(),
+      env: process.env.VUE_APP_BACKEND
     };
   },
-
+  async mounted() {
+    console.log(this.id);
+    console.log(this.isRoomie);
+  },
   methods: {
-    handleImageUpload(files) {
-      console.log(files);
-      this.file.append("file", files[0], files[0].name);
-      console.log(this.file);
-      this.uploadButtonDisabled = false;
-    },
-
     submitUpload: async function() {
       event.preventDefault();
 
@@ -62,7 +83,7 @@ export default {
 
       let data = await axios.post(
         `${endpoint}/uploadColoc/${this.id}/${this.isRoomie}`,
-        formData.append("file", this.fileList),
+        formData.append("file", this.fileList[0]),
         {
           headers: {
             "Content-type": "multipart/form-data",
@@ -71,6 +92,34 @@ export default {
           responseType: "application/json"
         }
       );
+    },
+
+    async submitFile() {
+      event.preventDefault();
+      const endpoint = process.env.VUE_APP_BACKEND + "/api/picture";
+      const file = this.file;
+      file.append("roomieId", parseInt(this.roomieId));
+
+      var id = this.roomieId;
+      var isRoomie = this.isRoomie;
+      console.log(this.isRoomie);
+      console.log(this.id);
+      let data = await axios.post(
+        `${endpoint}/uploadColoc/${this.id}/${this.isRoomie}`,
+        this.file,
+        {
+          headers: {
+            "Content-type": "multipart/form-data",
+            Authorization: `Bearer ${AuthService.accessToken}`
+          },
+          responseType: "application/json"
+        }
+      );
+    },
+    async handleFileUpload(files) {
+      console.log(files);
+      this.file.append("file", files[0], files[0].name);
+      console.log(this.file);
     }
   }
 };

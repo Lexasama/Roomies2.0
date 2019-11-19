@@ -93,7 +93,6 @@ export default {
   async mounted() {
     this.state = true;
     this.styles = styles;
-    console.log(this.styles);
     try {
       if (!AuthService.isConnected) {
         document.getElementById("NavMenu").style.display = "none";
@@ -178,5 +177,3 @@ a.router-link-active {
 <style lang="scss">
 @import "../styles/global.scss";
 </style>
-
-//  id="globalContainer"

@@ -6,6 +6,7 @@ using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Model.People.OAuth;
 using System;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -36,6 +37,12 @@ namespace Roomies2.WebApp.Authentication
 
         protected override Task<OAuthGoogle> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
+           using( HttpClient httpClient = new HttpClient())
+           {
+                httpClient.GetAsync("https://www.googleapis.com/plus/v1/people/me?personfilels=Birthdates");
+           };
+           
+           
             return Task.FromResult(new OAuthGoogle
             {
                 RefreshToken = ctx.RefreshToken,

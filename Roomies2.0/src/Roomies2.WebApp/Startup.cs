@@ -35,6 +35,7 @@ namespace Roomies2.WebApp
                 options.EnableEndpointRouting = false;
             });
             services.AddSingleton(_ => new UserGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new PictureGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TokenService>();
@@ -86,14 +87,16 @@ namespace Roomies2.WebApp
                 })
                 .AddGoogle(o =>
                 {
-                    o.SignInScheme = CookieAuthentication.AuthenticationScheme;
-                    o.ClientId = Configuration["Authentication:Google:ClientId"];
-                    o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                o.SignInScheme = CookieAuthentication.AuthenticationScheme;
+                o.ClientId = Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+
                     o.Events = new OAuthEvents
                     {
                         OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>().OnCreatingTicket(ctx)
                     };
-                    
+
                     o.AccessType = "offline";
                 })
                 .AddFacebook(facebookOptions =>
