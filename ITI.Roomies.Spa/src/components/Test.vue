@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <ImageUploader v-bind:id="1" v-bind:isRoomie="true"></ImageUploader>
-  </div>
+  <div></div>
 </template>
 
 <script>

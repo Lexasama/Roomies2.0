@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Roomies2.DAL.Gateways;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Roomies2.WebApp.Controllers
 {
@@ -18,25 +20,19 @@ namespace Roomies2.WebApp.Controllers
         {
             _pictureGateway = pictureGateway;
         }
-        [HttpPost("uploadColoc/{id}/{isRoomie}")]
-        public async Task<IActionResult> UploadImage(IFormCollection model, int id, bool isRoomie)
+        [HttpPost("uploadColoc")]
+        public async Task<IActionResult> UploadImage(IFormCollection model)
         {
-            //int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+           // int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            if (isRoomie)
-            {
-              
 
-                await _pictureGateway.UploadPicture(model.Files[0], id, isRoomie);
+            bool isRoomie = bool.Parse((model.ToList().Find(x => x.Key == "isRoomie").Value.ToString()));
 
-            }
+
+            int x = int.Parse((model.ToList().Find(x => x.Key == "id").Value.ToString()));
+
+            await _pictureGateway.UploadPicture(model.Files[0], x, isRoomie);
            
-            //List<string> result = await _imageGateway.UploadImage(model.Files, id, isRoomie);
-            //if (result.Count == 0)
-            //{
-            //    return Ok();
-            //}
-            //return Ok(result);
             return Ok();
 
         }
