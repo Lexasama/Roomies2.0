@@ -11,6 +11,10 @@ export async function getRoomieAsync(roomieId) {
   return await getAsync(`${endpoint}/${roomieId}`);
 }
 
+export async function getRoomieProfileAsync() {
+  return await getAsync(`${endpoint}/profile`);
+}
+
 export async function createRoomieAsync(model) {
   return await postAsync(endpoint, model);
 }

@@ -3,7 +3,7 @@
     <div id="NavMenu">
       <header>
         <b-navbar toggleable="lg" type="dark" variant="info">
-          <b-navbar-brand href="home">
+          <b-navbar-brand href="/home">
             <img class="image" src="../../public/favicon.png" />
           </b-navbar-brand>
           <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -51,12 +51,15 @@
                 <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
-
-            <b-img
-              src="https://banner2.cleanpng.com/20180319/rlq/kisspng-computer-icons-user-profile-avatar-profile-transparent-png-5ab03f3def8981.4074689915214999659812.jpg"
-              width="80"
-              rounded="circle"
-            ></b-img>
+            <b-navbar-nav>
+              <b-navbar-brand href="/profile">
+                <b-img
+                  src="https://banner2.cleanpng.com/20180319/rlq/kisspng-computer-icons-user-profile-avatar-profile-transparent-png-5ab03f3def8981.4074689915214999659812.jpg"
+                  width="80"
+                  rounded="circle"
+                ></b-img>
+              </b-navbar-brand>
+            </b-navbar-nav>
           </b-collapse>
         </b-navbar>
       </header>

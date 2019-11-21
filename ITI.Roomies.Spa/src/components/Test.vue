@@ -1,12 +1,14 @@
 <template>
-  <div></div>
+  <div>
+    <profile />
+  </div>
 </template>
 
 <script>
-import ImageUploader from "../components/Utility/ImageUploader.vue";
+import profile from "../components/Roomie/Profile.vue";
 export default {
   components: {
-    ImageUploader
+    profile
   },
   data() {
     return {};
