@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
 
 #endregion
 
@@ -9,18 +8,19 @@ namespace Roomies2.DAL.Model.Grocery
 {
     public class GroceryList
     {
-        public GroceryList(int groceryListId = default, string name = null, DateTime dateTime = default,
-            List<Item> items = null)
+        public GroceryList(int colocId, int roomieId, int groceryListId = default, string name = null, DateTime dateTime = default)
         {
+            ColocId = colocId;
+            RoomieId = roomieId;
             GroceryListId = groceryListId;
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            DateTime = dateTime;
-            Items = items ?? throw new ArgumentNullException(nameof(items));
+            ListName = name ?? throw new ArgumentNullException(nameof(name));
+            DueDate = dateTime;
         }
 
         public int GroceryListId { get; set; }
-        public string Name { get; set; }
-        public DateTime DateTime { get; set; }
-        public List<Item> Items { get; set; }
+        public int ColocId { get; set; }
+        public int RoomieId { get; set; }
+        public string ListName { get; set; }
+        public DateTime DueDate { get; set; }
     }
 }

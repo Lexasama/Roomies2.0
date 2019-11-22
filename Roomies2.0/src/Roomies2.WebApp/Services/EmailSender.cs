@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Services
 {
@@ -24,7 +21,7 @@ namespace Roomies2.WebApp.Services
         {
             string smtpAddress = Configuration["Emailsender:SMTPAddress"];
             int portNumber = int.Parse(Configuration["EmailSender:PortNumber"]);
-            bool enableSSL = bool.Parse(Configuration["EmailSender:EnableSSL"]);
+            bool enableSsl = bool.Parse(Configuration["EmailSender:EnableSSL"]);
             string emailFromAddress = Configuration["EmailSender:Email"];
             string password = Configuration["EmailSender:Password"];
             string body = EmailContent(Path);
@@ -42,7 +39,7 @@ namespace Roomies2.WebApp.Services
                 {
 
                     smtp.Credentials = new NetworkCredential(emailFromAddress, password);
-                    smtp.EnableSsl = enableSSL;
+                    smtp.EnableSsl = enableSsl;
 
                     try
                     {
@@ -50,7 +47,7 @@ namespace Roomies2.WebApp.Services
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Exception caugth in EmailSender.SendEmail to {0}:{1}",email, e.ToString());
+                        Console.WriteLine("Exception caugth in EmailSender.SendEmail to {0}:{1}",email, e);
                     }
                    
                 }

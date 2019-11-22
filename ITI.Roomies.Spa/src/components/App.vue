@@ -104,7 +104,7 @@ export default {
       this.state = false;
     }
 
-    if (this.$cookies.get("themeIdx") != undefined) {
+    if (this.$cookies.get("themeIdx") !== undefined) {
       this.themeIdx = this.$cookies.get("themeIdx");
     } else {
       this.setTheme(0);

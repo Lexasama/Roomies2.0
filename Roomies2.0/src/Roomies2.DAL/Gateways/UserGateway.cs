@@ -66,46 +66,42 @@ namespace Roomies2.DAL.Gateways
                 new {GoogleId = googleId});
         }
 
-        public async Task<Result<int>> CreatePasswordUser(string userName, string email, string lastName, string FirstName, string phone, int sex, DateTime BirthDate, byte[] hashedPassword)
+        public async Task<Result<int>> CreatePasswordUser(string userName, string email, string lastName,
+            string firstName, string phone, int sex, DateTime birthDate, byte[] hashedPassword)
         {
             await using var con = new SqlConnection(ConnectionString);
             var p = new DynamicParameters();
             p.Add("@UserName", userName);
             p.Add("@Email", email);
             p.Add("@LastName", lastName);
-            p.Add("@FirstName", FirstName);
+            p.Add("@FirstName", firstName);
             p.Add("@Phone", phone);
             p.Add("@Sex", sex);
-            p.Add("@BirthDate", BirthDate);
+            p.Add("@BirthDate", birthDate);
             p.Add("@HashedPassword", hashedPassword);
             p.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
             await con.ExecuteAsync("rm2.sPasswordUserCreate", p, commandType: CommandType.StoredProcedure);
 
             var status = p.Get<int>("@Status");
-            if (status == 1)
+            switch (status)
             {
-                return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
-            }
-            else if (status == 2)
-            {
-                return Result.Failure<int>(Status.BadRequest, "An account with this username already exists.");
-            }
-            else
-            {
-                Debug.Assert(status == 0);
-                return Result.Success(p.Get<int>("@UserId"));
+                case 1:
+                    return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
+                case 2:
+                    return Result.Failure<int>(Status.BadRequest, "An account with this username already exists.");
+                default:
+                    Debug.Assert(status == 0);
+                    return Result.Success(p.Get<int>("@UserId"));
             }
         }
 
         public async Task<UserData> FindUserName(string userName)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select * from rm2.vUser u where u.UserName = @UserName",
-                    new {UserName = userName});
-            }
+            await using var con = new SqlConnection(ConnectionString);
+            return await con.QueryFirstOrDefaultAsync<UserData>(
+                "select * from rm2.vUser u where u.UserName = @UserName",
+                new {UserName = userName});
         }
 
         private async Task<Result<int>> CreateUser(string userName, string email)

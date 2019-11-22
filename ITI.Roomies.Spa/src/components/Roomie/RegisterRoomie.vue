@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1 v-if="mode == 'create'">Enregistrer un Roomie</h1>
+      <h1 v-if="mode === 'create'">Enregistrer un Roomie</h1>
       <h1 v-else>Editer son Profil</h1>
     </div>
     <el-steps :active="active" finish-status="success">
@@ -18,7 +18,7 @@
         </ul>
       </div>
 
-      <div v-if="active == 0">
+      <div v-if="active === 0">
         <b-form-group id="sex" label="Vous êtes :" label-cols-sm="4" label-cols-lg="3">
           <b-form-radio-group>
             <b-form-radio v-model="roomie.sex" value="1">Monsieur</b-form-radio>
@@ -151,7 +151,7 @@ export default {
     this.mode = this.$route.params.mode;
     this.id = this.$route.params.id;
 
-    if (this.mode == "edit") {
+    if (this.mode === "edit") {
       try {
         const roomie = getRoomieAsync(this.id);
 
@@ -168,7 +168,7 @@ export default {
   methods: {
     nextStep() {
       if (this.active++ > 2) this.active = 0;
-      if (this.active == 2) onSubmit();
+      if (this.active === 2) onSubmit();
     },
     previousStep() {
       if (this.active-- <= 0) this.active = 0;
@@ -177,7 +177,7 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
 
-      var errors = [];
+      let errors = [];
 
       if (!this.roomie.lastName) errors.push("Nom");
       if (!this.roomie.firstName) errors.push("Prénom");
