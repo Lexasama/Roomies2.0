@@ -1,11 +1,5 @@
-﻿using Dapper;
-using Roomies2.DAL.Services;
+﻿using Roomies2.DAL.Services;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Roomies2.DAL.Gateways

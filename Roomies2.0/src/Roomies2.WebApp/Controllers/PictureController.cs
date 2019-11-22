@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Roomies2.WebApp.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Roomies2.DAL.Gateways;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Roomies2.WebApp.Authentication;
 
 namespace Roomies2.WebApp.Controllers
 {

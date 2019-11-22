@@ -76,12 +76,10 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<UserData> FindUserName(string userName)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select * from rm2.vUser u where u.UserName = @UserName",
-                    new {UserName = userName});
-            }
+            await using var con = new SqlConnection(ConnectionString);
+            return await con.QueryFirstOrDefaultAsync<UserData>(
+                "select * from rm2.vUser u where u.UserName = @UserName",
+                new {UserName = userName});
         }
 
         public async Task<Result<int>> CreateUser(string userName, string email)
