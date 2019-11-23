@@ -22,14 +22,14 @@
               </b-nav-item>-->
 
               <b-nav-item>
-                <el-dropdown>
+                <el-dropdown @command="handleCommand">
                   <span class="el-dropdown-link">
                     Coloc
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="c in colocList" :key="c">{{c}}</el-dropdown-item>
-                    <el-dropdown-item divided>
+                    <el-dropdown-item command="/coloc" divided>
                       Create
                       <i class="el-icon-circle-plus"></i>
                     </el-dropdown-item>
@@ -48,7 +48,7 @@
                 </template>
                 <b-dropdown-item href="/profile">Profile</b-dropdown-item>
                 <b-dropdown-item href="/settings">Settings</b-dropdown-item>
-                <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
+                <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
             <b-navbar-nav>
@@ -85,6 +85,8 @@ import Loading from "../components/Utility/Loading.vue";
 import Login from "../components/Login.vue";
 import { state } from "../state";
 import styles from "../styles/styles";
+import { findRoomieByEmailAsync } from "../api/RoomieApi";
+import { getCollocByRoomieIdAsync } from "../api/ColocApi";
 
 export default {
   components: {
@@ -98,7 +100,8 @@ export default {
       themeIdx: 0,
       state: true,
       styles: [],
-      colocList: ["coloc1", "coloc2", "coloc3"]
+      colocList: ["coloc1", "coloc2", "coloc3"],
+      roomie: {}
     };
   },
 
@@ -108,6 +111,19 @@ export default {
     try {
       if (!AuthService.isConnected) {
         document.getElementById("NavMenu").style.display = "none";
+      } else {
+        var collocData = await getCollocByRoomieIdAsync();
+        if (collocData != undefined) {
+          this.$currColloc.setCollocId(collocData.collocId);
+          this.$currColloc.setCollocName(collocData.collocName);
+        }
+
+        this.roomie = await findRoomieByEmailAsync(AuthService.email);
+        console.log("found roomie");
+        console.log(this.roomie);
+        if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
+          this.$router.replace("/register");
+        }
       }
     } catch (e) {
       console.error(e);
@@ -122,9 +138,15 @@ export default {
       this.themeIdx = this.$cookies.get(themeIdx);
     }
   },
+
   computed: {
     auth: () => AuthService,
 
+    refreshApp() {
+      if (!AuthService.isConnected) {
+        document.getElementById("NavMenu").style.display = "none";
+      }
+    },
     menuStyle() {
       return this.styles[this.themeIdx];
     },
@@ -132,10 +154,15 @@ export default {
       return this.styles[this.themeIdx];
     },
     isLoading() {
+      this.refreshApp();
       return this.state.isLoading;
     }
   },
   methods: {
+    handleCommand(command) {
+      this.$router.push("/coloc");
+    },
+
     setTheme(themeIdx) {
       this.$cookies.set("themeIdx", themeIdx);
       this.themeIdx = themeIdx;

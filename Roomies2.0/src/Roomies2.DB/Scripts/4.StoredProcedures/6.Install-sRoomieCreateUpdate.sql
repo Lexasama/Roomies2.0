@@ -1,4 +1,4 @@
-CREATE PROCEDURE rm2.sRoomieCreate
+CREATE PROCEDURE rm2.sRoomieCreateUpdate
 ( @RoomieId    INT OUT,
   @FirstName   NVARCHAR(32),
   @LastName    NVARCHAR(32),

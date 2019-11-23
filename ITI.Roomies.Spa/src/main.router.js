@@ -12,6 +12,7 @@ import Logout from "./components/Logout.vue";
 import Register from "./components/Register.vue";
 import ColocEdit from "./components/Coloc/ColocEdit.vue";
 import UserChoise from "./components/UserChoise.vue";
+import Profile from "./components/Roomie/Profile.vue";
 import Test from "./components/Test.vue";
 
 const routes = [
@@ -19,8 +20,10 @@ const routes = [
 
   { path: "/login", component: Login },
   { path: "/logout", component: Logout, beforeEnter: requireAuth },
-  { path: "/register", component: ColocEdit },
-  { path: "/test", component: Test }
+  { path: "/register", component: Register },
+  { path: "/test", component: Test },
+  { path: "/profile", component: Profile, beforeEnter: requireAuth },
+  { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth }
 ];
 
 export default new VueRouter({

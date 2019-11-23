@@ -26,7 +26,7 @@ namespace Roomies2.DAL.Tests.Tests
             {
                 Assert.That(user.Email, Is.EqualTo(email));
                 Assert.That(user.UserName, Is.EqualTo(userName));
-                Assert.That(user.Password, Is.EqualTo(password));
+                Assert.That(user.HashedPassword, Is.EqualTo(password));
             }
 
             {
@@ -37,7 +37,7 @@ namespace Roomies2.DAL.Tests.Tests
             {
                 UserData u = await sut.FindById(user.UserId);
                 Assert.That(u.Email, Is.EqualTo(email));
-                Assert.That(u.Password, Is.EqualTo(password));
+                Assert.That(u.HashedPassword, Is.EqualTo(password));
             }
 
             {

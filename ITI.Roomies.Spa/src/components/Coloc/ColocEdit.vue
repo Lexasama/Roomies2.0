@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-form ref="form" :model="coloc">
-      <el-form-item label="Nom">
-        <el-input v-model="coloc.name"></el-input>
+      <el-form-item label="Name" label-for="colocName">
+        <el-input id="colocName" v-model="coloc.name" size="lg"></el-input>
       </el-form-item>
     </el-form>
 
     <div>
-      <imageUploader :id="1" isRoomie="false" />
+      <imageUploader :id="id" isRoomie="false" />
     </div>
   </div>
 </template>

@@ -18,49 +18,105 @@ namespace Roomies2.DAL.Gateways
             _connectionString = connectionString;
         }
 
-        public async Task<Result<RoomieData>> FindById( int roomieId)
+        public async Task<Result<RoomieData>> FindById(int roomieId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 RoomieData r = await con.QueryFirstOrDefaultAsync<RoomieData>(
-                    @"SELECT * FROM rm2.vRoomie r WHERE c.RoomieId = @RoomieId;",
-                    new {RoomieId = roomieId}
+                    @"SELECT * FROM rm2.vRoomie r WHERE r.RoomieId = @RoomieId;",
+                    new { RoomieId = roomieId }
                     );
 
                 if (r == null) return Result.Failure<RoomieData>(Status.NotFound, "Roomie was not found.");
                 return Result.Success(Status.Ok, r);
-        
+
             }
 
         }
 
-        public async Task<Result<int>> Create( string lastName, string firstName, string phone, int sex, DateTime  birthDate, string desc, string pic  )
-        {
-            if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
-            if(!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
 
+        public async Task<Result<RoomieProfile>> GetProfile(int roomieId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                RoomieProfile profile = await con.QueryFirstOrDefaultAsync<RoomieProfile>(
+                    @"SELECT ",
+                    new { RoomieId = roomieId }
+                        );
+                if (profile == null) return Result.Failure<RoomieProfile>(Status.NotFound, "Roomie not found.");
+                return Result.Success(Status.Ok, profile);
+            }
+
+        }
+
+        public async Task<Result<UserData>> FindUserByEmail(string email)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                UserData user = await con.QueryFirstOrDefaultAsync<UserData>(
+                    @"SELECT * FROM rm2.vUser u WHERE u.Email = @Email;",
+                    new { Email = email }
+                    );
+                if (user == null) return Result.Failure<UserData>(Status.NotFound, "User was not found.");
+                return Result.Success(Status.Ok, user);
+            }
+        }
+
+        public async Task<Result<RoomieData>> FindRoomieByEmail(string email)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                RoomieData r = await con.QueryFirstOrDefaultAsync<RoomieData>(
+                    @"SELECT * FROM rm2.vRoomie u WHERE u.Email = @Email;",
+                    new { Email = email }
+                    );
+                if (r == null) return Result.Failure<RoomieData>(Status.NotFound, "Roomie was not found.");
+                return Result.Success(Status.Ok, r);
+            }
+
+        }
+
+        /// <summary>
+        /// When registered via External provider
+        /// </summary>
+        /// <param name="roomieId"></param>
+        /// <param name="lastName"></param>
+        /// <param name="firstName"></param>
+        /// <param name="phone"></param>
+        /// <param name="sex"></param>
+        /// <param name="birthDate"></param>
+        /// <param name="desc"></param>
+        /// <param name="pic"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> Create(int roomieId, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        {
+            if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
+            if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
+           
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 var p = new DynamicParameters();
-                p.Add("@FirstName", firstName );
+                p.Add("@FirstName", firstName);
                 p.Add("@LastName", lastName);
                 p.Add("@Phone", phone);
+                p.Add("@Description", desc);
                 p.Add("@Sex", sex);
                 p.Add("@BirthDate", birthDate);
-                p.Add("@PicPath", pic);
-                p.Add("@RoomieId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                p.Add("@PicturePath", pic);
+                p.Add("@RoomieId", roomieId);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-                await con.ExecuteAsync("rm2.sRoomieCreate", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("rm2.sRoomieCreateUpdate", p, commandType: CommandType.StoredProcedure);
 
                 int status = p.Get<int>("@Status");
-                if (status == 1) return Result.Failure<int>(Status.BadRequest, "A Roomie with this userBame already exists");
+                if (status == 1) return Result.Failure<int>(Status.BadRequest, "A Roomie with this username already exists");
 
                 Debug.Assert(status == 0);
                 return Result.Success(Status.Created, p.Get<int>("@RoomieId"));
             }
         }
 
-        public  async Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+
+        public async Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
             throw new NotImplementedException();
         }
@@ -85,3 +141,5 @@ namespace Roomies2.DAL.Gateways
         bool IsNameValid(string name) => !string.IsNullOrWhiteSpace(name);
     }
 }
+
+

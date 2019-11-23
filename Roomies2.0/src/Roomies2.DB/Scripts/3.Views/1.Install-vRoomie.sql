@@ -1,5 +1,5 @@
 ﻿CREATE VIEW rm2.vRoomie AS
-SELECT UserId,
+SELECT RoomieId,
        UserName,
        Email,
        FirstName,

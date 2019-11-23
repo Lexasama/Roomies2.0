@@ -1,14 +1,16 @@
 <template>
   <div>
-    <profile />
+    <register />
   </div>
 </template>
 
 <script>
 import profile from "../components/Roomie/Profile.vue";
+import register from "../components/Register.vue";
 export default {
   components: {
-    profile
+    profile,
+    register
   },
   data() {
     return {};

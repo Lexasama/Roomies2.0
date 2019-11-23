@@ -69,7 +69,12 @@
 <script>
 import Roomie from "../../components/Roomie/Roomie.js";
 import ImageUploader from "../Utility/ImageUploader.vue";
-import { updateRoomieAsync, getRoomieAsync } from "../../api/RoomieApi";
+import {
+  updateRoomieAsync,
+  getRoomieProfileAsync,
+  getRoomieAsync
+} from "../../api/RoomieApi";
+import { Server } from "http";
 export default {
   components: {
     ImageUploader

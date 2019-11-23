@@ -25,7 +25,7 @@ namespace Roomies2.WebApp.Services
         public async Task<UserData> FindUser(string email, string password)
         {
             UserData account = await Gateway.FindByEmail(email);
-            if (account != null && Hasher.VerifyHashedPassword(account.Password, password) == PasswordVerificationResult.Success)
+            if (account != null && Hasher.VerifyHashedPassword(account.HashedPassword, password) == PasswordVerificationResult.Success)
             {
                 return account;
             }
