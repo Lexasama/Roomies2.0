@@ -1,27 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Services;
-using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Controllers
 {
-    [Route( "api/[controller]" )]
-    //[Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
+    [Route("api/[controller]")]
     public class RoomieController : Controller
     {
-
-        readonly RoomieGateway _roomieGateway;
-
         public RoomieController(RoomieGateway roomieGateway)
         {
-            _roomieGateway = roomieGateway;
+            Gateway = roomieGateway;
         }
-  
+
+        private RoomieGateway Gateway { get; }
+
         [HttpGet("{roomieId}", Name = "GetRoomie")]
         public async Task<IActionResult> GetRoomie(int roomieId)
         {
-            Result<RoomieData> result = await _roomieGateway.FindById(roomieId);
+            var result = await Gateway.FindById(roomieId);
             return this.CreateResult(result);
         }
 

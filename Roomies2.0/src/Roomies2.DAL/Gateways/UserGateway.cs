@@ -1,14 +1,14 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Services;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Dapper;
-using System;
+using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Services;
 
 #endregion
 
@@ -16,9 +16,12 @@ namespace Roomies2.DAL.Gateways
 {
     public class UserGateway
     {
-        public string ConnectionString { get; }
+        public UserGateway(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
 
-        public UserGateway(string connectionString) => ConnectionString = connectionString;
+        public string ConnectionString { get; }
 
 
         //public async Task<IAccountData> FindById(int userId)
@@ -118,14 +121,14 @@ namespace Roomies2.DAL.Gateways
             var status = p.Get<int>("@Status");
 
             return status == 0
-                ? Result.Success(Status.Ok, p.Get<int>(("@UserId")))
+                ? Result.Success(Status.Ok, p.Get<int>("@UserId"))
                 : Result.Failure<int>(Status.BadRequest, "User already exists");
         }
 
         public async Task CreateOrUpdateFacebookUser(string userName, string email, string facebookId,
             string refreshToken)
         {
-            UserData r = FindByEmail(email).Result;
+            var r = FindByEmail(email).Result;
 
             // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
             int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
@@ -143,7 +146,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task CreateOrUpdateGoogleUser(string userName, string email, string googleId, string refreshToken)
         {
-            UserData r = FindByEmail(email).Result;
+            var r = FindByEmail(email).Result;
 
             // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
             int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
@@ -161,7 +164,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<IEnumerable<string>> GetAuthenticationProviders(string userId)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 return await con.QueryAsync<string>(
                     "select p.ProviderName from rm2.vAuthenticationProvider p where p.UserId = @UserId",
@@ -171,7 +174,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task Delete(int userId)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync("rm2.sUserDelete", new {UserId = userId},
                     commandType: CommandType.StoredProcedure);
@@ -180,7 +183,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task UpdateEmail(int userId, string email)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sUserUpdate",
@@ -191,7 +194,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task UpdatePassword(int userId, byte[] password)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sPasswordUserUpdate",

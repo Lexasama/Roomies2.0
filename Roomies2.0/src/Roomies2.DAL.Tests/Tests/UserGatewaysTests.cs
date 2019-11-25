@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Tests.Tests
 {
@@ -48,15 +47,15 @@ namespace Roomies2.DAL.Tests.Tests
         [Test]
         public async Task can_create_facebook_user()
         {
-            UserGateway sut = new UserGateway(TestHelpers.ConnectionString);
+            var sut = new UserGateway(TestHelpers.ConnectionString);
 
             string userName = TestHelpers.RandomTestName();
             string email = string.Format("user{0}@test.com", Guid.NewGuid());
             string facebookId = Guid.NewGuid().ToString();
             string refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
-            await sut.CreateOrUpdateFacebookUser( userName, email, facebookId, refreshToken);
-            UserData user = await sut.FindByEmail(email);
+            await sut.CreateOrUpdateFacebookUser(userName, email, facebookId, refreshToken);
+            var user = await sut.FindByEmail(email);
 
             Assert.That(user.FacebookRefreshToken, Is.EqualTo(refreshToken));
             Assert.That(user.FacebookId, Is.EqualTo(facebookId));
@@ -68,21 +67,20 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(user.FacebookRefreshToken, Is.EqualTo(refreshToken));
 
             await sut.Delete(user.UserId);
-
         }
 
         [Test]
         public async Task can_create_google_user()
         {
-            UserGateway sut = new UserGateway(TestHelpers.ConnectionString);
+            var sut = new UserGateway(TestHelpers.ConnectionString);
             string userName = TestHelpers.RandomTestName();
             string email = string.Format("user{0}@test.com", Guid.NewGuid());
             string googleId = Guid.NewGuid().ToString();
             string refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
             await sut.CreateOrUpdateGoogleUser(userName, email, googleId, refreshToken);
-            UserData user = await sut.FindByEmail(email);
-            UserData user1 = await sut.FindUserName(userName);
+            var user = await sut.FindByEmail(email);
+            var user1 = await sut.FindUserName(userName);
 
             {
                 Assert.That(user.Email, Is.EqualTo(user1.Email));
@@ -93,7 +91,7 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(user.GoogleRefreshToken, Is.EqualTo(refreshToken));
 
             refreshToken = Guid.NewGuid().ToString().Replace("-", string.Empty);
-            await sut.CreateOrUpdateGoogleUser( user.UserName, user.Email, user.GoogleId, refreshToken);
+            await sut.CreateOrUpdateGoogleUser(user.UserName, user.Email, user.GoogleId, refreshToken);
 
             user = await sut.FindById(user.UserId);
             Assert.That(user.GoogleRefreshToken, Is.EqualTo(refreshToken));

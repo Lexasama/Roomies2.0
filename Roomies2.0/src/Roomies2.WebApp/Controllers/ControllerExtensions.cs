@@ -16,7 +16,7 @@ namespace Roomies2.WebApp.Controllers
             Result<T> result,
             Action<ActionResultOptions<T>> options)
         {
-            ActionResultOptions<T> o = new ActionResultOptions<T>(@this);
+            var o = new ActionResultOptions<T>(@this);
             options(o);
             return @this.CreateResult(result, o);
         }
@@ -34,9 +34,7 @@ namespace Roomies2.WebApp.Controllers
             if (result.Status == Status.NotFound) return @this.NotFound(value);
             if (result.Status == Status.BadRequest) return @this.BadRequest(value);
             if (result.Status == Status.Created)
-            {
                 return @this.CreatedAtRoute(options.RouteName, options.RouteValues(result.Content), value);
-            }
 
             throw new ArgumentException("Unknown status.", nameof(result));
         }

@@ -8,7 +8,7 @@ namespace Roomies2.DAL.Model.People
 {
     public class Account : IAccountData
     {
-        protected Account( int userId = default, string userName = null, string email = null, byte[] password = null,
+        protected Account(int userId = default, string userName = null, string email = null, byte[] password = null,
             string firstName = null, string lastName = null, string phone = null, bool sex = default,
             DateTime birthDate = default, bool isSu = default)
         {

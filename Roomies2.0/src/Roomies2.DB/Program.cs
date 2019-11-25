@@ -1,8 +1,8 @@
-﻿using DbUp;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
+using DbUp;
+using Microsoft.Extensions.Configuration;
 
 namespace Roomies2.DB
 {
@@ -10,9 +10,16 @@ namespace Roomies2.DB
     {
         private static IConfiguration _configuration;
 
+        private static IConfiguration Configuration =>
+            _configuration ?? (_configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false)
+                .AddEnvironmentVariables()
+                .Build());
+
         public static int Main()
         {
-            var connectionString = Configuration["ConnectionStrings:Roomies2DB"];
+            string connectionString = Configuration["ConnectionStrings:Roomies2DB"];
 
             EnsureDatabase.For.SqlDatabase(connectionString);
 
@@ -39,12 +46,5 @@ namespace Roomies2.DB
             Console.ResetColor();
             return 0;
         }
-
-        private static IConfiguration Configuration =>
-            _configuration ?? (_configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddEnvironmentVariables()
-                .Build());
     }
 }

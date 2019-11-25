@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Roomies2.WebApp.Controllers
 {
@@ -13,10 +13,8 @@ namespace Roomies2.WebApp.Controllers
         public async Task<IActionResult> UploadImage(IFormCollection model, int id, bool isRoomie)
         {
             if (isRoomie)
-            {
                 //id = int.Parse( model.ToList().Find( x => x.Key == "roomieId" ).Value.ToString() );
                 id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            }
 
             //List<string> result = await _imageGateway.UploadImage(model.Files, id, isRoomie);
             //if (result.Count == 0)
@@ -25,7 +23,6 @@ namespace Roomies2.WebApp.Controllers
             //}
             //return Ok(result);
             return Ok();
-
         }
     }
 }

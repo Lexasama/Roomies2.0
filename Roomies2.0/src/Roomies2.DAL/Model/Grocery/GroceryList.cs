@@ -8,7 +8,8 @@ namespace Roomies2.DAL.Model.Grocery
 {
     public class GroceryList
     {
-        public GroceryList(int colocId, int roomieId, int groceryListId = default, string name = null, DateTime dateTime = default)
+        public GroceryList(int colocId, int roomieId, int groceryListId = default, string name = null,
+            DateTime dateTime = default)
         {
             ColocId = colocId;
             RoomieId = roomieId;

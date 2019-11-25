@@ -11,7 +11,25 @@ namespace Roomies2.DAL.Tests.Tests
     internal class RoomieGatewayTests
     {
         private RoomieGateway Sut { get; }
-        public RoomieGatewayTests() => Sut = new RoomieGateway(TestHelpers.ConnectionString);
+
+        public RoomieGatewayTests()
+        {
+            Sut = new RoomieGateway(TestHelpers.ConnectionString);
+        }
+
+        private static void CheckRoomie(Result<RoomieData> r, string lastName, string firstName, string phone, int sex,
+            DateTime birthDate, string desc, string pic)
+        {
+            Assert.That(r.HasError, Is.False);
+            Assert.That(r.Status, Is.EqualTo(Status.Ok));
+            Assert.That(r.Content.LastName, Is.EqualTo(lastName));
+            Assert.That(r.Content.FirstName, Is.EqualTo(firstName));
+            Assert.That(r.Content.BirthDate, Is.EqualTo(birthDate));
+            Assert.That(r.Content.Phone, Is.EqualTo(phone));
+            Assert.That(r.Content.Description, Is.EqualTo(desc));
+            Assert.That(r.Content.PicPath, Is.EqualTo(pic));
+            Assert.That(r.Content.Sex, Is.EqualTo(sex));
+        }
 
         [Test]
         public async Task can_create_find_updateand_delete_roomie()
@@ -21,14 +39,14 @@ namespace Roomies2.DAL.Tests.Tests
             string firstName = TestHelpers.RandomTestName() ?? throw new ArgumentNullException(
                                    $"TestHelpers.RandomTestName()");
             string phone = TestHelpers.RandomPhone();
-            var sex = 0;
+            const int sex = 0;
             var birthDate = TestHelpers.RandomBirthDate(20);
-            var desc = "Une belle description";
-            var pic = "Super photo";
+            const string desc = "Une belle description";
+            const string pic = "Super photo";
 
             //Create
             var result = await Sut.Create(lastName, firstName, phone, sex, birthDate, desc, pic);
-            
+
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
             int roomieId = result.Content;
@@ -54,20 +72,6 @@ namespace Roomies2.DAL.Tests.Tests
                 roomie = await Sut.FindById(roomieId);
                 Assert.That(roomie.Status, Is.EqualTo(Status.NotFound));
             }
-        }
-
-        private static void CheckRoomie(Result<RoomieData> r, string lastName, string firstName, string phone, int sex,
-            DateTime birthDate, string desc, string pic)
-        {
-            Assert.That(r.HasError, Is.False);
-            Assert.That(r.Status, Is.EqualTo(Status.Ok));
-            Assert.That(r.Content.LastName, Is.EqualTo(lastName));
-            Assert.That(r.Content.FirstName, Is.EqualTo(firstName));
-            Assert.That(r.Content.BirthDate, Is.EqualTo(birthDate));
-            Assert.That(r.Content.Phone, Is.EqualTo(phone));
-            Assert.That(r.Content.Description, Is.EqualTo(desc));
-            Assert.That(r.Content.PicPath, Is.EqualTo(pic));
-            Assert.That(r.Content.Sex, Is.EqualTo(sex));
         }
     }
 }

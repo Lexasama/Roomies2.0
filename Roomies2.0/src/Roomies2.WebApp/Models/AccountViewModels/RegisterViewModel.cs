@@ -30,9 +30,7 @@ namespace Roomies2.WebApp.Models.AccountViewModels
         [Display(Name = "Phone")]
         public string Phone { get; set; }
 
-        [Required]
-        [Display(Name = "Sex")]
-        public int Sex { get; set; }
+        [Required] [Display(Name = "Sex")] public int Sex { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -40,7 +38,8 @@ namespace Roomies2.WebApp.Models.AccountViewModels
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
