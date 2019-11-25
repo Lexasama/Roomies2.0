@@ -8,14 +8,14 @@ namespace Roomies2.WebApp.Services
 {
     public class UserService
     {
-        public UserGateway Gateway { get; }
-        public PasswordHasher Hasher { get; }
-
         public UserService(UserGateway userGateway, PasswordHasher passwordHasher)
         {
             Gateway = userGateway;
             Hasher = passwordHasher;
         }
+
+        public UserGateway Gateway { get; }
+        public PasswordHasher Hasher { get; }
 
         public Task<Result<int>> CreatePasswordUser(string email, string password)
         {

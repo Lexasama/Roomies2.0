@@ -1,18 +1,18 @@
-﻿using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Services;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
-using System;
 using System.Collections.Generic;
+using Roomies2.DAL.Services;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Gateways
 {
     public class RoomieGateway
     {
-        readonly string _connectionString;
+        private readonly string _connectionString;
 
         public RoomieGateway(string connectionString)
         {
@@ -21,7 +21,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result<RoomieData>> FindById(int roomieId)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = new SqlConnection(_connectionString))
             {
                 RoomieData r = await con.QueryFirstOrDefaultAsync<RoomieData>(
                     @"SELECT * FROM rm2.tRoomie r WHERE r.RoomieId = @RoomieId;",
@@ -32,7 +32,6 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success(Status.Ok, r);
 
             }
-
         }
 
 
@@ -173,14 +172,14 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result> Delete(int roomieId)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = new SqlConnection(_connectionString))
             {
                 var p = new DynamicParameters();
                 p.Add("@RoomieId", roomieId);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
                 await con.ExecuteAsync("rm2.sRoomieDelete", p, commandType: CommandType.StoredProcedure);
 
-                int status = p.Get<int>("@Status");
+                var status = p.Get<int>("@Status");
                 if (status == 1) return Result.Failure(Status.NotFound, "Roomie not found");
 
                 Debug.Assert(status == 0);
@@ -188,7 +187,10 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        bool IsNameValid(string name) => !string.IsNullOrWhiteSpace(name);
+        private bool IsNameValid(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name);
+        }
     }
 }
 

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Roomies2.DAL.Gateways;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Roomies2.WebApp.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Roomies2.WebApp.Controllers
 {
@@ -29,7 +30,6 @@ namespace Roomies2.WebApp.Controllers
             await _pictureGateway.UploadPicture(model.Files[0], id, isRoomie);
            
             return Ok();
-
         }
     }
 }

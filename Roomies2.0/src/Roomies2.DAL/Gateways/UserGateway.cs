@@ -1,14 +1,14 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Services;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Dapper;
-using System;
+using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Services;
 
 #endregion
 
@@ -16,9 +16,13 @@ namespace Roomies2.DAL.Gateways
 {
     public class UserGateway
     {
+        public UserGateway(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
         public string ConnectionString { get; }
 
-        public UserGateway(string connectionString) => ConnectionString = connectionString;
 
         public async Task<UserData> FindById(int userId)
         {
@@ -96,7 +100,7 @@ namespace Roomies2.DAL.Gateways
             int status = p.Get<int>("@Status");
 
             return status == 0
-                ? Result.Success(Status.Ok, p.Get<int>(("@UserId")))
+                ? Result.Success(Status.Ok, p.Get<int>("@UserId"))
                 : Result.Failure<int>(Status.BadRequest, "User already exists");
         }
 
@@ -124,7 +128,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<IEnumerable<string>> GetAuthenticationProviders(string userId)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 return await con.QueryAsync<string>(
                     "select p.ProviderName from rm2.vAuthenticationProvider p where p.UserId = @UserId",
@@ -134,7 +138,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task Delete(int userId)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync("rm2.sUserDelete",
                     new {UserId = userId},
@@ -144,7 +148,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task UpdateEmail(int userId, string email)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sUserUpdate",
@@ -155,7 +159,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task UpdatePassword(int userId, byte[] password)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sPasswordUserUpdate",

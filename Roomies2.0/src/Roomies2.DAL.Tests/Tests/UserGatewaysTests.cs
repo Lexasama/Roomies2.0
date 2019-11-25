@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Tests.Tests
 {
@@ -46,7 +45,7 @@ namespace Roomies2.DAL.Tests.Tests
         [Test]
         public async Task can_create_facebook_user()
         {
-            UserGateway sut = new UserGateway(TestHelpers.ConnectionString);
+            var sut = new UserGateway(TestHelpers.ConnectionString);
 
             string email = string.Format("user{0}@test.com", Guid.NewGuid());
             string facebookId = Guid.NewGuid().ToString();
@@ -65,13 +64,12 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(user.FacebookRefreshToken, Is.EqualTo(refreshToken));
 
             await sut.Delete(user.UserId);
-
         }
 
         [Test]
         public async Task can_create_google_user()
         {
-            UserGateway sut = new UserGateway(TestHelpers.ConnectionString);
+            var sut = new UserGateway(TestHelpers.ConnectionString);
             string userName = TestHelpers.RandomTestName();
             string email = string.Format("user{0}@test.com", Guid.NewGuid());
             string googleId = Guid.NewGuid().ToString();

@@ -30,10 +30,7 @@ namespace Roomies2.WebApp
 
             services.AddOptions();
 
-            services.AddMvc(options =>
-            {
-                options.EnableEndpointRouting = false;
-            });
+            services.AddMvc(options => { options.EnableEndpointRouting = false; });
             services.AddSingleton(_ => new UserGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new PictureGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new RoomieGateway(Configuration["ConnectionStrings:Roomies2DB"]));
@@ -47,7 +44,7 @@ namespace Roomies2.WebApp
             services.AddSingleton<FacebookAuthenticationManager>();
 
             string secretKey = Configuration["JwtBearer:SigningKey"];
-            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
 
             services.Configure<TokenProviderOptions>(o =>
@@ -57,10 +54,7 @@ namespace Roomies2.WebApp
                 o.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
-            services.Configure<SpaOptions>(o =>
-            {
-                o.Host = Configuration["Spa:Host"];
-            });
+            services.Configure<SpaOptions>(o => { o.Host = Configuration["Spa:Host"]; });
 
             services.AddAuthentication(CookieAuthentication.AuthenticationScheme)
                 .AddCookie(CookieAuthentication.AuthenticationScheme, o =>
@@ -96,7 +90,9 @@ namespace Roomies2.WebApp
 
                     o.Events = new OAuthEvents
                     {
-                        OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>().OnCreatingTicket(ctx)
+                        OnCreatingTicket = ctx =>
+                            ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>()
+                                .OnCreatingTicket(ctx)
                     };
 
                     o.AccessType = "offline";
@@ -109,7 +105,9 @@ namespace Roomies2.WebApp
                     facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                     facebookOptions.Events = new OAuthEvents
                     {
-                        OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<FacebookAuthenticationManager>().OnCreatingTicket(ctx)
+                        OnCreatingTicket = ctx =>
+                            ctx.HttpContext.RequestServices.GetRequiredService<FacebookAuthenticationManager>()
+                                .OnCreatingTicket(ctx)
                     };
 
                 });
@@ -118,10 +116,7 @@ namespace Roomies2.WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseCors(c =>
             {
@@ -141,7 +136,7 @@ namespace Roomies2.WebApp
                 routes.MapRoute(
                     "default",
                     "{controller}/{action}/{id?}",
-                    new { controller = "Account", action = "Login" });
+                    new {controller = "Account", action = "Login"});
             });
 
             app.UseStaticFiles();
