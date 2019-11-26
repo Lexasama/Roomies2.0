@@ -12,8 +12,6 @@ import axios from "axios";
 import Vueaxios from "vue-axios";
 import VueGlobalVariable from "vue-global-var";
 
-import Bulma from "bulma";
-
 import BootstrapVue from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -38,14 +36,31 @@ class currentColoc {
   }
 }
 class user {
-  constructor(userId, username, email, lastName, firstName) {
+  constructor(userId, username, email, lastName, firstName, colocList) {
     this.userId = userId;
     this.username = username;
     this.lastName = lastName;
     this.firstName = firstName;
     this.email = email;
+    this.colocList = colocList;
+  }
+  setId(id) {
+    this.userId = id;
+  }
+  setEmail(email) {
+    this.email = email;
+  }
+  setFirstName(name) {
+    this.firstName = name;
+  }
+  setLastName(name) {
+    this.lastName = name;
+  }
+  setColocList(list) {
+    this.colocList = list;
   }
 }
+
 Vue.use(VueGlobalVariable, {
   globals: {
     $currentColoc: new currentColoc(-1, ""),

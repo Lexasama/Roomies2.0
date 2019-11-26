@@ -45,17 +45,20 @@ namespace Roomies2.WebApp.Controllers
             return this.CreateResult(result);
         }
 
-
-        [HttpGet("profile", Name ="Profile")]
-        public async Task<IActionResult> GetProfile()
+        [HttpGet("user")]
+        public async Task<IActionResult> getUser()
         {
             int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            // Result<RoomieProfile> result = await _roomieGateway.GetProfile(roomieId);
-           
-            Result<RoomieData> roomie = await _roomieGateway.FindById(roomieId);
+           Result<RoomieProfile> roomie = await _roomieGateway.GetProfile(roomieId);
 
             return this.CreateResult(roomie);
+        }
+        [HttpGet("profile/{roomieId}")]
+        public async Task<IActionResult> GetProfile(int roomieId)
+        {
+            if(roomieId == 0 ) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            Result<RoomieProfile> result = await _roomieGateway.GetProfile(roomieId);
+            return this.CreateResult(result);
         }
 
         [HttpPost]
@@ -63,10 +66,19 @@ namespace Roomies2.WebApp.Controllers
         {
             int id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            string picpath = "";
+            
 
-            Result<int> result = await _roomieGateway.Create( id, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, picpath);
+            Result<int> result = await _roomieGateway.Create( id, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
             return this.CreateResult(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] RoomieViewModel model)
+        {
+            int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            Result result = await _roomieGateway.Update(roomieId,model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+           return this.CreateResult(result);
         }
     }
 }

@@ -1,78 +1,59 @@
 <template>
   <div>
-    <el-form ref="form" :model="coloc">
-      <el-form-item label="Name" label-for="colocName">
-        <el-input id="colocName" v-model="coloc.name" size="lg"></el-input>
-      </el-form-item>
-    </el-form>
+    <el-card>
+      <b-form-group
+        id="name-form"
+        label-cols-sm="4"
+        label-cols-lg="3"
+        label="Enter name"
+        description="The name of your flatsharing"
+        label-for="name"
+      >
+        <b-form-input id="name" v-model="coloc.colocName"></b-form-input>
+      </b-form-group>
+      <el-divider></el-divider>
+      <b-button block variant="primary" @click="onSubmit($event)">Create {{coloc.colocName}}</b-button>
 
-    <div>
-      <imageUploader :id="id" isRoomie="false" />
-    </div>
+      <el-divider></el-divider>
+    </el-card>
   </div>
 </template>
 
 <script>
-import ImageUploader from "../Utility/ImageUploader.vue";
+import { createColocAsync } from "../../api/ColocApi";
 
 export default {
-  components: {
-    ImageUploader
-  },
   data() {
     return {
-      coloc: {},
-      mode: null,
-      errors: [],
-      id: 1,
-      fileList: null
+      coloc: {
+        colocName: ""
+      },
+      errors: []
     };
   },
 
-  async mounted() {
-    this.mode = this.$route.params.mode;
-    this.id = this.$route.params.id;
-
-    if (this.mode == "edit") {
-      try {
-        const coloc = await getColocAsync(this.id);
-
-        this.coloc = coloc;
-
-        this.errors.push(this.coloc.errorMessage);
-      } catch (errors) {
-        console.error(errors);
-        this.$router.replace("/coloc");
-      }
-    }
-  },
+  async mounted() {},
   methods: {
-    refresh() {},
-
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-
     async onSubmit(event) {
       event.preventDefault();
 
+      console.log("SUBMITED");
+
       var errors = [];
 
-      if (!this.coloc.Name) errors.push("Name");
+      if (!this.coloc.colocName) errors.push("Name");
 
       this.errors = errors;
 
       if (errors.length == 0) {
         try {
-          if (this.mode == "create") {
-            await createColocAsync(this.coloc);
-          } else {
-            await updateColocAsync(this.coloc);
-          }
+          var coloc = await createColocAsync(this.coloc);
+
+          console.log(coloc);
+
+          this.$router.replace("/colocProfile");
         } catch (e) {
           console.error(e);
-        } finally {
-          this.refresh();
         }
       }
     }

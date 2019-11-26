@@ -1,5 +1,6 @@
 CREATE PROCEDURE rm2.sRoomieUpdate
 ( @RoomieId    INT,
+  @UserName    NVARCHAR(20), 
   @FirstName   NVARCHAR(32),
   @LastName    NVARCHAR(32),
   @Phone       NVARCHAR(12),
@@ -22,6 +23,7 @@ BEGIN
 
     UPDATE rm2.tUser
     SET 
+		UserName  = @UserName,
         FirstName = @FirstName,
         LastName  = @LastName,
         Phone     = @Phone,
@@ -30,7 +32,7 @@ BEGIN
         WHERE UserId = @RoomieId;
 
     UPDATE rm2.tRoomie
-    SET Description = @Description,
+    SET [Description] = @Description,
         PicturePath = @PicturePath
         WHERE RoomieId = @RoomieId
     COMMIT;

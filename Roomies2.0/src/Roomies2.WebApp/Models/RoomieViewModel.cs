@@ -34,5 +34,7 @@ namespace Roomies2.WebApp.Models.AccountViewModels
         [DataType(DataType.Date)]
         [Display(Name = "Birthdate")]
         public DateTime BirthDate { get; set; }
+
+        public string PicturePath { get; set; }
     }
 }

@@ -13,6 +13,7 @@ import Register from "./components/Register.vue";
 import ColocEdit from "./components/Coloc/ColocEdit.vue";
 import UserChoise from "./components/UserChoise.vue";
 import Profile from "./components/Roomie/Profile.vue";
+import ColocProfile from "./components/Coloc/ColocProfile.vue";
 import Test from "./components/Test.vue";
 
 const routes = [
@@ -23,7 +24,8 @@ const routes = [
   { path: "/register", component: Register },
   { path: "/test", component: Test },
   { path: "/profile", component: Profile, beforeEnter: requireAuth },
-  { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth }
+  { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth },
+  { path: "/colocProfile", component: ColocProfile, beforeEnter: requireAuth }
 ];
 
 export default new VueRouter({

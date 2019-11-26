@@ -1,73 +1,15 @@
 <template>
   <div id="app">
-    <div id="NavMenu">
+    <div id="NavMenu" v-if="auth.isConnected">
+      <!-- HEADER WITH NAVBAR -->
       <header>
-        <b-navbar toggleable="lg" type="dark" variant="info">
-          <b-navbar-brand href="/home">
-            <img class="image" src="../../public/favicon.png" />
-          </b-navbar-brand>
-          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-          <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
-              <b-nav-item href="#">Link</b-nav-item>
-              <!-- <b-nav-item>
-                <div>
-                  <b-button v-b-toggle.collapse-1 variant="outline-*">Coloc</b-button>
-                  <b-collapse id="collapse-1" class="mt-2">
-                   
-                    <b-card>create coloc</b-card>
-                  </b-collapse>
-                </div>
-              </b-nav-item>-->
-
-              <b-nav-item>
-                <el-dropdown @command="handleCommand">
-                  <span class="el-dropdown-link">
-                    Coloc
-                    <i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="c in colocList" :key="c">{{c}}</el-dropdown-item>
-                    <el-dropdown-item command="/coloc" divided>
-                      Create
-                      <i class="el-icon-circle-plus"></i>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </b-nav-item>
-            </b-navbar-nav>
-
-            <img src="../../public/Logo.png" width="80" />
-            <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
-              <b-nav-item-dropdown right>
-                <!-- Using 'button-content' slot -->
-                <template v-slot:button-content>
-                  <em>{{auth.email}}</em>
-                </template>
-                <b-dropdown-item href="/profile">Profile</b-dropdown-item>
-                <b-dropdown-item href="/settings">Settings</b-dropdown-item>
-                <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
-              </b-nav-item-dropdown>
-            </b-navbar-nav>
-            <b-navbar-nav>
-              <b-navbar-brand href="/profile">
-                <b-img
-                  src="https://banner2.cleanpng.com/20180319/rlq/kisspng-computer-icons-user-profile-avatar-profile-transparent-png-5ab03f3def8981.4074689915214999659812.jpg"
-                  width="80"
-                  rounded="circle"
-                ></b-img>
-              </b-navbar-brand>
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
+        <navBar />
       </header>
     </div>
 
     <template>
       <div id="globalContainer">
-        <main v-if="state == true " role="main">
+        <main v-if="state == true" role="main">
           <loading />
         </main>
         <main v-else class="card containerCard">
@@ -85,45 +27,35 @@ import Loading from "../components/Utility/Loading.vue";
 import Login from "../components/Login.vue";
 import { state } from "../state";
 import styles from "../styles/styles";
-import { findRoomieByEmailAsync } from "../api/RoomieApi";
-import { getCollocByRoomieIdAsync } from "../api/ColocApi";
+import { getUserAsync } from "../api/UserApi";
+import { getColocListAsync } from "../api/ColocApi";
+import NavBar from "../components/Utility/NavBar";
 
 export default {
   components: {
     Loading,
-    Login
+    Login,
+    NavBar
   },
 
   data() {
     return {
       state,
-      themeIdx: 0,
+      themeIdx: null,
       state: true,
-      styles: [],
-      colocList: ["coloc1", "coloc2", "coloc3"],
-      roomie: {}
+      styles: []
     };
   },
-
   async mounted() {
     this.state = true;
     this.styles = styles;
     try {
-      if (!AuthService.isConnected) {
-        document.getElementById("NavMenu").style.display = "none";
-      } else {
-        var collocData = await getCollocByRoomieIdAsync();
-        if (collocData != undefined) {
-          this.$currColloc.setCollocId(collocData.collocId);
-          this.$currColloc.setCollocName(collocData.collocName);
-        }
+      this.roomie = await getUserAsync();
 
-        this.roomie = await findRoomieByEmailAsync(AuthService.email);
-        console.log("found roomie");
-        console.log(this.roomie);
-        if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
-          this.$router.replace("/register");
-        }
+      if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
+        this.$router.replace("/register");
+      } else {
+        this.setUser();
       }
     } catch (e) {
       console.error(e);
@@ -140,13 +72,6 @@ export default {
   },
 
   computed: {
-    auth: () => AuthService,
-
-    refreshApp() {
-      if (!AuthService.isConnected) {
-        document.getElementById("NavMenu").style.display = "none";
-      }
-    },
     menuStyle() {
       return this.styles[this.themeIdx];
     },
@@ -156,16 +81,23 @@ export default {
     isLoading() {
       this.refreshApp();
       return this.state.isLoading;
-    }
+    },
+    auth: () => AuthService
   },
   methods: {
-    handleCommand(command) {
-      this.$router.push("/coloc");
-    },
-
     setTheme(themeIdx) {
       this.$cookies.set("themeIdx", themeIdx);
       this.themeIdx = themeIdx;
+    },
+
+    async setUser() {
+      this.$user.userId = this.roomie.roomieId;
+      this.$user.setId(this.roomie.roomieId);
+      this.$user.setEmail(AuthService.email);
+      this.$user.setLastName(this.roomie.lastName);
+      this.$user.setFirstName(this.roomie.FirstName);
+      let list = await getColocListAsync(this.$user.userId);
+      this.$user.setColocList(list);
     }
   }
 };
@@ -202,10 +134,6 @@ export default {
 
 a.router-link-active {
   font-weight: bold;
-}
-.image {
-  height: 50px !important;
-  width: auto !important;
 }
 
 .el-icon-arrow-down {

@@ -8,8 +8,8 @@
           id="file"
           accept="image/x-png, image/jpg, image/jpeg"
           @change="handleFileUpload($event.target.files)"
-        />>
-        <el-button type="button" @click="submitFile()">Importer une photo</el-button>
+        />
+        <el-button type="button" @click="submitFile()">Submit picture</el-button>
       </form>
     </div>
   </div>
@@ -56,8 +56,7 @@ export default {
 
       var id = this.roomieId;
       var isRoomie = this.isRoomie;
-      console.log(this.isRoomie);
-      console.log(this.id);
+
       let data = await axios.post(`${endpoint}/uploadColoc`, this.file, {
         headers: {
           "Content-type": "multipart/form-data",
@@ -68,9 +67,7 @@ export default {
     },
 
     async handleFileUpload(files) {
-      console.log(files);
       this.file.append("file", files[0], files[0].name);
-      console.log(this.file);
     }
   }
 };

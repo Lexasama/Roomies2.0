@@ -18,8 +18,12 @@ export async function findRoomieByEmailAsync(email) {
 export async function findUserByEmailAsync() {
   return await getAsync(`${endpoint}/getUserByEmail`);
 }
-export async function getRoomieProfileAsync() {
-  return await getAsync(`${endpoint}/profile`);
+export async function getRoomieProfileAsync(roomieId) {
+  return await getAsync(`${endpoint}/profile/${roomieId}`);
+}
+
+export async function getMyProfileAsync(roomieId) {
+  return await getAsync(`${endpoint}/profile/${roomieId}`);
 }
 
 export async function createRoomieAsync(model) {
@@ -27,5 +31,5 @@ export async function createRoomieAsync(model) {
 }
 
 export async function updateRoomieAsync(model) {
-  return await putAsync(`${endpoint}/${model.roomieId}`, model);
+  return await putAsync(endpoint, model);
 }

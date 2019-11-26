@@ -40,7 +40,7 @@ namespace Roomies2.DAL.Gateways
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 RoomieProfile profile = await con.QueryFirstOrDefaultAsync<RoomieProfile>(
-                    @"SELECT ",
+                    @"SELECT * FROM rm2.vRoomie r where r.RoomieId = @RoomieId",
                     new { RoomieId = roomieId }
                         );
                 if (profile == null) return Result.Failure<RoomieProfile>(Status.NotFound, "Roomie not found.");
@@ -116,9 +116,32 @@ namespace Roomies2.DAL.Gateways
         }
 
 
-        public async Task<Result> Update(string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        public async Task<Result> Update(int roomieId, string userName, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
-            throw new NotImplementedException();
+            if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
+            if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@UserName", userName);
+                p.Add("@FirstName", firstName);
+                p.Add("@LastName", lastName);
+                p.Add("@Phone", phone);
+                p.Add("@Description", desc);
+                p.Add("@Sex", sex);
+                p.Add("@BirthDate", birthDate);
+                p.Add("@PicturePath", pic);
+                p.Add("@RoomieId", roomieId);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sRoomieUpdate", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure<int>(Status.BadRequest, "A Roomie with this username already exists");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
         }
 
         public async Task<Result> Delete(int roomieId)
