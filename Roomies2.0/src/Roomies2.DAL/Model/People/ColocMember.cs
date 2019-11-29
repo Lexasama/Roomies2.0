@@ -2,13 +2,11 @@
 
 namespace Roomies2.DAL.Model.People
 {
-    public class RoomieProfile
+    public class ColocMember
     {
         public int RoomieId { get; set; }
-        public string UserName { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
-        public string Email { get; set; }
 
         public string Phone { get; set; }
 
@@ -20,8 +18,11 @@ namespace Roomies2.DAL.Model.People
 
         public string PicturePath { get; set; }
 
-        public int ColocAdminId {get;set;}
+        public int ColocAdminId { get; set; }
+        public int ColocId { get; set; }
+        public string ColocName { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        // public IEnumerable<ColocData>  ColocList{ get ; set; }
+        public string PicPath { get; set; }
     }
 }

@@ -2,7 +2,7 @@
   <div>
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand href="/home">
-        <img class="image" src="../../../public/favicon.png" />
+        <img src="../../../public/favicon.png" style="width: 60px; height: 60px" />
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -17,7 +17,11 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="c in colocList" :key="c.colocId">{{c.colocName}}</el-dropdown-item>
+                <el-dropdown-item
+                  :command="c.colocId"
+                  v-for="c in colocList"
+                  :key="c.colocId"
+                >{{c.colocName}}</el-dropdown-item>
                 <el-dropdown-item command="/coloc" divided>
                   Create
                   <i class="el-icon-circle-plus"></i>
@@ -42,11 +46,7 @@
         </b-navbar-nav>
         <b-navbar-nav>
           <b-navbar-brand href="/profile">
-            <b-img
-              src="https://banner2.cleanpng.com/20180319/rlq/kisspng-computer-icons-user-profile-avatar-profile-transparent-png-5ab03f3def8981.4074689915214999659812.jpg"
-              width="80"
-              rounded="circle"
-            ></b-img>
+            <el-avatar :size="50" :src="path"></el-avatar>
           </b-navbar-brand>
         </b-navbar-nav>
       </b-collapse>
@@ -56,15 +56,27 @@
 
 <script>
 import AuthService from "@/services/AuthService";
+import { getPicAsync } from "@/api/RoomieApi.js";
 
 export default {
+  props: {
+    navInfo: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      colocList: []
+      colocList: [],
+      path: null,
+      roomieId: null
     };
   },
   async mounted() {
-    await this.refresh();
+    this.roomieId;
+    //this.path = await getPicAsync(this.roomieId);
+    console.log("this.navInfo");
+    console.log(this.navInfo);
   },
   computed: {
     auth: () => AuthService
@@ -78,7 +90,14 @@ export default {
       }
     },
     handleCommand(command) {
-      this.$router.push("/coloc");
+      if (command == "/coloc") {
+        this.$router.push("/coloc");
+      } else {
+        this.$router.push(`/colocProfile/${command}`);
+      }
+    },
+    errorHandler() {
+      return true;
     }
   }
 };

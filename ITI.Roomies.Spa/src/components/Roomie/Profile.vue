@@ -6,7 +6,7 @@
 
         <el-popover placement="bottom" title="Upload a new profile picture" trigger="click">
           <el-button slot="reference" type="primary" icon="el-icon-edit" circle></el-button>
-          <ImageUploader :id="this.roomieId" isRoomie="true" />
+          <ImageUploader :id="this.roomieId" :isRoomie="true" />
         </el-popover>
 
         <el-divider></el-divider>
@@ -47,7 +47,7 @@
 import ImageUploader from "../Utility/ImageUploader.vue";
 import {
   updateRoomieAsync,
-  getMyProfileAsync,
+  getRoomieProfileAsync,
   getRoomieAsync
 } from "../../api/RoomieApi";
 
@@ -66,7 +66,7 @@ export default {
 
   async mounted() {
     try {
-      this.roomie = await getMyProfileAsync();
+      this.roomie = await getRoomieProfileAsync();
 
       this.roomieId = this.roomie.roomieId;
     } catch (error) {

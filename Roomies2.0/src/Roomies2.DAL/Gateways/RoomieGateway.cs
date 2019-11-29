@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
 using System;
+using System.Collections.Generic;
 
 namespace Roomies2.DAL.Gateways
 {
@@ -43,7 +44,7 @@ namespace Roomies2.DAL.Gateways
                     @"SELECT * FROM rm2.vRoomie r where r.RoomieId = @RoomieId",
                     new { RoomieId = roomieId }
                         );
-                if (profile == null) return Result.Failure<RoomieProfile>(Status.NotFound, "Roomie not found.");
+                if (profile == null) return Result.Failure<RoomieProfile>(Status.NotFound, "Roomie does not exist.");
                 return Result.Success(Status.Ok, profile);
             }
 
@@ -74,6 +75,31 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success(Status.Ok, r);
             }
 
+        }
+        public async Task<Result<IEnumerable<RoomieProfile>>> GetRoomies(int colocId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                IEnumerable<RoomieProfile> roomies = await con.QueryAsync<RoomieProfile>(
+                    @"SELECT * FROM rm2.vColocMembers WHERE ColocId = @ColocId",
+                    new { ColocId = colocId }
+                    );
+                return Result.Success(Status.Ok, roomies);
+            }
+        }
+
+        public async Task<Result<string>> GetPicture(int roomieId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string picPath = await con.QueryFirstOrDefaultAsync<string>(
+                    @"SELECT PicturePath FROM rm2.tRoomie WHERE RoomieId = @RoomieId;", 
+                    new { RoomieId = roomieId }
+                    );
+            
+            if (picPath == null) return Result.Failure<string>(Status.NotFound, "This Profile does not have a picture");
+            return Result.Success(Status.Ok, picPath);
+            }
         }
 
         /// <summary>

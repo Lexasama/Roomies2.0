@@ -25,9 +25,9 @@
       <div v-if="active == 1">
         <b-form-group id="sex" label="You are :" label-cols-sm="4" label-cols-lg="3">
           <b-form-radio-group>
-            <b-form-radio v-model="roomie.sex" value="1">Male</b-form-radio>
-            <b-form-radio v-model="roomie.sex" value="2">Female</b-form-radio>
-            <b-form-radio v-model="roomie.sex" value="3">Other</b-form-radio>
+            <b-form-radio v-model.number="roomie.sex" value="1">Male</b-form-radio>
+            <b-form-radio v-model.number="roomie.sex" value="2">Female</b-form-radio>
+            <b-form-radio v-model.number="roomie.sex" value="3">Other</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
         <b-form-group
@@ -114,7 +114,7 @@
       </div>
 
       <div v-if="active == 3">
-        <imageUploader :id="this.userId" isRoomie="true" />
+        <imageUploader :id="this.userId" :isRoomie="true" />
       </div>
     </b-form>
 
@@ -136,7 +136,7 @@
 <script>
 import { DateTime } from "luxon";
 import ImageUploader from "../Utility/ImageUploader";
-import { findUserByEmailAsync, createRoomieAsync } from "../../api/RoomieApi";
+import { findUserByEmailAsync, createRoomieAsync } from "@/api/RoomieApi";
 
 export default {
   components: {
@@ -145,15 +145,6 @@ export default {
   data() {
     return {
       roomie: {},
-      test: {
-        firstName: "a",
-        lastName: "b",
-        userName: "lexa",
-        birtdate: new Date("1999,10,10"),
-        phone: "0123456783",
-        description: "j'aime les patates",
-        sex: 1
-      },
       id: null,
       userId: null,
       errors: [],
@@ -171,8 +162,6 @@ export default {
 
       console.log(this.user);
       console.log(this.userId);
-
-      this.roomie = this.test;
     } catch (error) {
       console.error(error);
     }
@@ -188,7 +177,7 @@ export default {
           if (!this.roomie.firstName) errors.push("Firstname");
           if (!this.roomie.birthDate) errors.push("Birthdate");
           if (!this.roomie.phone) errors.push("Phone");
-          if (!this.roomie.sex) errors.push("Sexe");
+          if (!this.roomie.sex) errors.push("Sex");
           this.errors = errors;
           if (errors.length == 0) {
             this.active++;
@@ -215,13 +204,15 @@ export default {
       if (!this.roomie.firstName) errors.push("Firstname");
       if (!this.roomie.birthDate) errors.push("BirthDate");
       if (!this.roomie.phone) errors.push("Phone");
-      if (!this.roomie.sex) errors.push("Sexe");
+      if (!this.roomie.sex) errors.push("Sex");
 
       this.errors = errors;
 
       if (errors.length == 0) {
         try {
+          console.log(this.roomie);
           await createRoomieAsync(this.roomie);
+          this.$router.replace("/profile");
         } catch (e) {
           console.error(e);
         }

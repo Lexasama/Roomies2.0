@@ -5,6 +5,8 @@ using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models.AccountViewModels;
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -48,7 +50,7 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> getUser()
         {
-            int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+           int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
            Result<RoomieProfile> roomie = await _roomieGateway.GetProfile(roomieId);
 
             return this.CreateResult(roomie);
@@ -61,6 +63,15 @@ namespace Roomies2.WebApp.Controllers
             return this.CreateResult(result);
         }
 
+
+        [HttpGet("getRoomies/{colocId}")]
+        public async Task<IActionResult> getRoomies(int colocId)
+        {
+
+            Result<IEnumerable<RoomieProfile>> roomies = await _roomieGateway.GetRoomies(colocId);
+            return this.CreateResult(roomies);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RoomieViewModel model)
         {
@@ -69,6 +80,19 @@ namespace Roomies2.WebApp.Controllers
             
 
             Result<int> result = await _roomieGateway.Create( id, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+            return this.CreateResult(result, o=>
+            {
+                o.RouteName = "GetRoomie";
+                o.RouteValues = id => new { id };
+            });
+        }
+
+        [HttpGet("picture/{roomieId}")]
+        public async Task<IActionResult> GetPicture(int roomieId)
+        {
+            if (roomieId == 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            Result<string> result = await _roomieGateway.GetPicture(roomieId);
             return this.CreateResult(result);
         }
 

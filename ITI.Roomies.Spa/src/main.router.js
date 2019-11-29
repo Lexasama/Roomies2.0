@@ -22,10 +22,14 @@ const routes = [
   { path: "/login", component: Login },
   { path: "/logout", component: Logout, beforeEnter: requireAuth },
   { path: "/register", component: Register },
-  { path: "/test", component: Test },
+  { path: "/test", component: Test, beforeEnter: requireAuth },
   { path: "/profile", component: Profile, beforeEnter: requireAuth },
   { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth },
-  { path: "/colocProfile", component: ColocProfile, beforeEnter: requireAuth }
+  {
+    path: "/colocProfile/:colocId?",
+    component: ColocProfile,
+    beforeEnter: requireAuth
+  }
 ];
 
 export default new VueRouter({

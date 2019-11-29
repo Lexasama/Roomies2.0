@@ -1,31 +1,22 @@
 <template>
   <div>
-    <el-table
-      ref="singleTable"
-      :data="tableData"
-      highlight-current-row
-      @current-change="handleCurrentChange"
-      style="width: 100%"
-    >
-      <el-table-column type="index" width="50"></el-table-column>
-      <el-table-column property="date" label="Date" width="120"></el-table-column>
-      <el-table-column property="name" label="Name" width="120"></el-table-column>
-      <el-table-column property="address" label="Address"></el-table-column>
-    </el-table>
-    <div style="margin-top: 20px">
-      <el-button @click="setCurrent(tableData[1])">Select second row</el-button>
-      <el-button @click="setCurrent()">Clear selection</el-button>
-    </div>
+    <colocProfile />
   </div>
 </template>
 
 <script>
 import profile from "../components/Coloc/ColocProfile.vue";
 import register from "../components/Register.vue";
+import roomieProfile from "../components/Roomie/RoomiesProfile";
+import invite from "@//components/Roomie/Invite";
+import colocProfile from "@/components/Coloc/ColocProfile";
 export default {
   components: {
     profile,
-    register
+    register,
+    roomieProfile,
+    invite,
+    colocProfile
   },
   data() {
     return {
@@ -51,7 +42,19 @@ export default {
           address: "No. 189, Grove St, Los Angeles"
         }
       ],
-      currentRow: null
+      currentRow: null,
+      roomie: {
+        roomieId: 1,
+        userName: "Lexa",
+        lastName: "SANON",
+        firstName: "Axel",
+        email: "saxelsyeguillaume@gmail.com",
+        phone: "0123456456",
+        sex: 1,
+        birthDate: "1999-01-01T00:00:00",
+        description: "i love Roomies",
+        picturePath: "http://localhost:5000/Pictures/RoomiesPics/1.jpeg"
+      }
     };
   },
   methods: {

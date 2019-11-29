@@ -21,3 +21,7 @@ export function updateColocAsync(model) {
 export function createColocAsync(model) {
   return postAsync(endpoint, model);
 }
+
+export function getColocByRoomieIdAsync(roomieId) {
+  return getAsync(`${endpoint}/roomieColoc/${roomieId}`);
+}

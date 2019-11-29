@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.BuildingManagement;
+using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
@@ -28,7 +29,6 @@ namespace Roomies2.WebApp.Controllers
             Result<ColocData> result = await _colocGateway.FindById(colocId);
             return this.CreateResult(result);
         }
-
         [HttpGet("colocList/{roomieId}")]
         public async Task<IActionResult> getColocList(int roomieId)
         {
@@ -48,6 +48,13 @@ namespace Roomies2.WebApp.Controllers
                 o.RouteValues = colocId => new { colocId };
             }) ;
 
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] ColocViewModel model)
+        {
+            Result result = await _colocGateway.Update(model.ColocName, model.PicPath);
+            return this.CreateResult(result);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Gateways
 {

@@ -3,7 +3,7 @@
     <div id="NavMenu" v-if="auth.isConnected">
       <!-- HEADER WITH NAVBAR -->
       <header>
-        <navBar />
+        <navBar :navInfo="navbarInfo" />
       </header>
     </div>
 
@@ -30,6 +30,7 @@ import styles from "../styles/styles";
 import { getUserAsync } from "../api/UserApi";
 import { getColocListAsync } from "../api/ColocApi";
 import NavBar from "../components/Utility/NavBar";
+import { findUserByEmailAsync } from "@/api/RoomieApi";
 
 export default {
   components: {
@@ -43,7 +44,9 @@ export default {
       state,
       themeIdx: null,
       state: true,
-      styles: []
+      styles: [],
+      roomie: {},
+      navbarInfo: {}
     };
   },
   async mounted() {
@@ -51,11 +54,14 @@ export default {
     this.styles = styles;
     try {
       this.roomie = await getUserAsync();
+      //this.roomie = await findUserByEmailAsync();
 
       if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
         this.$router.replace("/register");
       } else {
-        this.setUser();
+        await this.setUser();
+        await this.setColoc();
+        await this.setNavBar();
       }
     } catch (e) {
       console.error(e);
@@ -95,9 +101,25 @@ export default {
       this.$user.setId(this.roomie.roomieId);
       this.$user.setEmail(AuthService.email);
       this.$user.setLastName(this.roomie.lastName);
-      this.$user.setFirstName(this.roomie.FirstName);
+      this.$user.setFirstName(this.roomie.firstName);
+      this.$user.setPicPath(this.roomie.picturePath);
       let list = await getColocListAsync(this.$user.userId);
       this.$user.setColocList(list);
+    },
+    async setNavBar() {
+      this.navbarInfo.email = this.$user.email;
+      this.navbarInfo.picPath = this.$user.picPath;
+      this.navbarInfo.colocList = this.$user.colocList;
+    },
+    async setColoc() {
+      var colocData = this.$user.colocList[0];
+
+      if (colocData !== null) {
+        this.$currentColoc.setColocId(colocData.colocId);
+        this.$currentColoc.setColocName(colocData.colocName);
+        this.$currentColoc.setPicPath(colocData.picPath);
+        this.$currentColoc.setDate(colocData.creationDate);
+      }
     }
   }
 };

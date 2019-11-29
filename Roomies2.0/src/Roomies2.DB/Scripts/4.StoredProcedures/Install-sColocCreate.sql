@@ -12,7 +12,7 @@ BEGIN
 	INSERT INTO rm2.tColoc  ( ColocName )
 	                  values( @ColocName )
 	set @ColocId = SCOPE_IDENTITY();
-	insert into rm2.itColRoom(colocId, RoomieId, ColocAdminId)
+	insert into rm2.itColRoom(ColocId, RoomieId, ColocAdminId)
 		values(@ColocId, @RoomieId, 1);
 
 	commit;

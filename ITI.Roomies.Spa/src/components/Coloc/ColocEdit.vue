@@ -37,8 +37,6 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
 
-      console.log("SUBMITED");
-
       var errors = [];
 
       if (!this.coloc.colocName) errors.push("Name");
@@ -47,11 +45,12 @@ export default {
 
       if (errors.length == 0) {
         try {
-          var coloc = await createColocAsync(this.coloc);
+          let colocId = await createColocAsync(this.coloc);
+          console.log("SUBMITED");
 
-          console.log(coloc);
-
-          this.$router.replace("/colocProfile");
+          console.log(a);
+          debugger;
+          this.$router.replace(`/colocProfile/${colocId}`);
         } catch (e) {
           console.error(e);
         }

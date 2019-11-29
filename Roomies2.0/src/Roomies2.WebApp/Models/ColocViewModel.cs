@@ -9,5 +9,7 @@ namespace Roomies2.WebApp.Models
         public int RoomieId { get;  set; }
         [Required]
         public string ColocName { get;  set; }
+
+        public string PicPath { get; set; }
     }
 }

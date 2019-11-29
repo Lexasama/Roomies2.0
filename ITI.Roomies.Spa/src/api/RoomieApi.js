@@ -22,9 +22,9 @@ export async function getRoomieProfileAsync(roomieId) {
   return await getAsync(`${endpoint}/profile/${roomieId}`);
 }
 
-export async function getMyProfileAsync(roomieId) {
-  return await getAsync(`${endpoint}/profile/${roomieId}`);
-}
+// export async function getMyProfileAsync(roomieId) {
+//   return await getAsync(`${endpoint}/profile/${roomieId}`);
+// }
 
 export async function createRoomieAsync(model) {
   return await postAsync(endpoint, model);
@@ -32,4 +32,14 @@ export async function createRoomieAsync(model) {
 
 export async function updateRoomieAsync(model) {
   return await putAsync(endpoint, model);
+}
+
+// retrun the picture path of a coloc
+export async function getPicAsync(roomieId) {
+  return await getAsync(`${endpoint}/picure/${roomieId}`);
+}
+
+//returns the list of  roomies in a coloc
+export async function getRoomiesAsync(colocId) {
+  return await getAsync(`${endpoint}/getRoomies/${colocId}`);
 }

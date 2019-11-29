@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
+using System.Diagnostics;
 
 namespace Roomies2.DAL.Gateways
 {
@@ -18,10 +22,19 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<List<string>> UploadPicture(IFormFile image, int id, bool isRoomie)
         {
+           //image.Name = Guid.NewGuid().ToString().Substring(12);
+            
             string path = _path + "/RoomiesPics/" + id;
 
             if (!isRoomie)
             {
+
+                //using (SqlConnection con = new SqlConnection(_connectionString))
+                //{
+                //    string picpath = await con<string>(
+                //        @"SELECT PicPath FROM rm2.tColoc WHERE ColocId = @ColocId",
+                //        );
+                //}
                 path = _path + "/ColocPics/" + id;
             }
 
