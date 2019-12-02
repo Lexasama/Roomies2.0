@@ -21,13 +21,12 @@ namespace Roomies2.WebApp.Controllers
         [HttpPost("uploadImage")]
         public async Task<IActionResult> UploadImage(IFormCollection model)
         {
-           // int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
             bool isRoomie = bool.Parse((model.ToList().Find(x => x.Key == "isRoomie").Value.ToString()));
 
-            int x = int.Parse((model.ToList().Find(x => x.Key == "id").Value.ToString()));
+            int id = int.Parse((model.ToList().Find(x => x.Key == "id").Value.ToString()));
 
-            await _pictureGateway.UploadPicture(model.Files[0], x, isRoomie);
+            await _pictureGateway.UploadPicture(model.Files[0], id, isRoomie);
            
             return Ok();
 

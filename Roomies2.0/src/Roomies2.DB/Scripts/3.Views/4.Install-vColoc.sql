@@ -1,4 +1,4 @@
-Create VIEW rm2.vCollocInfo
+Create VIEW rm2.vColocInfo
 AS
 SELECT ti.RoomieId,
 	   ti.ColocAdminId,

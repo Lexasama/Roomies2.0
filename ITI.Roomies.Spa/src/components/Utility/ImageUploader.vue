@@ -58,7 +58,7 @@ export default {
       var id = this.roomieId;
       var isRoomie = this.isRoomie;
 
-      let data = await axios.post(`${endpoint}/uploadColoc`, this.file, {
+      let data = await axios.post(`${endpoint}/uploadImage`, this.file, {
         headers: {
           "Content-type": "multipart/form-data",
           Authorization: `Bearer ${AuthService.accessToken}`

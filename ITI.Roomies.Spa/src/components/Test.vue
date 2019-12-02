@@ -1,6 +1,6 @@
 <template>
   <div>
-    <colocProfile />
+    <ImageUploader :id="roomieId" :isRoomie="true" />
   </div>
 </template>
 
@@ -10,13 +10,15 @@ import register from "../components/Register.vue";
 import roomieProfile from "../components/Roomie/RoomiesProfile";
 import invite from "@//components/Roomie/Invite";
 import colocProfile from "@/components/Coloc/ColocProfile";
+import ImageUploader from "@/components/Utility/ImageUploader";
 export default {
   components: {
     profile,
     register,
     roomieProfile,
     invite,
-    colocProfile
+    colocProfile,
+    ImageUploader
   },
   data() {
     return {
@@ -42,6 +44,7 @@ export default {
           address: "No. 189, Grove St, Los Angeles"
         }
       ],
+      roomieId: 1,
       currentRow: null,
       roomie: {
         roomieId: 1,
