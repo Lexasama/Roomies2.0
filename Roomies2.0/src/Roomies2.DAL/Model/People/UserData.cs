@@ -8,7 +8,7 @@
 
         public string Email { get; set; }
 
-        public byte[] Password { get; set; }
+        public byte[] HashedPassword { get; set; }
 
         public string FacebookId { get; set; }
 

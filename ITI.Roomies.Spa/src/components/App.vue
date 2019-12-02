@@ -1,61 +1,15 @@
 <template>
   <div id="app">
-    <div id="NavMenu">
+    <div id="NavMenu" v-if="auth.isConnected">
+      <!-- HEADER WITH NAVBAR -->
       <header>
-        <b-navbar toggleable="lg" type="dark" variant="info">
-          <b-navbar-brand href="#"></b-navbar-brand>
-
-          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-          <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
-              <b-nav-item href="#">Link</b-nav-item>
-              <!-- <b-nav-item>
-                <div>
-                  <b-button v-b-toggle.collapse-1 variant="outline-*">Coloc</b-button>
-                  <b-collapse id="collapse-1" class="mt-2">
-                   
-                    <b-card>create coloc</b-card>
-                  </b-collapse>
-                </div>
-              </b-nav-item>-->
-              <b-nav-item>
-                <el-dropdown>
-                  <span class="el-dropdown-link">
-                    Coloc
-                    <i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="c in colocList">{{c}}</el-dropdown-item>
-                    <el-dropdown-item divided>
-                      Create
-                      <i class="el-icon-circle-plus"></i>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </b-nav-item>
-            </b-navbar-nav>
-
-            <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
-              <b-nav-item-dropdown right>
-                <!-- Using 'button-content' slot -->
-                <template v-slot:button-content>
-                  <em>{{auth.email}}</em>
-                </template>
-                <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item href="#">Settings</b-dropdown-item>
-                <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
-              </b-nav-item-dropdown>
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
+        <navBar :navInfo="navbarInfo" />
       </header>
     </div>
 
     <template>
       <div id="globalContainer">
-        <main v-if="state == true " role="main">
+        <main v-if="state == true" role="main">
           <loading />
         </main>
         <main v-else class="card containerCard">
@@ -73,30 +27,41 @@ import Loading from "../components/Utility/Loading.vue";
 import Login from "../components/Login.vue";
 import { state } from "../state";
 import styles from "../styles/styles";
+import { getUserAsync } from "../api/UserApi";
+import { getColocListAsync } from "../api/ColocApi";
+import NavBar from "../components/Utility/NavBar";
+import { findUserByEmailAsync } from "@/api/RoomieApi";
 
 export default {
   components: {
     Loading,
-    Login
+    Login,
+    NavBar
   },
 
   data() {
     return {
       state,
-      themeIdx: 0,
+      themeIdx: null,
       state: true,
       styles: [],
-      colocList: ["coloc1", "coloc2", "coloc3"]
+      roomie: {},
+      navbarInfo: {}
     };
   },
-
   async mounted() {
     this.state = true;
     this.styles = styles;
-    console.log(this.styles);
     try {
-      if (!AuthService.isConnected) {
-        document.getElementById("NavMenu").style.display = "none";
+      this.roomie = await getUserAsync();
+      //this.roomie = await findUserByEmailAsync();
+
+      if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
+        this.$router.replace("/register");
+      } else {
+        await this.setUser();
+        await this.setColoc();
+        await this.setNavBar();
       }
     } catch (e) {
       console.error(e);
@@ -111,9 +76,8 @@ export default {
       this.themeIdx = this.$cookies.get(themeIdx);
     }
   },
-  computed: {
-    auth: () => AuthService,
 
+  computed: {
     menuStyle() {
       return this.styles[this.themeIdx];
     },
@@ -121,13 +85,41 @@ export default {
       return this.styles[this.themeIdx];
     },
     isLoading() {
+      this.refreshApp();
       return this.state.isLoading;
-    }
+    },
+    auth: () => AuthService
   },
   methods: {
     setTheme(themeIdx) {
       this.$cookies.set("themeIdx", themeIdx);
       this.themeIdx = themeIdx;
+    },
+
+    async setUser() {
+      this.$user.userId = this.roomie.roomieId;
+      this.$user.setId(this.roomie.roomieId);
+      this.$user.setEmail(AuthService.email);
+      this.$user.setLastName(this.roomie.lastName);
+      this.$user.setFirstName(this.roomie.firstName);
+      this.$user.setPicPath(this.roomie.picturePath);
+      let list = await getColocListAsync(this.$user.userId);
+      this.$user.setColocList(list);
+    },
+    async setNavBar() {
+      this.navbarInfo.email = this.$user.email;
+      this.navbarInfo.picPath = this.$user.picPath;
+      this.navbarInfo.colocList = this.$user.colocList;
+    },
+    async setColoc() {
+      var colocData = this.$user.colocList[0];
+
+      if (colocData !== null) {
+        this.$currentColoc.setColocId(colocData.colocId);
+        this.$currentColoc.setColocName(colocData.colocName);
+        this.$currentColoc.setPicPath(colocData.picPath);
+        this.$currentColoc.setDate(colocData.creationDate);
+      }
     }
   }
 };
@@ -166,10 +158,6 @@ a.router-link-active {
   font-weight: bold;
 }
 
-// .el-dropdown-link {
-//   cursor: pointer;
-//   color: #409eff;
-// }
 .el-icon-arrow-down {
   font-size: 12px;
 }
@@ -178,5 +166,3 @@ a.router-link-active {
 <style lang="scss">
 @import "../styles/global.scss";
 </style>
-
-//  id="globalContainer"

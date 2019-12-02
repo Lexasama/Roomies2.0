@@ -1,5 +1,5 @@
 CREATE PROCEDURE rm2.sRoomieCreate
-( @RoomieId    INT,
+( @RoomieId    INT OUT,
   @FirstName   NVARCHAR(32),
   @LastName    NVARCHAR(32),
   @Phone       NVARCHAR(12),

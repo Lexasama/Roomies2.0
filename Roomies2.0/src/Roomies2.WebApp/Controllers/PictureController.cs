@@ -1,27 +1,31 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Roomies2.DAL.Gateways;
+using System.Linq;
 
 namespace Roomies2.WebApp.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
     public class PictureController : Controller
     {
-        [HttpPost("uploadColoc/{id}/{isRoomie}")]
-        public async Task<IActionResult> UploadImage(IFormCollection model, int id, bool isRoomie)
-        {
-            if (isRoomie)
-                //id = int.Parse( model.ToList().Find( x => x.Key == "roomieId" ).Value.ToString() );
-                id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        readonly PictureGateway _pictureGateway;
 
-            //List<string> result = await _imageGateway.UploadImage(model.Files, id, isRoomie);
-            //if (result.Count == 0)
-            //{
-            //    return Ok();
-            //}
-            //return Ok(result);
+        public PictureController(PictureGateway pictureGateway)
+        {
+            _pictureGateway = pictureGateway;
+        }
+        [HttpPost("uploadImage")]
+        public async Task<IActionResult> UploadImage(IFormCollection model)
+        {
+
+            bool isRoomie = bool.Parse((model.ToList().Find(x => x.Key == "isRoomie").Value.ToString()));
+
+            int id = int.Parse((model.ToList().Find(x => x.Key == "id").Value.ToString()));
+
+            await _pictureGateway.UploadPicture(model.Files[0], id, isRoomie);
+           
             return Ok();
         }
     }

@@ -4,8 +4,9 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
-using Roomies2.DAL.Model.BuildingManagement;
-using Roomies2.DAL.Services;
+using System;
+using System.Collections.Generic;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Gateways
 {
@@ -22,16 +23,16 @@ namespace Roomies2.DAL.Gateways
         {
             using (var con = new SqlConnection(ConnectionString))
             {
-                var c = await con.QueryFirstOrDefaultAsync<ColocData>(
-                    @"SELECT ColocName, PicPath FROM rm2.tColoc c WHERE c.ColocId = @ColocId;",
-                    new {ColocId = colocId});
+                ColocData c = await con.QueryFirstOrDefaultAsync<ColocData>(
+                    @"SELECT * FROM rm2.tColoc c WHERE c.ColocId = @ColocId;",
+                    new { ColocId = colocId });
 
                 if (c == null) return Result.Failure<ColocData>(Status.NotFound, "Not found.");
                 return Result.Success(c);
             }
         }
 
-        public async Task<Result<int>> Create(int roomieId, string name, string picPath)
+        public async Task<Result<int>> Create(int roomieId, string name)
         {
             if (!IsNameValid(name)) return Result.Failure<int>(Status.BadRequest, "The name is not valid");
 
@@ -40,8 +41,7 @@ namespace Roomies2.DAL.Gateways
                 var p = new DynamicParameters();
                 p.Add("@ColocName", name);
                 p.Add("@RoomieId", roomieId);
-                p.Add("@PicPath", picPath);
-                p.Add("@RoomieId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                p.Add("@ColocId", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
                 await con.ExecuteAsync("rm2.sColocCreate", p, commandType: CommandType.StoredProcedure);
 
@@ -52,9 +52,16 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public Task<Result<int>> Create(int roomieId, object colocName, object picPath)
+        public async Task<Result<IEnumerable<ColocData>>> getList(int roomieId)
         {
-            throw new NotImplementedException();
+            using(SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                IEnumerable<ColocData> l = await con.QueryAsync<ColocData>(
+                    @"SELECT * FROM rm2.vCollocInfo WHERE RoomieId = @RoomieId",
+                    new { RoomieId = roomieId });
+                if (l == null) return Result.Failure<IEnumerable<ColocData>>(Status.NotFound, "Not Found");
+                return Result.Success(l);
+            }
         }
 
         public async Task<Result> Delete(int colocId)
@@ -94,9 +101,6 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        private bool IsNameValid(string name)
-        {
-            return string.IsNullOrWhiteSpace(name);
-        }
+        bool IsNameValid(string name) => !string.IsNullOrWhiteSpace(name);
     }
 }

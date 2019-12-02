@@ -44,6 +44,37 @@ namespace Roomies2.DAL.Tests.Tests
 //            }
 //        }
 
+            string userName = TestHelpers.RandomTestName();
+            string email = string.Format("user{0}@test.com", Guid.NewGuid());
+            byte[] password = Guid.NewGuid().ToByteArray();
+
+            //Create
+            Result<int> result = await sut.CreatePasswordUser(userName, email, password);
+            UserData user = await sut.FindById(result.Content);
+
+            {
+                Assert.That(user.Email, Is.EqualTo(email));
+                Assert.That(user.UserName, Is.EqualTo(userName));
+                Assert.That(user.HashedPassword, Is.EqualTo(password));
+            }
+
+            {
+                email = string.Format("user{0}@test.com", Guid.NewGuid());
+                await sut.UpdateEmail(user.UserId, email);
+            }
+
+            {
+                UserData u = await sut.FindById(user.UserId);
+                Assert.That(u.Email, Is.EqualTo(email));
+                Assert.That(u.HashedPassword, Is.EqualTo(password));
+            }
+
+            {
+                await sut.Delete(user.UserId);
+                Assert.That(await sut.FindById(user.UserId), Is.Null);
+            }
+        }
+
         [Test]
         public async Task can_create_facebook_user()
         {

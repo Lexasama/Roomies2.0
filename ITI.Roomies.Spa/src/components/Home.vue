@@ -1,6 +1,8 @@
 <template>
   <div>
     <div>
+      <h1>Home components</h1>
+
       <radial-menu
         style="margin: auto; margin-top: 300px; background-color: white"
         :itemSize="50"
@@ -23,6 +25,8 @@
 
 <script>
 import { RadialMenu, RadialMenuItem } from "vue-radial-menu";
+import AuthService from "./../services/AuthService";
+import { getUserAsync } from "@/api/UserApi";
 
 export default {
   components: {
@@ -44,9 +48,15 @@ export default {
         "Roomie4",
         "Roomie5"
       ],
-      lastClicked: "click on something!"
+      lastClicked: "click on something!",
+      roomie: {}
     };
   },
+
+  computed: {
+    auth: () => AuthService
+  }, //end computed
+
   methods: {
     handleClick(item) {
       this.lastClicked = item;

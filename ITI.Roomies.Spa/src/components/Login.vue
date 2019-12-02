@@ -1,14 +1,6 @@
 <template>
   <div>
-    <div id="centered_container">
-      <!-- <div>
-        <img
-          src="https://i.ibb.co/wc1n3HF/Roomies-logo-long.png"
-          alt="Roomies-logo-long"
-          border="0"
-        />
-        <div style="padding-top: 3rem;"></div>
-      </div>-->
+    <div>
       <div class="container p-3">
         <div class="text-center">
           <h1 class="my-4">Bienvenue sur Roomies</h1>
