@@ -1,7 +1,7 @@
-var target = Argument("target", "Test");
+var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Task("Test")
+Task("Test_task")
     .Does(() =>
 {
     Information("yolo");
