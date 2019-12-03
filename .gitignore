@@ -464,4 +464,4 @@ MigrationBackup/
 **/.idea/
 **/.vs/
 
-jenkins/tools/
+**/cake/tools/
