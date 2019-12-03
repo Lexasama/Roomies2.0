@@ -6,6 +6,7 @@ CREATE TABLE rm2.tTasks
     TaskDes  NVARCHAR(200) COLLATE Latin1_General_CI_AI,
     TaskDate DATETIME2,
     [State]  BIT DEFAULT 0,
+	IsRecurente BIT DEFAULT 0
 
     CONSTRAINT PK_rm2_tTasks PRIMARY KEY (TaskId),
 
