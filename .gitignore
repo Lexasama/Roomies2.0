@@ -463,3 +463,5 @@ MigrationBackup/
 
 **/.idea/
 **/.vs/
+
+jenkins/tools/
