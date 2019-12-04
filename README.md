@@ -18,8 +18,7 @@ Updated version of [Roomies](https://github.com/Lexasama/Roomies)
 
 ## Built With
 
-* **[Jenkins](https://jenkins.io)**
- **shield to be put here**
+* **[Jenkins](https://jenkins.io)** <img src="https://jenkins.tcousin.com/view/Roomies2.0/job/Backend/badge/icon" />
 * **[Cake (C# Make)](https://cakebuild.net)**
 
 ### Authors
