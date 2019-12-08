@@ -32,6 +32,8 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet("colocList/{roomieId}")]
         public async Task<IActionResult> getColocList(int roomieId)
         {
+            if (roomieId == 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
             Result<IEnumerable<ColocData>> colocList = await _colocGateway.getList(roomieId);
             return this.CreateResult(colocList);
         }

@@ -24,16 +24,18 @@ namespace Roomies2.WebApp.Controllers
             _roomieGateway = roomieGateway;
         }
   
-        [HttpGet("{roomieId}", Name = "GetRoomie")]
-        public async Task<IActionResult> GetRoomie(int roomieId)
+        [HttpGet("{id}", Name = "GetRoomie")]
+        public async Task<IActionResult> GetRoomie(int id)
         {
-            Result<RoomieData> result = await _roomieGateway.FindById(roomieId);
+            if(id == 0) id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            Result<RoomieData> result = await _roomieGateway.FindById(id);
             return this.CreateResult(result);
         }
 
         [HttpGet("getRoomieByEmail/{email}")]
         public async Task<IActionResult> GetRoomieByEmail(string email)
         {
+            if (email == "undefined") email = (HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Email).Value);
             Result<RoomieData> result = await _roomieGateway.FindRoomieByEmail(email);
             return this.CreateResult(result);
         }
@@ -77,9 +79,7 @@ namespace Roomies2.WebApp.Controllers
         {
             int id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            
-
-            Result<int> result = await _roomieGateway.Create( id, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+            Result<int> result = await _roomieGateway.Create( id, model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
             return this.CreateResult(result, o=>
             {
                 o.RouteName = "GetRoomie";
@@ -96,12 +96,13 @@ namespace Roomies2.WebApp.Controllers
             return this.CreateResult(result);
         }
 
+
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] RoomieViewModel model)
         {
             int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            Result result = await _roomieGateway.Update(roomieId,model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+            Result result = await _roomieGateway.Update(roomieId,model.UserName,  model.Email, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
            return this.CreateResult(result);
         }
     }

@@ -8,7 +8,7 @@ using System;
 
 namespace Roomies2.WebApp.Authentication
 {
-    public class FacebookAuthenticationManager : AuthenticationManager<OAuthFacebook>
+    public class FacebookAuthenticationManager : AuthenticationManager<FacebookUserInfo>
     {
         public UserService UserService { get; }
         public UserGateway UserGateway { get; }
@@ -19,25 +19,23 @@ namespace Roomies2.WebApp.Authentication
             UserGateway = userGateway;
         }
 
-        protected override async Task CreateOrUpdateUser(OAuthFacebook userInfo)
+        protected override async Task CreateOrUpdateUser(FacebookUserInfo userInfo)
         {
             if (userInfo.RefreshToken != null)
             {
-                userInfo.UserName = "User"+ Guid.NewGuid().ToString().Substring(10);
-
-                await UserGateway.CreateOrUpdateFacebookUser(userInfo.UserName, userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
+                await UserGateway.CreateOrUpdateFacebookUser( userInfo.Email, userInfo.FacebookId, userInfo.RefreshToken);
             }
         }
 
 
-        protected override Task<UserData> FindUser(OAuthFacebook userInfo)
+        protected override Task<UserData> FindUser(FacebookUserInfo userInfo)
         {
             return UserGateway.FindByFacebookId(userInfo.FacebookId);
         }
 
-        protected override Task<OAuthFacebook> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
+        protected override Task<FacebookUserInfo> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
-            return Task.FromResult(new OAuthFacebook
+            return Task.FromResult(new FacebookUserInfo
             {
                 RefreshToken = ctx.AccessToken,
                 Email = ctx.GetEmail(),
@@ -45,5 +43,14 @@ namespace Roomies2.WebApp.Authentication
                 
             });
         }
+    }
+
+    public class FacebookUserInfo
+    {
+        public string RefreshToken { get; set; }
+
+        public string Email { get; set; }
+
+        public string FacebookId { get; set; }
     }
 }

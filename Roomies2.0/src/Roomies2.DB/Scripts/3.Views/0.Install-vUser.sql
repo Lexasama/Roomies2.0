@@ -1,7 +1,6 @@
 ﻿CREATE VIEW rm2.vUser AS
 SELECT tU.UserId,
        tU.Email,
-       tU.UserName,
        tPU.HashedPassword,
        tGU.GoogleId,
        tGU.RefreshToken AS GRefreshToken,

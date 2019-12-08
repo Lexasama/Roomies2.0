@@ -1,9 +1,4 @@
-import {
-  getAsync,
-  postAsync,
-  putAsync,
-  deleteAsync
-} from "../helpers/apiHelper";
+import { getAsync, postAsync, putAsync } from "../helpers/apiHelper";
 
 const endpoint = process.env.VUE_APP_BACKEND + "/api/coloc";
 

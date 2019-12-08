@@ -92,7 +92,7 @@ namespace Roomies2.WebApp
                 o.SignInScheme = CookieAuthentication.AuthenticationScheme;
                 o.ClientId = Configuration["Authentication:Google:ClientId"];
                 o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+                //o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
 
                     o.Events = new OAuthEvents
                     {

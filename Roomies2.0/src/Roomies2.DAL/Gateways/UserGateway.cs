@@ -20,18 +20,6 @@ namespace Roomies2.DAL.Gateways
 
         public UserGateway(string connectionString) => ConnectionString = connectionString;
 
-
-        //public async Task<IAccountData> FindById(int userId)
-        //{
-        //    using(SqlConnection con = new SqlConnection(_connectionString))
-        //    {
-        //        return await con.QueryFirstOrDefaultAsync<IAccountData>(
-        //            "select u.UserId, u.Email, u.  from rm2.vUser where u.UserId = @UserId",
-        //            new {UsierId = userId});
-        //        //TODO
-        //    }
-        //}
-
         public async Task<UserData> FindById(int userId)
         {
             await using var con = new SqlConnection(ConnectionString);
@@ -83,19 +71,10 @@ namespace Roomies2.DAL.Gateways
             await con.ExecuteAsync("rm2.sPasswordUserCreate", p, commandType: CommandType.StoredProcedure);
 
             var status = p.Get<int>("@Status");
-            if (status == 1)
-            {
-                return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
-            }
-            else if (status == 2)
-            {
-                return Result.Failure<int>(Status.BadRequest, "An account with this username already exists.");
-            }
-            else
-            {
-                Debug.Assert(status == 0);
-                return Result.Success(p.Get<int>("@UserId"));
-            }
+            if (status == 1) return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
+            
+            Debug.Assert(status == 0);
+            return Result.Success(p.Get<int>("@UserId"));
         }
 
         public async Task<UserData> FindUserName(string userName)
@@ -126,41 +105,26 @@ namespace Roomies2.DAL.Gateways
                 : Result.Failure<int>(Status.BadRequest, "User already exists");
         }
 
-        public async Task CreateOrUpdateFacebookUser(string userName, string email, string facebookId,
-            string refreshToken)
+        public async Task CreateOrUpdateFacebookUser( string email, string facebookId, string refreshToken)
         {
-            UserData r = FindByEmail(email).Result;
+            using (SqlConnection con = new SqlConnection(ConnectionString)){
+                await con.ExecuteAsync("rm2.sFacebookUserCreateOrUpdate",
+                    new { Email = email, FacebookId = facebookId, RefreshToken = refreshToken },
+                    commandType: CommandType.StoredProcedure);
+            }
 
-            // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
-            int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
-
-            await using var con = new SqlConnection(ConnectionString);
-
-            var p = new DynamicParameters();
-            p.Add("@UserId", userId);
-            p.Add("@FacebookId", facebookId);
-            p.Add("@RefreshToken", refreshToken);
-            p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-
-            await con.ExecuteAsync("rm2.sFacebookUserCreateOrUpdate", p, commandType: CommandType.StoredProcedure);
         }
 
-        public async Task CreateOrUpdateGoogleUser(string userName, string email, string googleId, string refreshToken)
+        public async Task CreateOrUpdateGoogleUser(string email, string googleId, string refreshToken)
         {
-            UserData r = FindByEmail(email).Result;
 
-            // Coalescing expression meaning if r.userId is null taking CreateUser().Result.Content
-            int userId = r?.UserId ?? CreateUser(userName, email).Result.Content;
+            using (  SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                await con.ExecuteAsync("rm2.sGoogleUserCreateOrUpdate", 
+                    new { Email = email, GoogleId = googleId, RefreshToken = refreshToken },
+                    commandType: CommandType.StoredProcedure);
+            }
 
-            await using var con = new SqlConnection(ConnectionString);
-
-            var p = new DynamicParameters();
-            p.Add("@UserId", userId);
-            p.Add("@GoogleId", googleId);
-            p.Add("@RefreshToken", refreshToken);
-            p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-
-            await con.ExecuteAsync("rm2.sGoogleUserCreateOrUpdate", p, commandType: CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<string>> GetAuthenticationProviders(string userId)
@@ -177,18 +141,19 @@ namespace Roomies2.DAL.Gateways
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
-                await con.ExecuteAsync("rm2.sUserDelete", new {UserId = userId},
+                await con.ExecuteAsync("rm2.sUserDelete",
+                    new {UserId = userId},
                     commandType: CommandType.StoredProcedure);
             }
         }
 
-        public async Task UpdateEmail(int userId, string email)
+        public async Task UpdateEmail(int userId, string email, string userName)
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sUserUpdate",
-                    new {UserId = userId, Email = email},
+                    new {UserId = userId, Email = email, UserName = userName},
                     commandType: CommandType.StoredProcedure);
             }
         }

@@ -45,11 +45,7 @@
 
 <script>
 import ImageUploader from "../Utility/ImageUploader.vue";
-import {
-  updateRoomieAsync,
-  getRoomieProfileAsync,
-  getRoomieAsync
-} from "../../api/RoomieApi";
+import { updateRoomieAsync, getRoomieProfileAsync } from "../../api/RoomieApi";
 
 export default {
   components: {
@@ -78,8 +74,7 @@ export default {
   methods: {
     async refreshInfo() {
       try {
-        this.roomie = await getMyProfileAsync();
-
+        this.roomie = await getRoomieProfileAsync();
         this.roomieId = this.roomie.roomieId;
       } catch (error) {
         console.error(error);

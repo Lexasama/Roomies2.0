@@ -1,5 +1,5 @@
 ﻿CREATE VIEW rm2.vRoomie AS
-SELECT RoomieId,
+SELECT RoomieId = u.UserId,
        UserName,
        Email,
        FirstName,
@@ -9,6 +9,6 @@ SELECT RoomieId,
        BirthDate,
        Description,
        PicturePath
-    FROM tUser                 tU
-             LEFT JOIN tRoomie tR ON tU.UserId = tR.RoomieId
+    FROM rm2.tUser                 u
+             LEFT JOIN rm2.tRoomie r ON u.UserId = r.RoomieId
     WHERE UserId <> 0;

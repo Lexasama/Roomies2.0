@@ -22,45 +22,26 @@ Vue.use(ElementUI, { locale });
 Vue.use(VueCookies);
 Vue.use(Vueaxios, axios);
 
-class currentColoc {
-  constructor(colocId, colocName, picPath, date) {
-    this.colocId = colocId;
-    this.colocName = colocName;
-    this.picPath = picPath;
-    this.creationDate = date;
+class colocs {
+  constructor(list) {
+    this.colocList = list;
+    this.currentColoc;
   }
-  setColocId(newId) {
-    this.colocId = newId;
+  setList(list) {
+    this.colocList = list;
   }
-
-  setColocName(newName) {
-    this.colocName = newName;
-  }
-
-  setPicPath(picPath) {
-    this.picPath = picPath;
-  }
-  setDate(date) {
-    this.creationDate = date;
+  setCurrentColoc(coloc) {
+    this.currentColoc = coloc;
   }
 }
 class user {
-  constructor(
-    userId,
-    username,
-    email,
-    lastName,
-    firstName,
-    colocList,
-    picPath
-  ) {
+  constructor(userId, userName, email, lastName, firstName, picPath) {
     this.userId = userId;
-    this.username = username;
+    this.userName = userName;
     this.lastName = lastName;
     this.firstName = firstName;
     this.email = email;
     this.picPath = picPath;
-    this.colocList = colocList;
   }
   setId(id) {
     this.userId = id;
@@ -71,11 +52,11 @@ class user {
   setFirstName(name) {
     this.firstName = name;
   }
+  setUserName(userName) {
+    this.userName = userName;
+  }
   setLastName(name) {
     this.lastName = name;
-  }
-  setColocList(list) {
-    this.colocList = list;
   }
   setPicPath(picPath) {
     this.picPath = picPath;
@@ -84,7 +65,7 @@ class user {
 
 Vue.use(VueGlobalVariable, {
   globals: {
-    $currentColoc: new currentColoc(-1, "", "", ""),
+    $currentColoc: new colocs(),
     $user: new user()
   }
 });

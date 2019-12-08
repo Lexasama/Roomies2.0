@@ -48,7 +48,6 @@ export default {
           let colocId = await createColocAsync(this.coloc);
           console.log("SUBMITED");
 
-          console.log(a);
           debugger;
           this.$router.replace(`/colocProfile/${colocId}`);
         } catch (e) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ImageUploader :id="roomieId" :isRoomie="true" />
+    <colocList />
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import roomieProfile from "../components/Roomie/RoomiesProfile";
 import invite from "@//components/Roomie/Invite";
 import colocProfile from "@/components/Coloc/ColocProfile";
 import ImageUploader from "@/components/Utility/ImageUploader";
+import colocList from "../components/Coloc/ColocList";
 export default {
   components: {
     profile,
@@ -18,7 +19,8 @@ export default {
     roomieProfile,
     invite,
     colocProfile,
-    ImageUploader
+    ImageUploader,
+    colocList
   },
   data() {
     return {
