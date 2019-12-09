@@ -114,6 +114,27 @@ namespace Roomies2.DAL.Gateways
 
         }
 
+        public async Task<Result> Unassign(int taskId, int roomieId)
+        {
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@RoomieId", roomieId);
+
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTaskUnassign", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.BadRequest, "Task has never been assigned to this roomie");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Ok);
+            }
+
+        }
+
         public async Task<Result> UpdateState(int taskId)
         {
 

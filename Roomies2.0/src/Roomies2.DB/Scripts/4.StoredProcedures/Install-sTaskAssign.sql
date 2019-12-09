@@ -1,7 +1,7 @@
 CREATE PROCEDURE rm2.sTaskAssign
 (
-	@TaskId INT OUT,
-	@RoomieId INT OUT
+	@TaskId INT ,
+	@RoomieId INT 
 )
 AS 
 BEGIN

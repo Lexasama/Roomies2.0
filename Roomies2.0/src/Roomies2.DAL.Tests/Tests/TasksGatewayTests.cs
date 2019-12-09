@@ -72,6 +72,47 @@ namespace Roomies2.DAL.Tests.Tests
         public async Task can_assign_task()
         {
             TasksGateway sut = new TasksGateway(TestHelpers.ConnectionString);
+            string taskName = TestHelpers.RandomTestName();
+            string des = TestHelpers.RandomTestName() + "Description";
+            int colocId = 1;
+            DateTime date = TestHelpers.RandomDate(2);
+
+            Result<int> taskResult = await sut.Create(taskName, des, date, colocId);
+            Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
+
+            int taskId = taskResult.Content;
+            Result<TaskData> task;
+
+            {
+                var r = await sut.Assign(taskId, 1);
+                Assert.That(r.Status, Is.EqualTo(Status.Ok));
+            }
+            {
+               var r = await sut.Assign(taskId, 1);
+                Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
+            }
+            {
+                var r = await sut.Assign(taskId, 2);
+                Assert.That(r.Status, Is.EqualTo(Status.Ok));
+            }
+            {
+                var r = await sut.Unassign(taskId, 2);
+                Assert.That(r.Status, Is.EqualTo(Status.Ok));
+            }
+            {
+                var r = await sut.Unassign(taskId, 2);
+                Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
+            }
+        }
+
+        public async void can_found_tasks_of_roomie()
+        {
+
+        }
+
+        public async void can_find_roomies_of_task()
+        {
+
         }
 
         void CheckTask(Result<TaskData> task, string taskName, string des, DateTime date, int colocId, bool state)
@@ -82,8 +123,6 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(task.Content.TaskDate, Is.EqualTo(date));
             Assert.That(task.Content.ColocId, Is.EqualTo(colocId));
             Assert.That(task.Content.State, Is.EqualTo(state));
-
-
         }
     }
 }
