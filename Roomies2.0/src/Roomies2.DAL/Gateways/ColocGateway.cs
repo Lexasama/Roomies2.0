@@ -58,7 +58,7 @@ namespace Roomies2.DAL.Gateways
             using(SqlConnection con = new SqlConnection(ConnectionString))
             {
                 IEnumerable<ColocData> l = await con.QueryAsync<ColocData>(
-                    @"SELECT * FROM rm2.vCollocInfo WHERE RoomieId = @RoomieId",
+                    @"SELECT * FROM rm2.vColocInfo WHERE RoomieId = @RoomieId",
                     new { RoomieId = roomieId });
                 if (l == null) return Result.Failure<IEnumerable<ColocData>>(Status.NotFound, "Not Found");
                 return Result.Success(l);

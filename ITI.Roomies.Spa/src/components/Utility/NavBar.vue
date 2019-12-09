@@ -1,37 +1,30 @@
 <template>
   <div>
+    <div>
+      <checkUser />
+    </div>
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand href="/home">
-        <img src="../../../public/favicon.png" style="width: 60px; height: 60px" />
+        <el-image style="width: 80px; height: 80px" :src="colocPic" fit="fit">
+          <div slot="placeholder" class="image-slot">
+            Loading
+            <span class="dot">...</span>
+          </div>
+        </el-image>
+        <!-- <img src="../../../public/favicon.png" style="width: 60px; height: 60px" /> -->
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
+          <!-- <b-nav-item href="#">Link</b-nav-item> -->
 
           <b-nav-item @click="refresh()">
-            <el-dropdown trigger="click" @command="handleCommand">
-              <span class="el-dropdown-link">
-                Coloc
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  :command="c.colocId"
-                  v-for="c in colocList"
-                  :key="c.colocId"
-                >{{c.colocName}}</el-dropdown-item>
-                <el-dropdown-item command="/coloc" divided>
-                  Create
-                  <i class="el-icon-circle-plus"></i>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <b-button variant="outline-primary" @click="drawer = true">Flats</b-button>
           </b-nav-item>
         </b-navbar-nav>
 
-        <img src="../../../public/Logo.png" width="80" />
+        <img class="image" src="../../../public/Logo.png" width="80" />
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -50,6 +43,15 @@
           </b-navbar-brand>
         </b-navbar-nav>
       </b-collapse>
+
+      <el-drawer
+        title="List of your flats"
+        :visible.sync="drawer"
+        direction="ltr"
+        :with-header="false"
+      >
+        <colocList />
+      </el-drawer>
     </b-navbar>
   </div>
 </template>
@@ -57,6 +59,8 @@
 <script>
 import AuthService from "@/services/AuthService";
 import { getPicAsync } from "@/api/RoomieApi.js";
+import colocList from "../Coloc/ColocList";
+import checkUser from "@/components/Utility/CheckUser";
 
 export default {
   props: {
@@ -65,18 +69,22 @@ export default {
       required: true
     }
   },
+  components: {
+    colocList,
+    checkUser
+  },
+
   data() {
     return {
       colocList: [],
       path: null,
-      roomieId: null
+      roomieId: null,
+      drawer: false,
+      colocPic: "http://localhost:5000/Pictures/ColocPics/default.png"
     };
   },
   async mounted() {
-    this.roomieId;
-    //this.path = await getPicAsync(this.roomieId);
-    console.log("this.navInfo");
-    console.log(this.navInfo);
+    // this.colocPic =
   },
   computed: {
     auth: () => AuthService
@@ -84,7 +92,7 @@ export default {
   methods: {
     async refresh() {
       try {
-        this.colocList = this.$user.colocList;
+        this.colocList = this.$colocs.colocList;
       } catch (error) {
         console.error(error);
       }
@@ -105,7 +113,9 @@ export default {
 
 <style lang="scss">
 .image {
-  height: 50px !important;
-  width: auto !important;
+  position: absolute;
+  left: 50%;
+  margin: 0 auto;
+  width: 80;
 }
 </style>

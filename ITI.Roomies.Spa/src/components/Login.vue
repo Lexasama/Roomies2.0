@@ -27,7 +27,27 @@
                 @click="login('Base')"
               >Se Connecter via Roomies</button>
             </b-card>
-            <b-card header="Creer un compte"></b-card>
+            <b-card header="Creer un compte">
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="createAccount('Roomie')"
+              >
+                <i class="fa fa-users" aria-hidden="true"></i> Compte Roomie
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="dialogVisible = true"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i> Supervisor Account
+              </button>
+              <el-dialog title="Sorry" :visible.sync="dialogVisible" width="30%">
+                <span>We are working on this feature rigth now</span>
+                <span slot="footer" class="dialog-footer"></span>
+              </el-dialog>
+            </b-card>
           </b-card-group>
         </div>
       </div>
@@ -42,7 +62,8 @@ import Vue from "vue";
 export default {
   data() {
     return {
-      endpoint: null
+      endpoint: null,
+      dialogVisible: false
     };
   },
 
@@ -61,6 +82,12 @@ export default {
 
     onAuthenticated() {
       this.$router.replace("/");
+    },
+    createAccount(account) {
+      if (account === "Roomie") {
+        this.$router.push("/createRoomie");
+      } else {
+      }
     }
   }
 };

@@ -1,20 +1,9 @@
 <template>
   <div>
     <el-card>
-      <b-media>
-        <template>
-          <b-img :src="coloc.picPath" rounded width="180"></b-img>
-        </template>
-
-        <div>
-          <b-button v-b-toggle.collapse-1 variant="primary">Change Picture</b-button>
-          <b-collapse id="collapse-1" class="mt-2">
-            <b-card>
-              <ImageUploader :id="this.colocId" :isRoomie="false" />
-            </b-card>
-          </b-collapse>
-        </div>
-      </b-media>
+      <div class="block">
+        <el-avatar shape="square" :size="60" :src="coloc.picPath"></el-avatar>
+      </div>
 
       <el-divider></el-divider>
 
@@ -22,11 +11,9 @@
 
       <div style="margin: 20px;"></div>
       <el-form label-position="right" label-width="100px" v-model="coloc" inline>
-        <el-button @click="colocDawer = true">Flasharings</el-button>
         <el-form-item label="Name">
-          <el-input v-model="coloc.colocName"></el-input>
+          <el-input v-model="coloc.colocName" disabled></el-input>
         </el-form-item>
-        <el-button type="primary">Change Name</el-button>
         <el-form-item></el-form-item>
 
         <el-form-item label="Creation date">
@@ -36,23 +23,9 @@
       <el-divider></el-divider>
 
       <div>
-        <!-- <b-button v-b-toggle.collapse-2 variant="primary">Invite</b-button>
-        <b-collapse id="collapse-2" class="mt-2">
-          <b-card></b-card>
-        </b-collapse>-->
-
-        <el-button v-b-toggle.collapse-2 type="primary" icon="el-icon-plus">Invite</el-button>
-        <b-collapse id="collapse-2" class="mt-2">
-          <b-card></b-card>
-        </b-collapse>
-        <el-divider></el-divider>
-
-        <el-popover
-          placement="bottom"
-          title="Upload a new profile picture"
-          trigger="click"
-        >Invite form</el-popover>
         <template>
+          <h3>List of Roomies</h3>
+          <el-divider></el-divider>
           <el-table
             ref="membresTable"
             :data="members"
@@ -71,53 +44,18 @@
         <span></span>
         <profile :roomie="roomie" />
       </el-drawer>
-
-      <el-drawer title="Your list" :visible.sync="colocDawer" direction="ltr" size="50%">
-        <div>
-          <el-card>
-            <template>
-              <el-table
-                ref="colocTable"
-                :data="colocList"
-                highlight-current-row
-                @current-change="handleColocChange"
-                style="width: 100%"
-              >
-                <el-table-column property="colocName" label="Name"></el-table-column>
-                <el-table-column property="creationDate" label="Creation date"></el-table-column>
-              </el-table>
-            </template>
-          </el-card>
-        </div>
-        <div>
-          <!-- <el-drawer
-            title="Profile"
-            :append-to-body="true"
-            :visible.sync="innerDrawer"
-            direction="ltr"
-          >
-            <div>
-              <ColocProfile :colocId="this.selectedColoc.colocId" />
-            </div>
-          </el-drawer>-->
-        </div>
-      </el-drawer>
     </el-card>
   </div>
 </template>
 
 <script>
-import ImageUploader from "../Utility/ImageUploader.vue";
 import Profile from "../Roomie/RoomiesProfile.vue";
-import ColocProfile from "../Coloc/ColocProfile";
-import { getColocAsync, getColocListAsync } from "../../api/ColocApi";
+import { getColocAsync } from "../../api/ColocApi";
 import { getRoomiesAsync } from "@/api/RoomieApi";
 
 export default {
   components: {
-    ImageUploader,
-    Profile,
-    ColocProfile
+    Profile
   },
   props: {
     colocId: {

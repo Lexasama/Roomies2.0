@@ -24,7 +24,7 @@ namespace Roomies2.DAL.Gateways
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 RoomieData r = await con.QueryFirstOrDefaultAsync<RoomieData>(
-                    @"SELECT * FROM rm2.vRoomie r WHERE r.RoomieId = @RoomieId;",
+                    @"SELECT * FROM rm2.tRoomie r WHERE r.RoomieId = @RoomieId;",
                     new { RoomieId = roomieId }
                     );
 
@@ -114,14 +114,16 @@ namespace Roomies2.DAL.Gateways
         /// <param name="desc"></param>
         /// <param name="pic"></param>
         /// <returns></returns>
-        public async Task<Result<int>> Create(int roomieId, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        public async Task<Result<int>> Create(int roomieId, string userName, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
+            if (!IsNameValid(userName)) return Result.Failure<int>(Status.BadRequest, "The username is not valid");
             if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
             if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
            
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 var p = new DynamicParameters();
+                p.Add("@UserName", userName);
                 p.Add("@FirstName", firstName);
                 p.Add("@LastName", lastName);
                 p.Add("@Phone", phone);
@@ -131,7 +133,7 @@ namespace Roomies2.DAL.Gateways
                 p.Add("@PicturePath", pic);
                 p.Add("@RoomieId", roomieId);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-                await con.ExecuteAsync("rm2.sRoomieCreateUpdate", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("rm2.sRoomieCreate", p, commandType: CommandType.StoredProcedure);
 
                 int status = p.Get<int>("@Status");
                 if (status == 1) return Result.Failure<int>(Status.BadRequest, "A Roomie with this username already exists");
@@ -142,7 +144,7 @@ namespace Roomies2.DAL.Gateways
         }
 
 
-        public async Task<Result> Update(int roomieId, string userName, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
+        public async Task<Result> Update(int roomieId, string userName, string email, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, string pic)
         {
             if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
             if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
@@ -151,6 +153,7 @@ namespace Roomies2.DAL.Gateways
             {
                 var p = new DynamicParameters();
                 p.Add("@UserName", userName);
+                p.Add("@Email", email);
                 p.Add("@FirstName", firstName);
                 p.Add("@LastName", lastName);
                 p.Add("@Phone", phone);
