@@ -8,9 +8,9 @@ namespace Roomies2.DAL.Model.People
     {
         public int TaskId { get; set; }
         public string TaskName { get; set; }
-        public DateTime Date { get; set; }
-        public string Description { get; set; }
-
-        public string ColocId { get; set; }
+        public DateTime TaskDate { get; set; }
+        public string TaskDes { get; set; }
+        public int ColocId { get; set; }
+        public bool State { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Roomies2.DAL.Gateways
 {
@@ -21,12 +20,15 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result<TaskData>> Find(int taskId)
         {
-            throw new NotImplementedException();
-        }
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                TaskData task = await con.QueryFirstOrDefaultAsync<TaskData>(
+                    @"SELECT * FROM rm2.tTasks t WHERE t.TaskId = @TaskId;",
+                    new { TaskId = taskId });
 
-        public async Task<Result<int>> Create(string taskName, string description, DateTime date1, DateTime date2, int colocId )
-        {
-
+                if (task == null) return Result.Failure<TaskData>(Status.NotFound, "Not found.");
+                return Result.Success(task);
+            }
         }
 
         public async Task<Result<int>> Create(string taskName, string des, DateTime date, int colocId)
@@ -37,12 +39,12 @@ namespace Roomies2.DAL.Gateways
             {
                 var p = new DynamicParameters();
                 p.Add("@TaskName", taskName);
-                p.Add("@Description", des);
-                p.Add("@Date", date);
+                p.Add("@TaskDes", des);
+                p.Add("@TaskDate", date);
                 p.Add("@ColocId", colocId);
                 p.Add("@TaskId", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-                await con.ExecuteAsync("rm2.sTaskCreate", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("rm2.sTasksCreate", p, commandType: CommandType.StoredProcedure);
 
                 int status = p.Get<int>("@Status");
 
@@ -51,16 +53,85 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public Task<Result> Delete(int taskId)
+        public async Task<Result> Delete(int taskId)
         {
-            throw new NotImplementedException();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTasksDelete", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.NotFound, "Task not found");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
         }
 
-        public Task<Result> Update(string taskName, DateTime date, string des)
+        public async  Task<Result> Update(int taskId, string taskName, DateTime date, string des, bool state)
         {
-            throw new NotImplementedException();
+            if (!IsNameValid(taskName)) return Result.Failure<int>(Status.BadRequest, "The name is not valid");
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@TaskName", taskName);
+                p.Add("@TaskDate", date);
+                p.Add("@TaskDes", des);
+                p.Add("@State", state);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTasksUpdate", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.NotFound, "Not found.");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Ok);
+            }
         }
 
+        public async Task<Result> Assign(int taskId, int roomieId)
+        {
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@RoomieId", roomieId);
+
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTaskAssign", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.BadRequest, "Task already assigned to this roomie");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Ok);
+            }
+
+        }
+
+        public async Task<Result> UpdateState(int taskId)
+        {
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTasksUpdateState", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.BadRequest, "Task does not exist");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Ok);
+            }
+        }
+        
         bool IsNameValid(string name) => !string.IsNullOrWhiteSpace(name);
 
     }

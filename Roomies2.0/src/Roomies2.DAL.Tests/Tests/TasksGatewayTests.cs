@@ -18,14 +18,16 @@ namespace Roomies2.DAL.Tests.Tests
             _random = new Random();
         }
 
+        [Test]
         public async Task can_create_update_delete_a_task()
         {
             TasksGateway sut = new TasksGateway(TestHelpers.ConnectionString);
 
             string taskName = TestHelpers.RandomTestName();
             string des = TestHelpers.RandomTestName() + "descriptions";
-            DateTime date = TestHelpers.RandomBirthDate(0);
+            DateTime date = TestHelpers.RandomDate(5);
             int colocId = 1;
+            bool state = false; // task done
 
             Result<int> taskResult = await sut.Create(taskName, des, date, colocId);
             Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
@@ -35,20 +37,27 @@ namespace Roomies2.DAL.Tests.Tests
 
             {
                 task = await sut.Find(taskId);
-                CheckTask(task, taskName, des, date, colocId);
+                CheckTask(task, taskName, des, date, colocId, state);
             }
 
             {
                 taskName = TestHelpers.RandomTestName();
-                date =  DateTime.Now;
+                date = TestHelpers.RandomDate(5);
                 des = TestHelpers.RandomTestName() + "New DesCription";
-
-                Result t = await sut.Update(taskName, date, des);
+                state = true;
+                Result t = await sut.Update(taskId, taskName, date, des, state);
                 Assert.That(t.Status, Is.EqualTo(Status.Ok));
 
                 task = await sut.Find(taskId);
-                CheckTask(task, taskName, des, date, colocId);
+                CheckTask(task, taskName, des, date, colocId, state);
 
+            }
+            {
+                
+                Result s = await sut.UpdateState(taskId);
+                Assert.That(s.Status, Is.EqualTo(Status.Ok));
+                task = await sut.Find(taskId);
+                CheckTask(task, taskName, des, date, colocId, !state );          
             }
             {
                 Result result = await sut.Delete(taskId);
@@ -65,13 +74,14 @@ namespace Roomies2.DAL.Tests.Tests
             TasksGateway sut = new TasksGateway(TestHelpers.ConnectionString);
         }
 
-        void CheckTask(Result<TaskData> task, string taskName, string des, DateTime date, int colocId)
+        void CheckTask(Result<TaskData> task, string taskName, string des, DateTime date, int colocId, bool state)
         {
             Assert.That(task.Status, Is.EqualTo(Status.Ok));
             Assert.That(task.Content.TaskName, Is.EqualTo(taskName));
-            Assert.That(task.Content.Description, Is.EqualTo(des));
-            Assert.That(task.Content.Date, Is.EqualTo(date));
+            Assert.That(task.Content.TaskDes, Is.EqualTo(des));
+            Assert.That(task.Content.TaskDate, Is.EqualTo(date));
             Assert.That(task.Content.ColocId, Is.EqualTo(colocId));
+            Assert.That(task.Content.State, Is.EqualTo(state));
 
 
         }

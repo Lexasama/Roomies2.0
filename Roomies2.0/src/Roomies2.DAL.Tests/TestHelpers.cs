@@ -20,7 +20,7 @@ namespace Roomies2.DAL.Tests
 
         public static string RandomTestName() => $"Test-{Guid.NewGuid().ToString().Substring(24)}";
         public static DateTime RandomBirthDate(int age) => DateTime.UtcNow.AddYears(-age).AddMonths(Random.Next(-11, 0)).Date;
-
+        public static DateTime RandomDate(int days) => DateTime.Today.AddDays(days);
         public static string RandomPhone() => $"+33-{Random.Next(0,1000000000)}";
     }
 }
