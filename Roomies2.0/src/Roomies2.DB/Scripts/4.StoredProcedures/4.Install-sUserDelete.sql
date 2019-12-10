@@ -8,8 +8,10 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-    DELETE FROM rm2.itColRoom WHERE RoomieId = @UserId;
-    DELETE FROM rm2.tRoomie WHERE RoomieId = @UserId;
-    DELETE FROM rm2.tUser WHERE UserId = @UserId;
+    DELETE FROM rm2.tPasswordUser WHERE UserId = @UserId;
+    DELETE FROM rm2.tGoogleUser   WHERE UserId = @UserId;
+    DELETE FROM rm2.tFacebookUser WHERE UserId = @UserId;
+    DELETE FROM rm2.tUser		  WHERE UserId = @UserId;
+	COMMIT;
     RETURN 0;
 END;

@@ -55,7 +55,7 @@ namespace Roomies2.WebApp.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ColocViewModel model)
         {
-            Result result = await _colocGateway.Update(model.ColocName, model.PicPath);
+            Result result = await _colocGateway.Update(model.ColocId, model.ColocName, model.PicPath);
             return this.CreateResult(result);
         }
     }

@@ -1,9 +1,9 @@
 ﻿CREATE TABLE rm2.tRoomie
 (
     RoomieId		INT										  NOT NULL,
-    UserName        NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
-    FirstName		NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
-    LastName		NVARCHAR(20) COLLATE Latin1_General_CI_AI NOT NULL,
+    UserName        NVARCHAR(32) COLLATE Latin1_General_CI_AI NOT NULL,
+    FirstName		NVARCHAR(32) COLLATE Latin1_General_CI_AI NOT NULL,
+    LastName		NVARCHAR(32) COLLATE Latin1_General_CI_AI NOT NULL,
     Phone			NVARCHAR(12)                              NOT NULL,
     Sex				INT                                       NOT NULL,
     BirthDate		DATETIME2                                 NOT NULL,
