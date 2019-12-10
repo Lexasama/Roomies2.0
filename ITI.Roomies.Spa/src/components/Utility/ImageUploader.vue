@@ -1,19 +1,16 @@
 <template>
   <div>
-    <form enctype="multipart/form-data">
-      <input type="file" name="image" accept="image/x-png, image/jpg,
-      image/jpeg"/>
-    </form>
-    
-    <el-button
-      style="margin-left: 10px;"
-      size="small"
-      type="success"
-      @click="submitUpload"
-      >upload to server</el-button
-    >
-    <div class="el-upload__tip" slot="tip">
-      jpg/png files with a size less than 500kb
+    <div>
+      <form action="POST" enctype="multipart/form-data">
+        <input
+          type="file"
+          name="file"
+          id="file"
+          accept="image/x-png, image/jpg, image/jpeg"
+          @change="handleFileUpload($event.target.files)"
+        />
+        <el-button type="button" @click="submitFile()">Submit picture</el-button>
+      </form>
     </div>
   </div>
 </template>
@@ -23,54 +20,55 @@
 import axios from "axios";
 import AuthService from "../../services/AuthService";
 export default {
+  props: {
+    id: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    isRoomie: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
-    props: ["id", "isRoomie"];
     return {
-      dialogImageUrl: "",
-      dialogVisible: false,
-      fileList: null,
-      id: 1,
-      isRoomie: true,
-      file: null
+      files: new FormData(),
+      model: {},
+      env: process.env.VUE_APP_BACKEND,
+      sizeMax: 5000000,
+      file: new FormData(),
+      env: process.env.VUE_APP_BACKEND
     };
   },
 
+  async mounted() {
+    console.log(this.id);
+    console.log(this.isRoomie);
+  },
+
   methods: {
-    handleImageUpload(files) {
-      console.log(files);
-      this.file.append("file", files[0], files[0].name);
-      console.log(this.file);
-      this.uploadButtonDisabled = false;
+    async submitFile() {
+      event.preventDefault();
+      const endpoint = process.env.VUE_APP_BACKEND + "/api/picture";
+      const file = this.file;
+      file.append("id", parseInt(this.id));
+      file.append("isRoomie", this.isRoomie);
+
+      var id = this.roomieId;
+      var isRoomie = this.isRoomie;
+
+      let data = await axios.post(`${endpoint}/uploadImage`, this.file, {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: `Bearer ${AuthService.accessToken}`
+        },
+        responseType: "application/json"
+      });
     },
 
-    submitUpload: async function() {
-      event.preventDefault();
-
-      const endpoint = process.env.VUE_APP_BACKEND + "/api/picture";
-
-      // if (this.isRoomie == true) {
-      //   file.append("roomieId", parseInt(this.id));
-      // } else {
-      //   file.append("colocId", parseInt(this.id));
-      //}
-
-      console.log(this.fileList);
-      var formData = new FormData();
-
-      console.log(this.isRoomie);
-      console.log(this.id);
-
-      let data = await axios.post(
-        `${endpoint}/uploadColoc/${this.id}/${this.isRoomie}`,
-        formData.append("file", this.fileList),
-        {
-          headers: {
-            "Content-type": "multipart/form-data",
-            Authorization: `Bearer ${AuthService.accessToken}`
-          },
-          responseType: "application/json"
-        }
-      );
+    async handleFileUpload(files) {
+      this.file.append("file", files[0], files[0].name);
     }
   }
 };

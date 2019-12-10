@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE rm2.sUserCreate
-( @UserName NVARCHAR(20),
+(
   @Email    NVARCHAR(64),
   @UserId   INT OUT
 )
@@ -11,15 +11,15 @@ BEGIN
     BEGIN TRAN;
     
     IF EXISTS(
-            SELECT * FROM RoomiesV2.rm2.vUser vU WHERE vU.Email LIKE @Email
+            SELECT * FROM RoomiesV2.rm2.tUser u WHERE u.Email = @Email
         )
             BEGIN
                 ROLLBACK
                 RETURN 1
             END
 
-    INSERT INTO rm2.tUser (UserName, Email, FirstName, LastName, Phone, Sex, BirthDate)
-        VALUES (@UserName, @Email, N'', N'', N'', 0, N'')
+    INSERT INTO rm2.tUser (Email)
+                   VALUES (@Email)
 
     SET @UserId = scope_identity()
     COMMIT
