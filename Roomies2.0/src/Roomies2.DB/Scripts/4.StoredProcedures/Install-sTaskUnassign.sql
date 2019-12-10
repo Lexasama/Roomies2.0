@@ -1,0 +1,21 @@
+CREATE PROCEDURE rm2.sTaskUnassign
+(
+	@TaskId INT ,
+	@RoomieId INT 
+)
+AS 
+BEGIN
+	SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+	BEGIN TRAN;
+
+
+	IF NOT EXISTS(SELECT * FROM rm2.tiTaskRoom t WHERE t.TaskId = @TaskId AND t.RoomieId = @RoomieId)
+	BEGIN
+		ROLLBACK;
+		RETURN 1;
+	END;
+
+	DELETE FROM rm2.tiTaskRoom WHERE TaskId = @TaskId AND RoomieId = @RoomieId;
+	COMMIT;
+	RETURN 0;
+END;
