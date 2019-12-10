@@ -54,17 +54,11 @@ namespace Roomies2.DAL.Gateways
                 new {GoogleId = googleId});
         }
 
-        public async Task<Result<int>> CreatePasswordUser(string userName, string email, string lastName, string FirstName, string phone, int sex, DateTime BirthDate, byte[] hashedPassword)
+        public async Task<Result<int>> CreatePasswordUser(string email, byte[] hashedPassword)
         {
             await using var con = new SqlConnection(ConnectionString);
             var p = new DynamicParameters();
-            p.Add("@UserName", userName);
             p.Add("@Email", email);
-            p.Add("@LastName", lastName);
-            p.Add("@FirstName", FirstName);
-            p.Add("@Phone", phone);
-            p.Add("@Sex", sex);
-            p.Add("@BirthDate", BirthDate);
             p.Add("@HashedPassword", hashedPassword);
             p.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
@@ -87,7 +81,7 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        private async Task<Result<int>> CreateUser(string userName, string email)
+        public async Task<Result<int>> CreateUser(string userName, string email)
         {
             await using var con = new SqlConnection(ConnectionString);
 
@@ -147,13 +141,13 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public async Task UpdateEmail(int userId, string email, string userName)
+        public async Task UpdateEmail(int userId, string email)
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 await con.ExecuteAsync(
                     "rm2.sUserUpdate",
-                    new {UserId = userId, Email = email, UserName = userName},
+                    new {UserId = userId, Email = email},
                     commandType: CommandType.StoredProcedure);
             }
         }

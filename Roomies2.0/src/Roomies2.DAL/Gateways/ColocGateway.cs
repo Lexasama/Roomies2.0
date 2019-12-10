@@ -82,13 +82,14 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public async Task<Result> Update(string name, string picPath)
+        public async Task<Result> Update(int colocId, string name, string picPath)
         {
             if (!IsNameValid(name)) return Result.Failure<int>(Status.BadRequest, "The Name is not valid");
 
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 var p = new DynamicParameters();
+                p.Add("@ColocId", colocId);
                 p.Add("@ColocName", name);
                 p.Add("@PicPath", picPath);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);

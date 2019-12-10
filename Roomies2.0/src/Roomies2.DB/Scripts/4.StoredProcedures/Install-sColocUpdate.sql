@@ -1,4 +1,4 @@
-CREATE PROC rm2.sCollocUpdate
+CREATE PROC rm2.sColocUpdate
 (
 	@ColocId   INT,
 	@ColocName NVARCHAR(32), 

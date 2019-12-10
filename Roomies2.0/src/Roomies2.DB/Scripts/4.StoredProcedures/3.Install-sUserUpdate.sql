@@ -12,8 +12,7 @@ BEGIN
     BEGIN TRAN;
 
 		UPDATE rm2.tUser 
-			SET 
-				Email = @Email
+			SET Email = @Email
 			WHERE UserId = @UserId;
     COMMIT
     RETURN 0;

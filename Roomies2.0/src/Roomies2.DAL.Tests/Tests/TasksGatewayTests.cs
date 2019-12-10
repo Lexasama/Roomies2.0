@@ -27,7 +27,7 @@ namespace Roomies2.DAL.Tests.Tests
             string des = TestHelpers.RandomTestName() + "descriptions";
             DateTime date = TestHelpers.RandomDate(5);
             int colocId = 1;
-            bool state = false; // task done
+            bool state = false; // task not done
 
             Result<int> taskResult = await sut.Create(taskName, des, date, colocId);
             Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
