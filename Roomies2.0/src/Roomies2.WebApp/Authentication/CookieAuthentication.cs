@@ -2,7 +2,7 @@
 {
     public static class CookieAuthentication
     {
-        public const string AuthenticationScheme = "Roomies2.0Cookie";
-        public const string AuthenticationType = "Roomies2.0Cookie";
+        public const string AuthenticationScheme = "Roomiesv2Cookie";
+        public const string AuthenticationType = "Roomiesv2Cookie";
     }
 }

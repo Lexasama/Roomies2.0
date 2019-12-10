@@ -1,33 +1,57 @@
 <template>
-  <div id="app">
-    <div id="centered_container">
-      <h2 class="centered">Welcome</h2>
+  <div>
+    <div>
+      <div class="container p-3">
+        <div class="text-center">
+          <h1 class="my-4">Bienvenue sur Roomies</h1>
+          <b-card-group deck>
+            <b-card header="Connexion" class="text-center">
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="login('Google')"
+              >
+                <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="login('Facebook')"
+              >
+                <i class="fa fa-facebook" aria-hidden="true"></i> Se connecter via Facebook
+              </button>
 
-      <div>
-        <img
-          src="https://i.ibb.co/wc1n3HF/Roomies-logo-long.png"
-          alt="Roomies-logo-long"
-          border="0"
-        />
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-default"
+                @click="login('Base')"
+              >Se Connecter via Roomies</button>
+            </b-card>
+            <b-card header="Creer un compte">
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="createAccount('Roomie')"
+              >
+                <i class="fa fa-users" aria-hidden="true"></i> Compte Roomie
+              </button>
 
-        <button
-          style="margin-top:16px"
-          id="centered_container"
-          @click="login('Google')"
-          class="btn btn-lg btn-block btn-primary"
-        >
-          <i class="fa fa-google" aria-hidden="true"></i>
-          connectvia2
-        </button>
-        <br />
-        <button
-          id="centered_container"
-          @click="login('Base')"
-          class="btn btn-block btn-lg btn-dark"
-        >connectvia2</button>
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-primary"
+                @click="dialogVisible = true"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i> Supervisor Account
+              </button>
+              <el-dialog title="Sorry" :visible.sync="dialogVisible" width="30%">
+                <span>We are working on this feature rigth now</span>
+                <span slot="footer" class="dialog-footer"></span>
+              </el-dialog>
+            </b-card>
+          </b-card-group>
+        </div>
       </div>
     </div>
-    <div style="padding-top: 3rem;"></div>
   </div>
 </template>
 
@@ -38,7 +62,8 @@ import Vue from "vue";
 export default {
   data() {
     return {
-      endpoint: null
+      endpoint: null,
+      dialogVisible: false
     };
   },
 
@@ -57,6 +82,12 @@ export default {
 
     onAuthenticated() {
       this.$router.replace("/");
+    },
+    createAccount(account) {
+      if (account === "Roomie") {
+        this.$router.push("/createRoomie");
+      } else {
+      }
     }
   }
 };

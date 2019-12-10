@@ -3,6 +3,10 @@ using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
+using Roomies2.DAL.Model.People.OAuth;
+using System;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace Roomies2.WebApp.Authentication
 {
@@ -19,27 +23,36 @@ namespace Roomies2.WebApp.Authentication
 
         protected override async Task CreateOrUpdateUser(GoogleUserInfo userInfo)
         {
+            string userName = Guid.NewGuid().ToString();
             if (userInfo.RefreshToken != null)
             {
-                await Gateway.CreateOrUpdateGoogleUser(userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken);
+                await Gateway.CreateOrUpdateGoogleUser(userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 
             }
         }
 
-        protected override Task<IAccountData> FindUser(GoogleUserInfo userInfo)
+        protected override Task<UserData> FindUser(GoogleUserInfo userInfo)
         {
             return Gateway.FindByGoogleId(userInfo.GoogleId);
         }
 
         protected override Task<GoogleUserInfo> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
+           //using( HttpClient httpClient = new HttpClient())
+           //{
+           //     httpClient.GetAsync("https://www.googleapis.com/plus/v1/people/me?personfilels=Birthdates");
+           //};
+           
+           
             return Task.FromResult(new GoogleUserInfo
             {
                 RefreshToken = ctx.RefreshToken,
                 Email = ctx.GetEmail(),
-                GoogleId = ctx.GetGoogleId()
-            });
+                GoogleId = ctx.GetGoogleId(),
+                
+            }); ;
         }
     }
+
 
     public class GoogleUserInfo
     {

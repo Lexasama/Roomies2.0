@@ -3,9 +3,9 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Roomies2.DAL.Gateways;
 using Roomies2.WebApp.Authentication;
@@ -27,18 +27,29 @@ namespace Roomies2.WebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+          
             services.AddOptions();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            });
             services.AddSingleton(_ => new UserGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new PictureGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new RoomieGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new ColocGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TokenService>();
             services.AddSingleton<GoogleAuthenticationManager>();
+            services.AddSingleton<FacebookAuthenticationManager>();
 
+
+           
             string secretKey = Configuration["JwtBearer:SigningKey"];
             SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
+          
             services.Configure<TokenProviderOptions>(o =>
             {
                 o.Audience = Configuration["JwtBearer:Audience"];
@@ -78,19 +89,34 @@ namespace Roomies2.WebApp
                 })
                 .AddGoogle(o =>
                 {
-                    o.SignInScheme = CookieAuthentication.AuthenticationScheme;
-                    o.ClientId = Configuration["Authentication:Google:ClientId"];
-                    o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                o.SignInScheme = CookieAuthentication.AuthenticationScheme;
+                o.ClientId = Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                //o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+
                     o.Events = new OAuthEvents
                     {
                         OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<GoogleAuthenticationManager>().OnCreatingTicket(ctx)
                     };
+
                     o.AccessType = "offline";
+                })
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.SignInScheme = CookieAuthentication.AuthenticationScheme;
+                                         
+                   facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                   facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                    facebookOptions.Events = new OAuthEvents
+                    {
+                        OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<FacebookAuthenticationManager>().OnCreatingTicket(ctx)
+                    };
+                    
                 });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

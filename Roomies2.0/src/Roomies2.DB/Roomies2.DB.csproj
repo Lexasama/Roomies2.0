@@ -1,27 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0004.Install-vUser.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0005.Install-vAuthenticationProvider.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0006.Install-sGithubUserCreateOrUpdate.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0007.Install-sGoogleUserCreateOrUpdate.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0008.Install-sPasswordUserCreate.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0009.Install-sPasswordUserUpdate.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0010.Install-sUserDelete.sql" />
-    <EmbeddedResource Include="Scripts\old\20170123160900.0011.Install-sUserUpdate.sql" />
+    <EmbeddedResource Include="Scripts\**\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
