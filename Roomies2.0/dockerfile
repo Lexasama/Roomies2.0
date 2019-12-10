@@ -1,18 +1,17 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-WORKDIR /app
-
+WORKDIR /roomiesApp
 
 COPY *.sln .
-COPY src/*.csproj ./src/
+
+COPY src/Roomies2.DAL/*.csproj ./src/Roomies2.DAL/
+COPY src/Roomies2.DAL.Tests/*.csproj ./src/Roomies2.DAL.Tests/
+COPY src/Roomies2.DB/*.csproj ./src/Roomies2.DB/
+COPY src/Roomies2.WebApp/*.csproj ./src/Roomies2.WebApp/
+
 RUN dotnet restore
 
-# copy everything else and build app
-COPY src/. ./src/
-WORKDIR /app/src
 RUN dotnet publish -c Release -o out
 
-
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
-WORKDIR /app
-COPY --from=build /app/src/out ./
+COPY --from=build /roomiesApp/src/out ./
 ENTRYPOINT ["dotnet", "Roomies2.dll"]
