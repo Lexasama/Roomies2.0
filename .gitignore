@@ -464,8 +464,6 @@ MigrationBackup/
 **/.idea/
 **/.vs/
 
-**/cake/tools/
-
 Roomies2.0/src/Roomies2.DAL.Tests/appsettings.json
 
 Roomies2.0/src/Roomies2.WebApp/wwwroot/pictures/ColocPics/
