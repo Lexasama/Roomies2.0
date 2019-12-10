@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Reflection;
+using DbUp.Engine;
 
 namespace Roomies2.DB
 {
@@ -12,18 +13,18 @@ namespace Roomies2.DB
 
         public static int Main()
         {
-            var connectionString = Configuration["ConnectionStrings:Roomies2DB"];
+            string connectionString = Configuration["ConnectionStrings:Roomies2DB"];
 
             EnsureDatabase.For.SqlDatabase(connectionString);
 
-            var upgrader =
+            UpgradeEngine upgrader =
                 DeployChanges.To
                     .SqlDatabase(connectionString)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
                     .Build();
 
-            var result = upgrader.PerformUpgrade();
+            DatabaseUpgradeResult result = upgrader.PerformUpgrade();
 
             if (!result.Successful)
             {

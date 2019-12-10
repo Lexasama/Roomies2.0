@@ -17,7 +17,7 @@ namespace Roomies2.WebApp.Services
 
         public Token GenerateToken(string userId, string email)
         {
-            var now = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
             // Specifically add the iat (issued timestamp), and sub (subject/user) claims.
             // You can add other claims here, if you want:
@@ -29,14 +29,14 @@ namespace Roomies2.WebApp.Services
             };
 
             // Create the JWT and write it to a string
-            var jwt = new JwtSecurityToken(
+            JwtSecurityToken jwt = new JwtSecurityToken(
                 issuer: _options.Issuer,
                 audience: _options.Audience,
                 claims: claims,
                 notBefore: now,
                 expires: now.Add(_options.Expiration),
                 signingCredentials: _options.SigningCredentials);
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return new Token(encodedJwt, (int)_options.Expiration.TotalSeconds);
         }

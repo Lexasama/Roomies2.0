@@ -15,11 +15,11 @@ namespace Roomies2.DAL.Tests.Tests
         {
             UserGateway sut = new UserGateway(TestHelpers.ConnectionString);
 
-            string email = string.Format("user{0}@test.com", Guid.NewGuid());
-            byte[] password = Guid.NewGuid().ToByteArray();
+            string email = $"user{Guid.NewGuid()}@test.com";
+            var password = Guid.NewGuid().ToByteArray();
 
             //Create
-            Result<int> result = await sut.CreatePasswordUser(email, password);
+            var result = await sut.CreatePasswordUser(email, password);
             UserData user = await sut.FindById(result.Content);
 
             {

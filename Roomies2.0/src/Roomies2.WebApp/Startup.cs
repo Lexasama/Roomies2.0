@@ -131,7 +131,7 @@ namespace Roomies2.WebApp
                 c.WithOrigins(Configuration["Spa:Host"]);
             });
 
-            var secretKey = Configuration["JwtBearer:SigningKey"];
+            string secretKey = Configuration["JwtBearer:SigningKey"];
             SymmetricSecurityKey unused = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
             app.UseAuthentication();

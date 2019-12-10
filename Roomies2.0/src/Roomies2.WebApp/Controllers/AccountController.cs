@@ -76,7 +76,7 @@ namespace Roomies2.WebApp.Controllers
             if (ModelState.IsValid)
             {
 
-                Result<int> result = await UserService.CreatePasswordUser( model.Email, model.Password);
+                var result = await UserService.CreatePasswordUser( model.Email, model.Password);
                 if (result.HasError)
                 {
                     ModelState.AddModelError(string.Empty, result.ErrorMessage);
@@ -136,7 +136,7 @@ namespace Roomies2.WebApp.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string email = User.FindFirst(ClaimTypes.Email).Value;
             Token token = TokenService.GenerateToken(userId, email);
-            IEnumerable<string> providers = await UserGateway.GetAuthenticationProviders(userId);
+            var providers = await UserGateway.GetAuthenticationProviders(userId);
             ViewData["SpaHost"] = SpaOptions.Value.Host;
             ViewData["BreachPadding"] = GetBreachPadding(); // Mitigate BREACH attack. See http://www.breachattack.com/
             ViewData["Token"] = token;
@@ -148,7 +148,7 @@ namespace Roomies2.WebApp.Controllers
 
         async Task SignIn(string email, string userId)
         {
-            List<Claim> claims = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim( ClaimTypes.Email, email, ClaimValueTypes.String ),
                 new Claim( ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String )
@@ -160,7 +160,7 @@ namespace Roomies2.WebApp.Controllers
 
         string GetBreachPadding()
         {
-            byte[] data = new byte[Random.Next(64, 256)];
+            var data = new byte[Random.Next(64, 256)];
             Random.NextBytes(data);
             return Convert.ToBase64String(data);
         }

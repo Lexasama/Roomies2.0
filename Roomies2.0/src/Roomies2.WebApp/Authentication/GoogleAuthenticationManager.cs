@@ -49,7 +49,7 @@ namespace Roomies2.WebApp.Authentication
                 Email = ctx.GetEmail(),
                 GoogleId = ctx.GetGoogleId(),
                 
-            }); ;
+            });
         }
     }
 

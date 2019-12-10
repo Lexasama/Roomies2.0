@@ -16,19 +16,15 @@ namespace Roomies2.WebApp.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
     public class RoomieController : Controller
     {
+        public RoomieGateway Gateway { get; }
 
-        readonly RoomieGateway _roomieGateway;
+        public RoomieController(RoomieGateway roomieGateway) => Gateway = roomieGateway;
 
-        public RoomieController(RoomieGateway roomieGateway)
-        {
-            _roomieGateway = roomieGateway;
-        }
-  
         [HttpGet("{id}", Name = "GetRoomie")]
         public async Task<IActionResult> GetRoomie(int id)
         {
             if(id == 0) id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            Result<RoomieData> result = await _roomieGateway.FindById(id);
+            var result = await Gateway.FindById(id);
             return this.CreateResult(result);
         }
 
@@ -36,7 +32,7 @@ namespace Roomies2.WebApp.Controllers
         public async Task<IActionResult> GetRoomieByEmail(string email)
         {
             if (email == "undefined") email = (HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Email).Value);
-            Result<RoomieData> result = await _roomieGateway.FindRoomieByEmail(email);
+            var result = await Gateway.FindRoomieByEmail(email);
             return this.CreateResult(result);
         }
 
@@ -45,15 +41,15 @@ namespace Roomies2.WebApp.Controllers
         {
             string email = (HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Email).Value);
 
-            Result<UserData> result = await _roomieGateway.FindUserByEmail(email);
+            var result = await Gateway.FindUserByEmail(email);
             return this.CreateResult(result);
         }
 
         [HttpGet("user")]
-        public async Task<IActionResult> getUser()
+        public async Task<IActionResult> GetUser()
         {
            int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-           Result<RoomieProfile> roomie = await _roomieGateway.GetProfile(roomieId);
+           var roomie = await Gateway.GetProfile(roomieId);
 
             return this.CreateResult(roomie);
         }
@@ -61,16 +57,16 @@ namespace Roomies2.WebApp.Controllers
         public async Task<IActionResult> GetProfile(int roomieId)
         {
             if(roomieId == 0 ) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            Result<RoomieProfile> result = await _roomieGateway.GetProfile(roomieId);
+            var result = await Gateway.GetProfile(roomieId);
             return this.CreateResult(result);
         }
 
 
         [HttpGet("getRoomies/{colocId}")]
-        public async Task<IActionResult> getRoomies(int colocId)
+        public async Task<IActionResult> GetRoomies(int colocId)
         {
 
-            Result<IEnumerable<RoomieProfile>> roomies = await _roomieGateway.GetRoomies(colocId);
+            var roomies = await Gateway.GetRoomies(colocId);
             return this.CreateResult(roomies);
         }
 
@@ -79,11 +75,11 @@ namespace Roomies2.WebApp.Controllers
         {
             int id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            Result<int> result = await _roomieGateway.Create( id, model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+            var result = await Gateway.Create( id, model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
             return this.CreateResult(result, o=>
             {
                 o.RouteName = "GetRoomie";
-                o.RouteValues = id => new { id };
+                o.RouteValues = id => new { id = id };
             });
         }
 
@@ -92,7 +88,7 @@ namespace Roomies2.WebApp.Controllers
         {
             if (roomieId == 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            Result<string> result = await _roomieGateway.GetPicture(roomieId);
+            var result = await Gateway.GetPicture(roomieId);
             return this.CreateResult(result);
         }
 
@@ -102,7 +98,7 @@ namespace Roomies2.WebApp.Controllers
         {
             int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            Result result = await _roomieGateway.Update(roomieId,model.UserName,  model.Email, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
+            Result result = await Gateway.Update(roomieId,model.UserName,  model.Email, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
            return this.CreateResult(result);
         }
     }

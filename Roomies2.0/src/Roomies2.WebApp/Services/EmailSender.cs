@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Roomies2.WebApp.Services
 {
@@ -24,36 +21,29 @@ namespace Roomies2.WebApp.Services
         {
             string smtpAddress = Configuration["Emailsender:SMTPAddress"];
             int portNumber = int.Parse(Configuration["EmailSender:PortNumber"]);
-            bool enableSSL = bool.Parse(Configuration["EmailSender:EnableSSL"]);
+            bool enableSsl = bool.Parse(Configuration["EmailSender:EnableSSL"]);
             string emailFromAddress = Configuration["EmailSender:Email"];
             string password = Configuration["EmailSender:Password"];
             string body = EmailContent(Path);
 
+            using MailMessage mail = new MailMessage { From = new MailAddress(emailFromAddress) };
+            mail.To.Add(email);
+            mail.Subject = "Invitation à une colocation";
+            mail.Body = body;
+            mail.IsBodyHtml = true;
 
-            using (MailMessage mail = new MailMessage())
+            using SmtpClient smtp = new SmtpClient(smtpAddress, portNumber)
             {
-                mail.From = new MailAddress(emailFromAddress);
-                mail.To.Add(email);
-                mail.Subject = "Invitation à une colocation";
-                mail.Body = body;
-                mail.IsBodyHtml = true;
+                Credentials = new NetworkCredential(emailFromAddress, password), EnableSsl = enableSsl
+            };
 
-                using (SmtpClient smtp = new SmtpClient(smtpAddress, portNumber))
-                {
-
-                    smtp.Credentials = new NetworkCredential(emailFromAddress, password);
-                    smtp.EnableSsl = enableSSL;
-
-                    try
-                    {
-                        smtp.Send(mail);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Exception caugth in EmailSender.SendEmail to {0}:{1}",email, e.ToString());
-                    }
-                   
-                }
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception caugth in EmailSender.SendEmail to {0}:{1}",email, e);
             }
         }
 

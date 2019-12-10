@@ -53,16 +53,15 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public async Task<Result<IEnumerable<ColocData>>> getList(int roomieId)
+        public async Task<Result<IEnumerable<ColocData>>> GetList(int roomieId)
         {
-            using(SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                IEnumerable<ColocData> l = await con.QueryAsync<ColocData>(
-                    @"SELECT * FROM rm2.vColocInfo WHERE RoomieId = @RoomieId",
-                    new { RoomieId = roomieId });
-                if (l == null) return Result.Failure<IEnumerable<ColocData>>(Status.NotFound, "Not Found");
-                return Result.Success(l);
-            }
+            await using SqlConnection con = new SqlConnection(ConnectionString);
+            var l = await con.QueryAsync<ColocData>(
+                @"SELECT * FROM rm2.vColocInfo WHERE RoomieId = @RoomieId",
+                new { RoomieId = roomieId });
+            return l == null 
+                ? Result.Failure<IEnumerable<ColocData>>(Status.NotFound, "Not Found") 
+                : Result.Success(l);
         }
 
         public async Task<Result> Delete(int colocId)

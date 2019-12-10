@@ -11,58 +11,56 @@ namespace Roomies2.DAL.Tests.Tests
     [TestFixture]
     class TasksGatewayTests
     {
+        private TasksGateway Gateway { get; set; }
 
-        readonly Random _random;
-            public TasksGatewayTests()
+        public TasksGatewayTests()
         {
-            _random = new Random();
+            Gateway = new TasksGateway(TestHelpers.ConnectionString);
         }
 
         [Test]
         public async Task can_create_update_delete_a_task()
         {
-            TasksGateway sut = new TasksGateway(TestHelpers.ConnectionString);
+            
 
             string taskName = TestHelpers.RandomTestName();
             string des = TestHelpers.RandomTestName() + "descriptions";
             DateTime date = TestHelpers.RandomDate(5);
             int colocId = 1;
-            bool state = false; // task not done
 
-            Result<int> taskResult = await sut.Create(taskName, des, date, colocId);
+            var taskResult = await Gateway.Create(taskName, des, date, colocId);
             Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
 
             int taskId = taskResult.Content;
             Result<TaskData> task;
 
             {
-                task = await sut.Find(taskId);
-                CheckTask(task, taskName, des, date, colocId, state);
+                task = await Gateway.Find(taskId);
+                CheckTask(task, taskName, des, date, colocId, false);
             }
 
             {
                 taskName = TestHelpers.RandomTestName();
                 date = TestHelpers.RandomDate(5);
                 des = TestHelpers.RandomTestName() + "New DesCription";
-                state = true;
-                Result t = await sut.Update(taskId, taskName, date, des, state);
+                Result t = await Gateway.Update(taskId, taskName, date, des, true);
                 Assert.That(t.Status, Is.EqualTo(Status.Ok));
 
-                task = await sut.Find(taskId);
-                CheckTask(task, taskName, des, date, colocId, state);
+                task = await Gateway.Find(taskId);
+                CheckTask(task, taskName, des, date, colocId, true);
 
             }
             {
                 
-                Result s = await sut.UpdateState(taskId);
+                Result s = await Gateway.UpdateState(taskId);
                 Assert.That(s.Status, Is.EqualTo(Status.Ok));
-                task = await sut.Find(taskId);
-                CheckTask(task, taskName, des, date, colocId, !state );          
+                task = await Gateway.Find(taskId);
+                CheckTask(task, taskName, des, date, colocId, false );          
             }
             {
-                Result result = await sut.Delete(taskId);
+                Result result = await Gateway.Delete(taskId);
                 Assert.That(result.Status, Is.EqualTo(Status.Ok));
-                task = await sut.Find(taskId);
+                task = await Gateway.Find(taskId);
                 Assert.That(task.Status, Is.EqualTo(Status.NotFound));
             }
 
@@ -71,48 +69,36 @@ namespace Roomies2.DAL.Tests.Tests
         [Test]
         public async Task can_assign_task()
         {
-            TasksGateway sut = new TasksGateway(TestHelpers.ConnectionString);
             string taskName = TestHelpers.RandomTestName();
             string des = TestHelpers.RandomTestName() + "Description";
             int colocId = 1;
             DateTime date = TestHelpers.RandomDate(2);
 
-            Result<int> taskResult = await sut.Create(taskName, des, date, colocId);
+            var taskResult = await Gateway.Create(taskName, des, date, colocId);
             Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
 
             int taskId = taskResult.Content;
-            Result<TaskData> task;
 
             {
-                var r = await sut.Assign(taskId, 1);
+                Result r = await Gateway.Assign(taskId, 1);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-               var r = await sut.Assign(taskId, 1);
+               Result r = await Gateway.Assign(taskId, 1);
                 Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
             }
             {
-                var r = await sut.Assign(taskId, 2);
+                Result r = await Gateway.Assign(taskId, 2);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-                var r = await sut.Unassign(taskId, 2);
+                Result r = await Gateway.Unassign(taskId, 2);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-                var r = await sut.Unassign(taskId, 2);
+                Result r = await Gateway.Unassign(taskId, 2);
                 Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
             }
-        }
-
-        public async void can_found_tasks_of_roomie()
-        {
-
-        }
-
-        public async void can_find_roomies_of_task()
-        {
-
         }
 
         void CheckTask(Result<TaskData> task, string taskName, string des, DateTime date, int colocId, bool state)

@@ -44,7 +44,7 @@ namespace Roomies2.DAL.Gateways
             this.ExistDirectory(path);
             string fileName = image.FileName;
 
-            string ext = image.FileName.Substring(fileName.LastIndexOf("."));
+            string ext = image.FileName.Substring(fileName.LastIndexOf(".", StringComparison.Ordinal));
 
             string name = id.ToString() + ext;
             string filePath = Path.Combine(path, name);
@@ -70,7 +70,7 @@ namespace Roomies2.DAL.Gateways
         {
             if (!Directory.Exists(path))
             {
-                var test = Directory.GetCurrentDirectory();
+                string test = Directory.GetCurrentDirectory();
                 Directory.CreateDirectory(path);
             }
         }

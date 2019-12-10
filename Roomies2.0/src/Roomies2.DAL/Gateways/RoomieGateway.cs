@@ -78,14 +78,12 @@ namespace Roomies2.DAL.Gateways
         }
         public async Task<Result<IEnumerable<RoomieProfile>>> GetRoomies(int colocId)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                IEnumerable<RoomieProfile> roomies = await con.QueryAsync<RoomieProfile>(
-                    @"SELECT * FROM rm2.vColocMembers WHERE ColocId = @ColocId",
-                    new { ColocId = colocId }
-                    );
-                return Result.Success(Status.Ok, roomies);
-            }
+            await using SqlConnection con = new SqlConnection(_connectionString);
+            var roomies = await con.QueryAsync<RoomieProfile>(
+                @"SELECT * FROM rm2.vColocMembers WHERE ColocId = @ColocId",
+                new { ColocId = colocId }
+            );
+            return Result.Success(Status.Ok, roomies);
         }
 
         public async Task<Result<string>> GetPicture(int roomieId)

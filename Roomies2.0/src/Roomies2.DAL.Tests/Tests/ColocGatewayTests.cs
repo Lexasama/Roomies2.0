@@ -20,9 +20,8 @@ namespace Roomies2.DAL.Tests.Tests
         public async Task can_create_update_and_delete_a_coloc()
         {
             string name = TestHelpers.RandomTestName();
-            string picPath = "myAwesomePic";
 
-            Result<int> result = await Sut.Create(1, name);
+            var result = await Sut.Create(1, name);
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
             int colocId = result.Content;
@@ -35,8 +34,8 @@ namespace Roomies2.DAL.Tests.Tests
 
             {
                 name = TestHelpers.RandomTestName();
-                picPath = "an other awesome picture ;)";
-                var r  = await Sut.Update(colocId, name, picPath);
+                string picPath = "an other awesome picture ;)";
+                Result r  = await Sut.Update(colocId, name, picPath);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
 
                 colocData = await Sut.FindById(colocId);

@@ -56,15 +56,15 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result<int>> CreatePasswordUser(string email, byte[] hashedPassword)
         {
-            await using var con = new SqlConnection(ConnectionString);
-            var p = new DynamicParameters();
+            await using SqlConnection con = new SqlConnection(ConnectionString);
+            DynamicParameters p = new DynamicParameters();
             p.Add("@Email", email);
             p.Add("@HashedPassword", hashedPassword);
             p.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
             await con.ExecuteAsync("rm2.sPasswordUserCreate", p, commandType: CommandType.StoredProcedure);
 
-            var status = p.Get<int>("@Status");
+            int status = p.Get<int>("@Status");
             if (status == 1) return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
             
             Debug.Assert(status == 0);
@@ -83,16 +83,16 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result<int>> CreateUser(string userName, string email)
         {
-            await using var con = new SqlConnection(ConnectionString);
+            await using SqlConnection con = new SqlConnection(ConnectionString);
 
-            var p = new DynamicParameters();
+            DynamicParameters p = new DynamicParameters();
             p.Add("@Email", email);
             p.Add("@UserName", userName);
             p.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
             await con.ExecuteAsync("rm2.sUserCreate", p, commandType: CommandType.StoredProcedure);
-            var status = p.Get<int>("@Status");
+            int status = p.Get<int>("@Status");
 
             return status == 0
                 ? Result.Success(Status.Ok, p.Get<int>(("@UserId")))
