@@ -463,6 +463,7 @@ MigrationBackup/
 
 **/.idea/
 **/.vs/
+**/.vscode
 
 **/cake/tools/
 **/appsettings.json

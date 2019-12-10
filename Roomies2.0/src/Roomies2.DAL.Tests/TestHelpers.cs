@@ -14,7 +14,7 @@ namespace Roomies2.DAL.Tests
         private static IConfiguration Configuration =>
             _configuration ?? (_configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build());
 
