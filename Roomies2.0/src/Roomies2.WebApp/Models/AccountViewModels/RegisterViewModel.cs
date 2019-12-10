@@ -4,8 +4,10 @@ namespace Roomies2.WebApp.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
+
         [Required]
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

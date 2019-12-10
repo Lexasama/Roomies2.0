@@ -16,7 +16,7 @@ namespace Roomies2.WebApp.Controllers
             Result<T> result,
             Action<ActionResultOptions<T>> options)
         {
-            ActionResultOptions<T> o = new ActionResultOptions<T>(@this);
+            var o = new ActionResultOptions<T>(@this);
             options(o);
             return @this.CreateResult(result, o);
         }

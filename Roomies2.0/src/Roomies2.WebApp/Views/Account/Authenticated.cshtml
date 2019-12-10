@@ -5,7 +5,7 @@
     Token token = (Token)ViewData["Token"];
     string email = (string)ViewData["Email"];
     string breachPadding = (string)ViewData["BreachPadding"];
-    IEnumerable<string> providers = (IEnumerable<string>)ViewData["Providers"];
+    var providers = (IEnumerable<string>)ViewData["Providers"];
     string providerNames = string.Join(",", providers.Select(p => string.Format("'{0}'", p)));
 }
 

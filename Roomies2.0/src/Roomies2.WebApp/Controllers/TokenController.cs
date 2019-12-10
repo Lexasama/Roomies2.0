@@ -24,13 +24,13 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Token()
         {
-            var identity = User.Identities.SingleOrDefault(i => i.AuthenticationType == CookieAuthentication.AuthenticationScheme);
+            ClaimsIdentity identity = User.Identities.SingleOrDefault(i => i.AuthenticationType == CookieAuthentication.AuthenticationScheme);
             if (identity == null) return Ok(new { Success = false });
 
             string userId = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
             string email = identity.FindFirst(ClaimTypes.Email).Value;
             Token token = _tokenService.GenerateToken(userId, email);
-            IEnumerable<string> providers = await _userGateway.GetAuthenticationProviders(userId);
+            var providers = await _userGateway.GetAuthenticationProviders(userId);
             return Ok(new { Success = true, Bearer = token, Email = email, BoundProviders = providers });
         }
     }

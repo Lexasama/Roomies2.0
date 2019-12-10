@@ -8,10 +8,11 @@ namespace Roomies2.DAL.Model.People
 {
     public class Account : IAccountData
     {
-        protected Account(int userId = default, string userName = null, string email = null, byte[] password = null,
+        protected Account( int userId = default, string userName = null, string email = null, byte[] password = null,
             string firstName = null, string lastName = null, string phone = null, bool sex = default,
-            DateTime birthDate = default)
+            DateTime birthDate = default, bool isSu = default)
         {
+            IsSu = isSu;
             UserId = userId;
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
             Email = email ?? throw new ArgumentNullException(nameof(email));
@@ -32,5 +33,6 @@ namespace Roomies2.DAL.Model.People
         public string Phone { get; }
         public bool Sex { get; }
         public DateTime BirthDate { get; }
+        public bool IsSu { get; }
     }
 }

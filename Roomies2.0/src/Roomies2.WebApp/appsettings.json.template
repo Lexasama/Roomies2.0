@@ -11,8 +11,19 @@
     "Google": {
       "ClientId": "",
       "ClientSecret": ""
+    },
+    "Facebook": {
+      "AppId": "",
+      "AppSecret": ""
     }
 
+  },
+  "EmailSender": {
+    "SMTPAddress": "smtp.gmail.com",
+    "Port": "587",
+    "SSL": "true",
+    "Email": "ITI.Roomies@gmail.com",
+    "Password": ""
   },
   "Spa": {
     "Host": "http://localhost:8080"

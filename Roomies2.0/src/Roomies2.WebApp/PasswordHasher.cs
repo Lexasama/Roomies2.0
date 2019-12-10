@@ -54,8 +54,8 @@ namespace Roomies2.WebApp
             {
                 return false;
             }
-            var areSame = true;
-            for (var i = 0; i < a.Length; i++)
+            bool areSame = true;
+            for (int i = 0; i < a.Length; i++)
             {
                 areSame &= (a[i] == b[i]);
             }
@@ -86,9 +86,9 @@ namespace Roomies2.WebApp
             const int saltSize = 128 / 8; // 128 bits
 
             // Produce a version 2 (see comment above) text hash.
-            byte[] salt = new byte[saltSize];
+            var salt = new byte[saltSize];
             rng.GetBytes(salt);
-            byte[] subkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
+            var subkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
 
             var outputBytes = new byte[1 + saltSize + pbkdf2SubkeyLength];
             outputBytes[0] = 0x00; // format marker
@@ -109,9 +109,9 @@ namespace Roomies2.WebApp
         private static byte[] HashPasswordV3(string password, RandomNumberGenerator rng, KeyDerivationPrf prf, int iterCount, int saltSize, int numBytesRequested)
         {
             // Produce a version 3 (see comment above) text hash.
-            byte[] salt = new byte[saltSize];
+            var salt = new byte[saltSize];
             rng.GetBytes(salt);
-            byte[] subkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, numBytesRequested);
+            var subkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, numBytesRequested);
 
             var outputBytes = new byte[13 + salt.Length + subkey.Length];
             outputBytes[0] = 0x01; // format marker
@@ -170,7 +170,7 @@ namespace Roomies2.WebApp
                     }
 
                 case 0x01:
-                    if (VerifyHashedPasswordV3(hashedPassword, providedPassword, out var embeddedIterCount))
+                    if (VerifyHashedPasswordV3(hashedPassword, providedPassword, out int embeddedIterCount))
                     {
                         // If this hasher was configured with a higher iteration count, change the entry now.
                         return (embeddedIterCount < _iterCount)
@@ -200,14 +200,14 @@ namespace Roomies2.WebApp
                 return false; // bad size
             }
 
-            byte[] salt = new byte[saltSize];
+            var salt = new byte[saltSize];
             Buffer.BlockCopy(hashedPassword, 1, salt, 0, salt.Length);
 
-            byte[] expectedSubkey = new byte[pbkdf2SubkeyLength];
+            var expectedSubkey = new byte[pbkdf2SubkeyLength];
             Buffer.BlockCopy(hashedPassword, 1 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 
             // Hash the incoming password and verify it
-            byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
+            var actualSubkey = KeyDerivation.Pbkdf2(password, salt, pbkdf2Prf, pbkdf2IterCount, pbkdf2SubkeyLength);
             return ByteArraysEqual(actualSubkey, expectedSubkey);
         }
 
@@ -227,7 +227,7 @@ namespace Roomies2.WebApp
                 {
                     return false;
                 }
-                byte[] salt = new byte[saltLength];
+                var salt = new byte[saltLength];
                 Buffer.BlockCopy(hashedPassword, 13, salt, 0, salt.Length);
 
                 // Read the subkey (the rest of the payload): must be >= 128 bits
@@ -236,11 +236,11 @@ namespace Roomies2.WebApp
                 {
                     return false;
                 }
-                byte[] expectedSubkey = new byte[subkeyLength];
+                var expectedSubkey = new byte[subkeyLength];
                 Buffer.BlockCopy(hashedPassword, 13 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 
                 // Hash the incoming password and verify it
-                byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, subkeyLength);
+                var actualSubkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, subkeyLength);
                 return ByteArraysEqual(actualSubkey, expectedSubkey);
             }
             catch

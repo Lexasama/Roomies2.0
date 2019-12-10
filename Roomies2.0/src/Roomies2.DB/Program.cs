@@ -3,27 +3,28 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Reflection;
+using DbUp.Engine;
 
 namespace Roomies2.DB
 {
     public class Program
     {
-        static IConfiguration _configuration;
+        private static IConfiguration _configuration;
 
-        public static int Main(string[] args)
+        public static int Main()
         {
-            var connectionString = Configuration["ConnectionStrings:Roomies2DB"];
+            string connectionString = Configuration["ConnectionStrings:Roomies2DB"];
 
             EnsureDatabase.For.SqlDatabase(connectionString);
 
-            var upgrader =
+            UpgradeEngine upgrader =
                 DeployChanges.To
                     .SqlDatabase(connectionString)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
                     .Build();
 
-            var result = upgrader.PerformUpgrade();
+            DatabaseUpgradeResult result = upgrader.PerformUpgrade();
 
             if (!result.Successful)
             {
@@ -40,21 +41,11 @@ namespace Roomies2.DB
             return 0;
         }
 
-        static IConfiguration Configuration
-        {
-            get
-            {
-                if (_configuration == null)
-                {
-                    _configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: false)
-                        .AddEnvironmentVariables()
-                        .Build();
-                }
-
-                return _configuration;
-            }
-        }
+        private static IConfiguration Configuration =>
+            _configuration ?? (_configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddEnvironmentVariables()
+                .Build());
     }
 }
