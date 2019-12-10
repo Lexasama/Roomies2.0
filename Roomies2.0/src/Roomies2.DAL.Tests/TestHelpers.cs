@@ -9,12 +9,12 @@ namespace Roomies2.DAL.Tests
         private static readonly Random Random = new Random();
         private static IConfiguration _configuration;
 
-        public static string ConnectionString => Configuration["ConnectionStrings:PrimarySchoolDB"];
+        public static string ConnectionString => Configuration["ConnectionStrings:Roomies2DB"];
 
         private static IConfiguration Configuration =>
             _configuration ?? (_configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build());
 
