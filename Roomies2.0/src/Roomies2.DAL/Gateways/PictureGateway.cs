@@ -26,7 +26,7 @@ namespace Roomies2.DAL.Gateways
             _path = @"../Roomies2.WebApp/wwwroot/pictures";
             _serverLink = "http://localhost:5000/Pictures";
             _colocFolder = "/ColocPics/";
-            _roomieFolder = "/ RoomiesPics /";
+            _roomieFolder = "/RoomiesPics/";
         }
 
         public async Task<Result> UploadPicture(IFormFile image, int id, bool isRoomie)
@@ -57,12 +57,19 @@ namespace Roomies2.DAL.Gateways
             {
                 await image.CopyToAsync(fileStream);
             }
-            Result result = await UpdateRoomiePic(id, savedPath);
+
+            Result result = null;
 
             if (!isRoomie)
             {
-                result =  await UpdateColocPic(id, savedPath);
+                result = await UpdateColocPic(id, savedPath);
             }
+            else
+            {
+                result = await UpdateRoomiePic(id, savedPath);
+
+            }
+
 
             return result;
         }

@@ -22,16 +22,44 @@ Vue.use(ElementUI, { locale });
 Vue.use(VueCookies);
 Vue.use(Vueaxios, axios);
 
+class currentColoc {
+  constructor(colocId, colocName, creationDate, picPath) {
+    this.colocId = colocId;
+    this.colocName = colocName;
+    this.creationDate = creationDate;
+    this.picPath = picPath;
+  }
+
+  setCurrentColoc(coloc) {
+    this.colocId = coloc.colocId;
+    this.colocName = coloc.colocName;
+    this.creationDate = coloc.creationDate;
+    if (coloc.picPath != null) {
+      this.picPath = coloc.picPath;
+    }
+  }
+  setColocId(colocId) {
+    this.colocId = colocId;
+  }
+
+  setColocName(colocName) {
+    this.colocName = colocName;
+  }
+
+  setCreationDate(date) {
+    this.creationDate = date;
+  }
+
+  setPicPath(picPath) {
+    this.picPath = picPath;
+  }
+}
 class colocs {
   constructor(list) {
     this.colocList = list;
-    this.currentColoc;
   }
   setList(list) {
     this.colocList = list;
-  }
-  setCurrentColoc(coloc) {
-    this.currentColoc = coloc;
   }
 }
 class user {
@@ -61,12 +89,28 @@ class user {
   setPicPath(picPath) {
     this.picPath = picPath;
   }
+  getPicPath() {
+    return this.picPath;
+  }
 }
 
 Vue.use(VueGlobalVariable, {
   globals: {
-    $currentColoc: new colocs(),
-    $user: new user()
+    $colocs: new colocs(null),
+    $currentColoc: new currentColoc(
+      -1,
+      "",
+      new Date(),
+      "http://localhost:5000/Pictures/ColocPics/default.png"
+    ),
+    $user: new user(
+      -1,
+      "",
+      "",
+      "",
+      "",
+      "http://localhost:5000/Pictures/RoomiesPics/default.png"
+    )
   }
 });
 

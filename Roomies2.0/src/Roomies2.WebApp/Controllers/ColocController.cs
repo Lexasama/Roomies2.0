@@ -33,7 +33,7 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet("colocList/{roomieId}")]
         public async Task<IActionResult> GetColocList(int roomieId)
         {
-            if (roomieId == 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            if (roomieId <= 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
             var colocList = await Gateway.GetList(roomieId);
             return this.CreateResult(colocList);

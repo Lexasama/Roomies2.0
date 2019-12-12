@@ -41,7 +41,10 @@ export default {
     return {};
   }, //End data
   async mounted() {
-    console.log(this.roomie.picturePath);
+    if (this.roomie == null) {
+      this.roomie = this.$user;
+    }
+    console.log("#roomiesProfile", this.roomie);
   } //end mounted
 }; // END EXPORT DEFAULT
 </script>

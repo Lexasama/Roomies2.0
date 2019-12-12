@@ -48,11 +48,14 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<UserData> FindByGoogleId(string googleId)
         {
-            await using var con = new SqlConnection(ConnectionString);
-            return await con.QueryFirstOrDefaultAsync<UserData>(
-                "select  * FROM  rm2.vUser u WHERE u.GoogleId = @GoogleId",
-                new {GoogleId = googleId});
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                return await con.QueryFirstOrDefaultAsync<UserData>(
+                    "select * FROM  rm2.vUser u WHERE u.GoogleId = @GoogleId",
+                    new { GoogleId = googleId });
+            }
         }
+    
 
         public async Task<Result<int>> CreatePasswordUser(string email, byte[] hashedPassword)
         {

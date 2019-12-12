@@ -9,13 +9,13 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-	IF NOT EXISTS (SELECT PicturePath FROM rm2.vRoomie r WHERE r.RoomieId = @RoomieId)
+	IF NOT EXISTS (SELECT PicturePath FROM rm2.tRoomie r WHERE r.RoomieId = @RoomieId)
 		BEGIN 
 			ROLLBACK;
 			 RETURN 1;
             END;
 
-    UPDATE rm2.vRoomie
+    UPDATE rm2.tRoomie
     SET
 		PicturePath = @PicturePath
 		WHERE RoomieId = @RoomieId;

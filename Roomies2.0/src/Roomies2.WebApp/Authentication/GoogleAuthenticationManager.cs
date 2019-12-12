@@ -23,7 +23,6 @@ namespace Roomies2.WebApp.Authentication
 
         protected override async Task CreateOrUpdateUser(GoogleUserInfo userInfo)
         {
-            string userName = Guid.NewGuid().ToString();
             if (userInfo.RefreshToken != null)
             {
                 await Gateway.CreateOrUpdateGoogleUser(userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 

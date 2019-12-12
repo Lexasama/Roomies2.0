@@ -10,7 +10,7 @@ export async function getColocListAsync(roomieId) {
   return await getAsync(`${endpoint}/colocList/${roomieId}`);
 }
 export function updateColocAsync(model) {
-  return putAsync(`${endpoint}/${model.colocId}`, model);
+  return putAsync(`${endpoint}`, model);
 }
 
 export function createColocAsync(model) {

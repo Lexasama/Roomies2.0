@@ -86,16 +86,16 @@ namespace Roomies2.DAL.Gateways
             return Result.Success(Status.Ok, roomies);
         }
 
-        public async Task<Result<string>> GetPicture(int roomieId)
+        public async Task<Result<Picture>> GetPicture(int roomieId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                string picPath = await con.QueryFirstOrDefaultAsync<string>(
+                Picture picPath = await con.QueryFirstOrDefaultAsync<Picture>(
                     @"SELECT PicturePath FROM rm2.tRoomie WHERE RoomieId = @RoomieId;", 
                     new { RoomieId = roomieId }
                     );
             
-            if (picPath == null) return Result.Failure<string>(Status.NotFound, "This Profile does not have a picture");
+            if (picPath == null) return Result.Failure<Picture>(Status.NotFound, "This Profile does not have a picture");
             return Result.Success(Status.Ok, picPath);
             }
         }

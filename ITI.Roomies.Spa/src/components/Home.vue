@@ -31,6 +31,7 @@ import { getRoomieAsync } from "../api/RoomieApi";
 import { getColocListAsync } from "../api/ColocApi";
 import checkUser from "../components/Utility/CheckUser";
 import AuthService from "../services/AuthService";
+import { get } from "http";
 
 export default {
   components: {
@@ -40,22 +41,9 @@ export default {
   },
   data() {
     return {
-      items: [
-        "Taks",
-        "Calendar",
-        "Goceries",
-        "Budget",
-        "Settings",
-        "more",
-        "Roomie1",
-        "Roomie2",
-        "Roomie3",
-        "Roomie4",
-        "Roomie5"
-      ],
+      items: ["Task", "Calendar", "Groceries", "Settings", "more", "Axel"],
       lastClicked: "click on something!",
-      roomie: {},
-      navbarInfo: {}
+      roomie: {}
     };
   },
   async mounted() {
@@ -68,8 +56,8 @@ export default {
         } else {
           try {
             await this.setUser();
-            await this.setColoc();
-            await this.setNavBar();
+            await this.setColocList();
+            await this.setCurrentColoc();
           } catch (error) {
             console.error(error);
           }
@@ -90,36 +78,32 @@ export default {
     },
 
     async setUser() {
-      // this.$user.userId = this.roomie.roomieId;
       this.$user.setId(this.roomie.roomieId);
       this.$user.setEmail(AuthService.email);
       this.$user.setLastName(this.roomie.lastName);
       this.$user.setFirstName(this.roomie.firstName);
       this.$user.setUserName(this.roomie.userName);
       this.$user.setPicPath(this.roomie.picturePath);
-      let list = await getColocListAsync(this.$user.userId);
-      this.$user.setColocList(list);
       console.log("#Home: $user");
       console.log(this.$user);
     },
-    async setNavBar() {
-      this.navbarInfo.email = this.$user.email;
-      this.navbarInfo.picPath = this.$user.picPath;
-      this.navbarInfo.colocList = this.$user.colocList;
-      console.log("#Home: navbarInfo");
-      console.log(this.navbarInfo);
-    },
-    async setColoc() {
-      var colocData = this.$user.colocList[0];
+    async setCurrentColoc() {
+      var coloc = this.$colocs.colocList[0];
 
-      if (colocData != null) {
-        this.$currentColoc.setColocId(colocData.colocId);
-        this.$currentColoc.setColocName(colocData.colocName);
-        this.$currentColoc.setPicPath(colocData.picPath);
-        this.$currentColoc.setDate(colocData.creationDate);
+      if (coloc != null) {
+        this.$currentColoc.setCurrentColoc(coloc);
+      }
+      console.log("#Home: Current-coloc");
+      console.log(this.$currentColoc);
+    },
+    async setColocList() {
+      var colocs = await getColocListAsync(this.$user.userId);
+      console.log("colocs", colocs);
+      if (colocs.length > 0) {
+        this.$colocs.setList(colocs);
       }
       console.log("#Home: currentColoc");
-      console.log(this.$currentColoc);
+      console.log(this.$colocs);
     }
   }
 };

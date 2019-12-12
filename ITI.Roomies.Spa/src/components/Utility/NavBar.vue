@@ -1,16 +1,15 @@
 <template>
   <div>
-    <div>
-      <checkUser />
-    </div>
     <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="/home">
-        <el-image style="width: 80px; height: 80px" :src="colocPic" fit="fit">
-          <div slot="placeholder" class="image-slot">
-            Loading
-            <span class="dot">...</span>
-          </div>
-        </el-image>
+      <b-navbar-brand>
+        <router-link to="/ColocProfile">
+          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit">
+            <div slot="placeholder" class="image-slot">
+              Loading
+              <span class="dot">...</span>
+            </div>
+          </el-image>
+        </router-link>
         <!-- <img src="../../../public/favicon.png" style="width: 60px; height: 60px" /> -->
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -20,11 +19,12 @@
           <!-- <b-nav-item href="#">Link</b-nav-item> -->
 
           <b-nav-item @click="refresh()">
-            <b-button variant="outline-primary" @click="drawer = true">Flats</b-button>
+            <b-button variant="outline-primary" @click="drawerSwitch()">Flats</b-button>
           </b-nav-item>
         </b-navbar-nav>
-
-        <img class="image" src="../../../public/Logo.png" width="80" />
+        <router-link to="/home">
+          <img class="image" src="../../../public/Logo.png" width="80" />
+        </router-link>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -32,14 +32,24 @@
             <template v-slot:button-content>
               <em>{{ auth.email }}</em>
             </template>
-            <b-dropdown-item href="/profile">Profile</b-dropdown-item>
-            <b-dropdown-item href="/settings">Settings</b-dropdown-item>
-            <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+            <router-link to="/profile">
+              <b-dropdown-item href="/profile">Profile</b-dropdown-item>
+            </router-link>
+            <router-link to="/settings">
+              <b-dropdown-item href="/settings">Settings</b-dropdown-item>
+            </router-link>
+            <router-link to="/logout">
+              <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+            </router-link>
           </b-nav-item-dropdown>
         </b-navbar-nav>
         <b-navbar-nav>
-          <b-navbar-brand href="/profile">
-            <el-avatar :size="50" :src="path"></el-avatar>
+          <b-navbar-brand>
+            <div style>
+              <router-link to="/profile">
+                <el-image class="avatar" :src="getUserPic" fit="scale-down"></el-image>
+              </router-link>
+            </div>
           </b-navbar-brand>
         </b-navbar-nav>
       </b-collapse>
@@ -58,36 +68,29 @@
 
 <script>
 import AuthService from "@/services/AuthService";
-import { getPicAsync } from "@/api/RoomieApi.js";
+import { getPicAsync } from "../../api/RoomieApi.js";
 import colocList from "../Coloc/ColocList";
-import checkUser from "@/components/Utility/CheckUser";
 
 export default {
-  props: {
-    navInfo: {
-      type: Object,
-      required: true
-    }
-  },
   components: {
-    colocList,
-    checkUser
+    colocList
   },
 
   data() {
     return {
       colocList: [],
-      path: null,
-      roomieId: null,
-      drawer: false,
-      colocPic: "http://localhost:5000/Pictures/ColocPics/default.png"
+      drawer: false
     };
   },
-  async mounted() {
-    // this.colocPic =
-  },
+  async mounted() {},
   computed: {
-    auth: () => AuthService
+    auth: () => AuthService,
+    getUserPic: function() {
+      return this.$user.picPath;
+    },
+    getColocPic: function() {
+      return this.$currentColoc.picPath;
+    }
   },
   methods: {
     async refresh() {
@@ -106,6 +109,9 @@ export default {
     },
     errorHandler() {
       return true;
+    },
+    drawerSwitch() {
+      this.drawer = !this.drawer;
     }
   }
 };
@@ -117,5 +123,10 @@ export default {
   left: 50%;
   margin: 0 auto;
   width: 80;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50% !important;
 }
 </style>

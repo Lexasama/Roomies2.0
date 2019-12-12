@@ -7,11 +7,11 @@
         </router-link>
       </div>
       <div>
-        <template>
+        <template v-on:coloccreated="this.show()">
           <el-table :data="colocList" style="width: 100%">
             <el-table-column prop="picPath" label width="110">
               <template slot-scope="scope">
-                <el-avatar shape="square" :size="50" :src="scope.row.picPath"></el-avatar>
+                <el-image style="width:50px; height:50px" :src="scope.row.picPath" fit="scale-down"></el-image>
                 <div class="block"></div>
               </template>
             </el-table-column>
@@ -34,7 +34,7 @@
         </template>
 
         <el-drawer title="Profile" :visible.sync="drawer" direction="rtl" :with-header="false">
-          <ColocProfileRead :colocId="this.selectedColoc.colocId" />
+          <ColocProfileRead :coloc="this.selectedColoc" />
         </el-drawer>
       </div>
     </el-card>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { EventBus } from "../Utility/event-bus";
 import { getColocListAsync } from "../../api/ColocApi";
 import ColocProfileRead from "./ColocProfileRead.vue";
 export default {
@@ -55,36 +56,35 @@ export default {
       selectedColoc: {}
     };
   },
+
   async mounted() {
-    this.colocList = await getColocListAsync();
-    console.log(this.$user.userId);
-    console.log(this.colocList);
+    this.refreshList();
   }, //end mounted
   methods: {
     handleEdit(index, row) {
-      console.log(index);
-      console.log(row);
+      console.log("index", index);
+      console.log("row", row);
       this.selectedColoc = row;
       this.drawer = !this.drawer;
     },
 
     switchColoc(coloc) {
-      console.log(coloc);
+      console.log("colocToswitchTo", coloc);
       this.setColoc(coloc);
     },
-    async setColoc(coloc) {
-      var colocData = coloc;
-
-      if (colocData != null) {
-        this.$currentColoc.setColocId(colocData.colocId);
-        this.$currentColoc.setColocName(colocData.colocName);
-        this.$currentColoc.setPicPath(colocData.picPath);
-        this.$currentColoc.setDate(colocData.creationDate);
-      }
-      console.log("#Home: currentColoc");
-      console.log(this.$currentColoc);
+    show() {
+      this.$message({
+        showClose: true,
+        message: "event",
+        type: "success"
+      });
+    },
+    async refreshList() {
+      this.colocList = await getColocListAsync();
+      console.log("colocList", this.colocList);
+      this.$colocs.setList(this.colocList);
     }
-  }
+  } //end methods
 };
 </script>
 

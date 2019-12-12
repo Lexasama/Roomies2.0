@@ -16,15 +16,27 @@ namespace Roomies2.WebApp.Services
             Configuration = configuration;
             Path = path;
         }
+    
+        public EmailSender(string path)
+        {
+            Path = path;
+        }
 
         public void SendEmail( string email)
         {
-            string smtpAddress = Configuration["Emailsender:SMTPAddress"];
-            int portNumber = int.Parse(Configuration["EmailSender:PortNumber"]);
-            bool enableSsl = bool.Parse(Configuration["EmailSender:EnableSSL"]);
-            string emailFromAddress = Configuration["EmailSender:Email"];
-            string password = Configuration["EmailSender:Password"];
-            string body = EmailContent(Path);
+            //string smtpAddress = Configuration["Emailsender:SMTPAddress"];
+            //int portNumber = int.Parse(Configuration["EmailSender:PortNumber"]);
+            //bool enableSsl = bool.Parse(Configuration["EmailSender:EnableSSL"]);
+            //string emailFromAddress = Configuration["EmailSender:Email"];
+            //string password = Configuration["EmailSender:Password"];
+
+            string smtpAddress = "smtp.gmail.com";
+            int portNumber = 465;
+            bool enableSsl = true;
+            string emailFromAddress = "ITI.Roomies@gmail.com";
+            string password = "0123456789A@";
+            string body = "bienvenue";
+                //EmailContent(Path);
 
             using MailMessage mail = new MailMessage { From = new MailAddress(emailFromAddress) };
             mail.To.Add(email);

@@ -26,76 +26,46 @@
         <template>
           <h3>List of Roomies</h3>
           <el-divider></el-divider>
-          <el-table
-            ref="membresTable"
-            :data="members"
-            highlight-current-row
-            @current-change="handleCurrentChange"
-            style="width: 100%"
-          >
-            <el-table-column property="lastName" label="Lastname"></el-table-column>
-            <el-table-column property="firstName" label="Firstname"></el-table-column>
-            <el-table-column property="phone" label="Phone"></el-table-column>
-          </el-table>
+          <roomieList :colocId="coloc.colocId" />
         </template>
       </div>
-
-      <el-drawer title="Profile" :visible.sync="drawer1" direction="rtl">
-        <span></span>
-        <profile :roomie="roomie" />
-      </el-drawer>
     </el-card>
   </div>
 </template>
 
 <script>
 import Profile from "../Roomie/RoomiesProfile.vue";
+import colocList from "../Coloc/ColocList.vue";
 import { getColocAsync } from "../../api/ColocApi";
 import { getRoomiesAsync } from "@/api/RoomieApi";
+import roomieList from "../Roomie/RoomieList";
 
 export default {
   components: {
-    Profile
+    Profile,
+    colocList,
+    roomieList
   },
   props: {
-    colocId: {
-      type: Number,
-      required: false
+    coloc: {
+      type: Object,
+      required: true
     }
   }, //end props
   data() {
     return {
-      roomie: {},
-      profile: {},
-      drawer1: false,
-      colocDawer: false,
-      innerDrawer: false,
-      currentRow: null,
-      coloc: {},
-      members: [],
-      colocList: [],
-      selectedColoc: {}
+      coloc: {}
     };
   },
 
   async mounted() {
-    try {
-      this.colocId = this.$route.params.colocId;
-
-      if (this.colocId == null) {
-        this.coloc = this.$currentColoc;
-        this.colocId = this.$currentColoc.colocId;
-      } else {
-        this.coloc = await getColocAsync(this.colocId);
-      }
-
-      this.members = await getRoomiesAsync(this.colocId);
-      this.colocList = await getColocListAsync(this.$user.userId);
-    } catch (error) {
-      console.error(error);
-    }
+    console.log("coloc", this.coloc);
   },
-  computed: {},
+  computed: {
+    getColoc: function() {
+      return this.coloc;
+    }
+  }, //end computed
   methods: {
     handleClose(done) {
       this.$confirm("You still have unsaved data, proceed?")
