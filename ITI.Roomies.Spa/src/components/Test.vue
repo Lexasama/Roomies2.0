@@ -1,6 +1,6 @@
 <template>
   <div>
-    <invite />
+    <TasksCreate />
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import colocProfile from "@/components/Coloc/ColocProfile";
 import ImageUploader from "@/components/Utility/ImageUploader";
 import colocList from "../components/Coloc/ColocList";
 import roomieList from "../components/Roomie/RoomieList";
+import TasksCreate from "../components/Tasks/TaskCreate";
 export default {
   components: {
     profile,
@@ -22,7 +23,8 @@ export default {
     colocProfile,
     ImageUploader,
     colocList,
-    roomieList
+    roomieList,
+    TasksCreate
   },
   data() {
     return {

@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Models
 {
-    public class InviteViewModel
+    public class TaskViewModel
     {
         [Required]
-        public IEnumerable<string> Emails { get; set; }
+        public string TaskName { get; set; }
 
         [Required]
+        public DateTime TaskDate { get; set; }
+
+        public string TaskDes { get; set; }
+
+        [Required]
+        public IEnumerable<int> Roomies { get; set; }
+        [Required]
         public int ColocId { get; set; }
+
     }
 }

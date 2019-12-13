@@ -27,7 +27,7 @@ namespace Roomies2.DAL.Gateways
                     new { TaskId = taskId });
 
                 if (task == null) return Result.Failure<TaskData>(Status.NotFound, "Not found.");
-                return Result.Success(task);
+                return Result.Success(Status.Ok, task);
             }
         }
 

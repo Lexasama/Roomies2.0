@@ -45,8 +45,6 @@ namespace Roomies2.WebApp
             services.AddSingleton<GoogleAuthenticationManager>();
             services.AddSingleton<FacebookAuthenticationManager>();
 
-
-           
             string secretKey = Configuration["JwtBearer:SigningKey"];
             SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 

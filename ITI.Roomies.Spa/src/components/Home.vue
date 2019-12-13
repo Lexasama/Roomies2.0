@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      items: ["Task", "Calendar", "Groceries", "Settings", "more", "Axel"],
+      items: ["Tasks", "Calendar", "Groceries", "Settings", "more", "Axel"],
       lastClicked: "click on something!",
       roomie: {}
     };
@@ -74,7 +74,12 @@ export default {
 
   methods: {
     handleClick(item) {
+      console.log("item", item);
       this.lastClicked = item;
+
+      if (item == "Tasks") {
+        this.$router.push("/Tasks");
+      }
     },
 
     async setUser() {
