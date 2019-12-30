@@ -14,10 +14,14 @@
 <script>
 import tasksCreate from "./TaskCreate";
 import history from "./TaskHistory";
+
 export default {
   components: {
     tasksCreate,
     history
+  },
+  data() {
+    return {};
   }
 };
 </script>

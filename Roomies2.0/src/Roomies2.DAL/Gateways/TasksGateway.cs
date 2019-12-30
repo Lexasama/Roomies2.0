@@ -1,7 +1,9 @@
 ﻿using Dapper;
+using Roomies2.DAL.Model;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -30,6 +32,29 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success(Status.Ok, task);
             }
         }
+
+
+        public async Task<IEnumerable<TasksRoomie>> GetTasks(int colocId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                return await con.QueryAsync<TasksRoomie>(
+                    @"SELECT * FROM rm2.vTasksRoomies WHERE ColocId = @ColocId;", 
+                    new {ColocId = colocId });
+            }
+        }
+
+        public async Task<IEnumerable<Tasks2>> GET(int colocId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                return await con.QueryAsync<Tasks2>(
+                    @"SELECT * FROM rm2.vTasksRoomies WHERE ColocId = @ColocId;",
+                    new { ColocId = colocId });
+            }
+        }
+
+
 
         public async Task<Result<int>> Create(string taskName, string des, DateTime date, int colocId)
         {
@@ -95,7 +120,6 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result> Assign(int taskId, int roomieId)
         {
-
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 var p = new DynamicParameters();

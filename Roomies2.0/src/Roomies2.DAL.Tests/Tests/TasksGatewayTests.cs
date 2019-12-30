@@ -100,6 +100,12 @@ namespace Roomies2.DAL.Tests.Tests
                 Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
             }
         }
+        [Test]
+       public async Task test_return_value()
+        {
+            var r = await Gateway.GET(1);
+            Console.WriteLine(r);
+        }
 
         void CheckTask(Result<TaskData> task, string taskName, string des, DateTime date, int colocId, bool state)
         {
