@@ -13,9 +13,8 @@ BEGIN
 		ROLLBACK;
         RETURN 1;
     END;
-
-	DELETE FROM rm2.itSupervisorBuilding WHERE BuildingId = @BuildingId;
-	DELETE FROM rm2.itBuilding WHERE @BuildingId = @BuildingId;
+	
+	DELETE FROM rm2.tBuilding WHERE @BuildingId = @BuildingId;
 
 	COMMIT;
 	RETURN 0;

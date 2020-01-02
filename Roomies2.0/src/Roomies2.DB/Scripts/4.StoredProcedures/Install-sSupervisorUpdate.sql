@@ -14,7 +14,7 @@ BEGIN
 	SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-	IF NOT EXISTS( SELECT * FROM rm2.tSupervisor s WHERE s.SupervisorId = @SupervisorId);
+	IF NOT EXISTS( SELECT * FROM rm2.tSupervisor s WHERE s.SupervisorId = @SupervisorId)
 	BEGIN
 		ROLLBACK;
 		RETURN 1;

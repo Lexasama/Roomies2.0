@@ -16,7 +16,10 @@ namespace Roomies2.DAL.Tests
 
         public static string ConnectionString
         {
-            get { return Configuration["ConnectionStrings:Roomies2DB"]; }
+            get 
+            { 
+                return Configuration["ConnectionStrings:Roomies2DB"]; 
+            }
         }
 
         static IConfiguration Configuration
@@ -27,7 +30,7 @@ namespace Roomies2.DAL.Tests
                 {
                     _configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", optional: false)
+                        .AddJsonFile("appsettings.json", optional: true)
                         .AddEnvironmentVariables()
                         .Build();
                 }
@@ -36,18 +39,31 @@ namespace Roomies2.DAL.Tests
             }
         }
 
-        public static async Task<int> StubUserId()
+        public static async Task<Result<int>> StubSupervisor()
+        {
+            SupervisorGateway supervisorGateway = new SupervisorGateway(ConnectionString);
+            Result<int> user = await StubUser();
+
+            string lastName = TestHelpers.RandomTestName();
+            string firstName = TestHelpers.RandomTestName();
+            string phone = TestHelpers.RandomPhone();
+
+            Result<int> super = await supervisorGateway.Create(user.Content, lastName, firstName, phone );
+            return super;
+        }
+
+        public static async Task<Result<int>> StubUser()
         {
             UserGateway sut = new UserGateway(ConnectionString);
             string email = $"user{Guid.NewGuid()}@test.com";
             Byte[] password = Guid.NewGuid().ToByteArray();
 
-            var c = await sut.CreatePasswordUser(email, password);
+            Result<int> userResult = await sut.CreatePasswordUser(email, password);
             
-            return c.Content;
+            return userResult;
         }
 
-        public static async Task<int> StubRoomieId()
+        public static async Task<Result<int>> StubRoomie()
         {
             RoomieGateway rg = new RoomieGateway(ConnectionString);
 
@@ -60,11 +76,11 @@ namespace Roomies2.DAL.Tests
             string desc = "Une belle description";
             string pic = "pic";
 
-            int roomieId = await StubUserId();
+            Result<int> roomieId = await StubUser();
 
-            var r = await rg.Create(roomieId, userName, lastName, firstName, phone, sex, birthDate, desc, pic);
+            Result<int> roomie = await rg.Create(roomieId.Content, userName, lastName, firstName, phone, sex, birthDate, desc, pic);
 
-            return r.Content;
+            return roomie;
         }
     }
 

@@ -21,8 +21,6 @@ namespace Roomies2.DAL.Tests.Tests
         [Test]
         public async Task can_create_update_delete_a_task()
         {
-            
-
             string taskName = TestHelpers.RandomTestName();
             string des = TestHelpers.RandomTestName() + "descriptions";
             DateTime date = TestHelpers.RandomDate(5);
@@ -74,29 +72,37 @@ namespace Roomies2.DAL.Tests.Tests
             int colocId = 1;
             DateTime date = TestHelpers.RandomDate(2);
 
+            //Create roomie
+            Result<int> roomieResult = await TestStubs.StubRoomie();
+            int roomieId = roomieResult.Content;
+
+
             var taskResult = await Gateway.Create(taskName, des, date, colocId);
             Assert.That(taskResult.Status, Is.EqualTo(Status.Created));
 
             int taskId = taskResult.Content;
 
             {
-                Result r = await Gateway.Assign(taskId, 1);
+                Result r = await Gateway.Assign(taskId, roomieId);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-               Result r = await Gateway.Assign(taskId, 1);
+               Result r = await Gateway.Assign(taskId, roomieId);
                 Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
             }
+            ///create an other roomie to update
+            roomieResult = await TestStubs.StubRoomie();
+            roomieId = roomieResult.Content;
             {
-                Result r = await Gateway.Assign(taskId, 2);
+                Result r = await Gateway.Assign(taskId, roomieId);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-                Result r = await Gateway.Unassign(taskId, 2);
+                Result r = await Gateway.Unassign(taskId, roomieId);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
             }
             {
-                Result r = await Gateway.Unassign(taskId, 2);
+                Result r = await Gateway.Unassign(taskId, roomieId);
                 Assert.That(r.Status, Is.EqualTo(Status.BadRequest));
             }
         }

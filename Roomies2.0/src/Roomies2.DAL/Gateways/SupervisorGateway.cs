@@ -20,12 +20,27 @@ namespace Roomies2.DAL.Gateways
             _connectionString = connectionString;
         }
 
-        public async Task<Result<int>> Create(string lastName, string firstName, string phone)
+        public async Task<Result<int>> Create(int supervisorId, string lastName, string firstName, string phone)
         {
             if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
             if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
 
-            throw new NotImplementedException();
+            using(SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@SupervisorId", supervisorId);
+                p.Add("@LastName", lastName);
+                p.Add("@FirstName", firstName);
+                p.Add("@Phone", phone);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sSupervisorCreate", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure<int>(Status.BadRequest, "This supervisor already exists");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Created, p.Get<int>("@SupervisorId"));
+            }
         }
 
         public async Task<Result<SupervisorData>> Find(int superId)
@@ -43,9 +58,29 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public Task Update(int superId, string lastName, string firstName, string email, string phone)
+        public async Task<Result> Update(int supervisorId, string email, string lastName, string firstName, string phone)
         {
-            throw new NotImplementedException();
+            if (!IsNameValid(lastName)) return Result.Failure<int>(Status.BadRequest, "The lastname is not valid");
+            if (!IsNameValid(firstName)) return Result.Failure<int>(Status.BadRequest, "The firstname is not valid");
+
+            using( SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@SupervisorId", supervisorId);
+                p.Add("@LastName", lastName);
+                p.Add("@FirstName", firstName);
+                p.Add("@Phone", phone);
+                p.Add("@Email", email);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sSupervisorUpdate", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure<int>(Status.NotFound, "Not found");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+
         }
 
         public async Task<Result> Delete(int superId)

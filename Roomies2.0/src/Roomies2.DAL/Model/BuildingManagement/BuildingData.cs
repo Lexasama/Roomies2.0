@@ -4,6 +4,7 @@
     {
         public int BuildingId { get; set; }
         public string BuildingName { get; set; }
-        public string Adress { get; set; }        
+        public string BuildingAddress { get; set; }        
+        public int SupervisorId { get; set; }
     }
 }
