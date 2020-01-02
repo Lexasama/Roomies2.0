@@ -53,7 +53,7 @@ namespace Roomies2.DAL.Tests.Tests
                 Result r = await sut.Delete(superId);
                 Assert.That(r.Status, Is.EqualTo(Status.Ok));
                 supervisor = await sut.Find(superId);
-                Assert.That(supervisor.Status, Is.EqualTo(Status.NotFound)));
+                Assert.That(supervisor.Status, Is.EqualTo(Status.NotFound));
             }
         }
 
@@ -62,6 +62,8 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(s.HasError, Is.False);
             Assert.That(s.Status, Is.EqualTo(Status.Ok));
             Assert.That(s.Content.LastName, Is.EqualTo(lastname));
+
+           
         }
             
     }
