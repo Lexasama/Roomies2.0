@@ -1,9 +1,8 @@
 <template>
   <div>
-    <el-button @click="print()">Refresh</el-button>
     <el-row>
       <el-col>
-        <activeTasks ref="activeTaskComp" @update-tasklist="refreshDoneTasks()" />
+        <activeTasks ref="activeTasksComp" @update-tasklist="refreshDoneTasks()" />
       </el-col>
     </el-row>
     <el-row>
@@ -22,21 +21,12 @@ export default {
     doneTasks
   }, //end components
   methods: {
-    async refreshDoneTasks(){
-      console.log("Refresh Done Tasks")
-      await this.$refs.doneTasksComp.refresh()
-    },
-    async refreshActiveTasks(){
-      console.log("Refresh Active Tasks")
-      await this.$refs.activeTasksComp.refresh()
-    },
-    async refresh() {
+    async refreshDoneTasks() {
       await this.$refs.doneTasksComp.refreshList();
-      this.$refs.activeTasksComp.refreshList();
+    },
+    async refreshActiveTasks() {
+      await this.$refs.activeTasksComp.refreshList();
     }
   } //end methods
 };
 </script>
-
-<style>
-</style>

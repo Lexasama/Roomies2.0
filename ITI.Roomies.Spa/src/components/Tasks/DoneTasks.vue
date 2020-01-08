@@ -33,12 +33,6 @@ export default {
       colocId: null
     };
   }, //end data
-  props: {
-    doneTaskList: {
-      type: Array,
-      required: true
-    }
-  }, // end props
   async mounted() {
     this.colocId = this.$currentColoc.colocId;
     this.refreshList();
@@ -50,9 +44,7 @@ export default {
   }, //end computed
   methods: {
     async refreshList() {
-      console.log("#DoneTasks refreshList");
       this.taskList = await getColocFilteredTasksAsync(this.colocId, false);
-      this.$emit("update-tasklist");
     },
     nameFormatter(row, colunm) {
       let names = "";
@@ -71,6 +63,7 @@ export default {
       try {
         var r = await updateStateAsync(task.taskId);
         this.$emit("update-tasklist");
+        this.refreshList();
       } catch (e) {
         console.error(e);
       }

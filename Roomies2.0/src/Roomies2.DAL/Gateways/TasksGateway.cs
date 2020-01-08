@@ -52,13 +52,13 @@ namespace Roomies2.DAL.Gateways
                 if (isActive)
                 {
                     return await con.QueryAsync<TaskData>(
-                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 1;",
+                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 0;",
                     new { ColocId = colocId });
                 }
                 else { 
                
                     return await con.QueryAsync<TaskData>(
-                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 0;",
+                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 1;",
                     new { ColocId = colocId });
                 }
 
@@ -75,7 +75,7 @@ namespace Roomies2.DAL.Gateways
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryAsync<TaskRoomies>(
-                    @"SELECT firstName FROM rm2.vTaskRoomies WHERE TaskId = @TaskId;",
+                    @"SELECT firstName, roomieId FROM rm2.vTaskRoomies WHERE TaskId = @TaskId;",
                     new { TaskId = taskId });
             }
         }

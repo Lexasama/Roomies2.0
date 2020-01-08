@@ -3,7 +3,6 @@
     <el-card>
       <div slot="header">
         <span>Active tasks</span>
-        <el-button @click="refreshList()">Refresh</el-button>
       </div>
       <div>
         <template>
@@ -53,14 +52,13 @@ export default {
   }, //end computed
   methods: {
     async refreshList() {
-      console.log("#ActiveTasks refreshList");
-
       this.taskList = await getColocFilteredTasksAsync(this.colocId, true);
     },
     async deleteTask(task) {
       try {
         var r = await deleteTaskAsync(task.taskId);
         this.$emit("update-tasklist");
+        this.refreshList();
       } catch (error) {
         console.error(error);
       }
@@ -69,12 +67,10 @@ export default {
       try {
         var r = await updateStateAsync(task.taskId);
         this.$emit("update-tasklist");
+        this.refreshList();
       } catch (e) {
         console.error(e);
       }
-    },
-    printer() {
-      console.log("priter");
     },
     formatter(row, colunm) {
       var names = "";
@@ -86,6 +82,3 @@ export default {
   } //end methods
 };
 </script>
-
-<style>
-</style>

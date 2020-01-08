@@ -10,7 +10,7 @@
             <el-input v-model="task.taskName" style="width: 75%;"></el-input>
           </el-form-item>
 
-          <el-form-item label="Due Date">
+          <el-form-item label="Due Date" required>
             <el-date-picker
               type="datetime"
               v-model="task.taskDate"
@@ -31,12 +31,13 @@
               >{{r.firstName}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-
+          {{task.roomies}}
+          <el-form-item label="Description">
+            <el-input type="textarea" placeholder="Describe your task" v-model="task.taskDes"></el-input>
+          </el-form-item>
           <el-form-item>
-            <el-button></el-button>
             <el-button type="primary" @click="onSubmit($event)">Submit</el-button>
           </el-form-item>
-          {{task.taskDate}}
         </el-form>
       </div>
     </el-card>
@@ -77,8 +78,7 @@ export default {
       task: {
         taskName: "",
         taskDate: "",
-        taskTime: "",
-        description: "",
+        taskDes: "",
         colocId: null,
         roomies: []
       },
@@ -119,14 +119,8 @@ export default {
   },
   async mounted() {
     this.roomies = await getRoomiesAsync(this.$currentColoc.colocId);
-    console.log("Roomies", this.roomies);
   }, //end mounted
-  computed: {
-    a: function() {
-      console.log(this.assigned);
-      return this.assigned;
-    }
-  }, //end computed
+  computed: {}, //end computed
   methods: {
     async onSubmit(event) {
       event.preventDefault;
@@ -149,6 +143,7 @@ export default {
             if (i != null) {
               this.$emit("update-tasklist");
               this.show("Task created", "success");
+              this.$refs["taskForm"].resetFields();
             } else {
               this.show("Try again", "error");
             }
@@ -156,7 +151,6 @@ export default {
             console.error(error);
           }
         } else {
-          console.log("error submit!!");
           this.show("Some fields are invalid", "error");
           return false;
         }
