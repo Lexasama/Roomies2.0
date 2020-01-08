@@ -82,6 +82,28 @@ namespace Roomies2.DAL.Tests
 
             return roomie;
         }
+
+        public static async Task<Result<int>> StubColoc()
+        {
+            ColocGateway cg = new ColocGateway(ConnectionString);
+            string colocName = TestHelpers.RandomTestName();
+            Result<int> roomieResult = await TestStubs.StubRoomie();
+            int roomieId = roomieResult.Content;
+
+            Result<int> coloc = await cg.Create(roomieId, colocName);
+
+            return coloc;
+        }
+
+        public static async Task<Result<int>> StubColoc(int roomieId)
+        {
+            ColocGateway cg = new ColocGateway(ConnectionString);
+            string colocName = TestHelpers.RandomTestName();
+
+            Result<int> coloc = await cg.Create(roomieId, colocName);
+
+            return coloc;
+        }
     }
 
     

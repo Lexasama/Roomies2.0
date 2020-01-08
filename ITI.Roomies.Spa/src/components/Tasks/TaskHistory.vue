@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-button @click="refreshList()">Refresh</el-button>
+    <el-button @click="print()">Refresh</el-button>
     <el-row>
       <el-col>
-        <activeTasks :activeTasks="activeTaskList" @update-tasklist="evented" />
+        <activeTasks ref="activeTaskComp" @update-tasklist="refreshDoneTasks()" />
       </el-col>
     </el-row>
     <el-row>
-      <doneTasks />
+      <doneTasks ref="doneTasksComp" @update-tasklist="refreshActiveTasks()" />
     </el-row>
   </div>
 </template>
@@ -16,54 +16,23 @@
 import doneTasks from "./DoneTasks";
 import activeTasks from "./ActiveTaskList";
 
-import { getColocTaskList } from "@/api/TaskApi";
-
 export default {
   components: {
     activeTasks,
     doneTasks
   }, //end components
-  data() {
-    return {
-      taskList: [],
-      colocId: null
-    };
-  }, //end data
-
-  async mounted() {
-    this.colocId = this.$currentColoc.colocId;
-  }, //end mounted
-  computed: {
-    activeTaskList() {
-      let list = [];
-      list = this.taskList.filter(this.isActive);
-      return list;
-    },
-    doneTaskList() {
-      let list = [];
-      list = this.taskList.filter(this.isDone);
-      return list;
-    }
-  }, //end computed
-
   methods: {
-    evented() {
-      console.log("THE EVENT §§§ ");
+    async refreshDoneTasks(){
+      console.log("Refresh Done Tasks")
+      await this.$refs.doneTasksComp.refresh()
     },
-    async refreshList() {
-      console.log("colocId", this.colocId);
-      this.taskList = await getColocTaskList(this.colocId);
-      console.log("TasksList", this.taskList);
+    async refreshActiveTasks(){
+      console.log("Refresh Active Tasks")
+      await this.$refs.activeTasksComp.refresh()
     },
-    isDone(task) {
-      if (task.state == true) {
-        return true;
-      }
-    },
-    isActive(task) {
-      if (task.state == false) {
-        return true;
-      }
+    async refresh() {
+      await this.$refs.doneTasksComp.refreshList();
+      this.$refs.activeTasksComp.refreshList();
     }
   } //end methods
 };

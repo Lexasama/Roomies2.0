@@ -1,28 +1,50 @@
 <template>
   <div>
-    <b-row :gutter="20">
+    <taskHistory />
+    <!-- <b-row :gutter="20">
       <b-col>
-        <tasksCreate />
+        <tasksCreate @update-tasklist="refreshList()" />
       </b-col>
       <b-col>
-        <history />
+        <b-col>
+          <activeTasks @update-tasklist="refreshList()" />
+        </b-col>
+        <b-col>
+          <doneTasks />
+        </b-col>
       </b-col>
-    </b-row>
+    </b-row>-->
   </div>
 </template>
 
 <script>
 import tasksCreate from "./TaskCreate";
-import history from "./TaskHistory";
+import activeTasks from "./ActiveTaskList";
+import doneTasks from "./DoneTasks";
+import TaskHistory from "./TaskHistory.vue";
 
 export default {
   components: {
     tasksCreate,
-    history
+    activeTasks,
+    doneTasks,
+    TaskHistory
   },
   data() {
-    return {};
-  }
+    return {
+      colocId: null
+    };
+  }, //end data
+  async mounted() {
+    this.colocId = this.$currentColoc.colocId;
+    this.refreshList();
+  }, //end mounted
+  computed: {}, //end computed
+  methods: {
+    async refreshList() {
+      ///should trigger refresch mzthods of the child components
+    }
+  } //end methods
 };
 </script>
 

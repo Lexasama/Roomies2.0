@@ -2,25 +2,25 @@
   <div>
     <el-card>
       <div slot="header">
-        <span>Active Task</span>
+        <span>Active tasks</span>
         <el-button @click="refreshList()">Refresh</el-button>
       </div>
       <div>
         <template>
           <el-table :data="activeTaskList" style="width: 100%">
             <el-table-column prop="state" label="State" width="180">
-              <template slot="scope">
-                <el-button round icon="el-icon-circle-check"></el-button>
+              <template slot-scope="scope">
+                <el-button round icon="el-icon-circle-check" @click="updateState(scope.row)"></el-button>
               </template>
             </el-table-column>
             <el-table-column prop="taskDate" label="date" width="180"></el-table-column>
             <el-table-column prop="taskName" label="Name"></el-table-column>
-            <el-table-column prop="firstName" label="Roomie(s)"></el-table-column>
+            <el-table-column label="Roomie(s)" :formatter="formatter"></el-table-column>
             <el-table-column prop="taskDes" label="Description"></el-table-column>
             <el-table-column label="Options">
               <template slot-scope="scope">
                 <el-button size="mini" icon="el-icon-edit"></el-button>
-                <el-button size="mini" icon="el-icon-delete" @click="deleteTask(scope.row)">Delete</el-button>
+                <el-button size="mini" icon="el-icon-delete" @click="deleteTask(scope.row)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -31,15 +31,19 @@
 </template>
 
 <script>
-import { deleteTaskAsync } from "@/api/TaskApi";
+import {
+  deleteTaskAsync,
+  updateStateAsync,
+  updateTaskAsync,
+  getColocFilteredTasksAsync
+} from "@/api/TaskApi";
 export default {
   data() {
-    return { taskList: [] };
+    return { taskList: [], colocId: null };
   },
-  props: {
-    activeTasks: Array
-  }, //end props
+
   async mounted() {
+    this.colocId = this.$currentColoc.colocId;
     this.refreshList();
   }, //end mounted
   computed: {
@@ -49,35 +53,35 @@ export default {
   }, //end computed
   methods: {
     async refreshList() {
-      this.taskList = this.activeTasks;
-      console.log("tasks");
+      console.log("#ActiveTasks refreshList");
 
-      // const l = this.groupBy(this.taskList, t => t.taskId);
-      // console.log(l);
+      this.taskList = await getColocFilteredTasksAsync(this.colocId, true);
     },
     async deleteTask(task) {
       try {
         var r = await deleteTaskAsync(task.taskId);
         this.$emit("update-tasklist");
-        this.refreshList();
       } catch (error) {
         console.error(error);
       }
     },
-
-    groupBy(list, keyGetter) {
-      const map = new Map();
-
-      list.forEach(i => {
-        const key = keyGetter(i);
-        const collection = map.get(key);
-        if (!collection) {
-          return map.set(key, [i]);
-        } else {
-          collection.push(i);
-        }
+    async updateState(task) {
+      try {
+        var r = await updateStateAsync(task.taskId);
+        this.$emit("update-tasklist");
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    printer() {
+      console.log("priter");
+    },
+    formatter(row, colunm) {
+      var names = "";
+      row.roomies.forEach(element => {
+        names = names + " " + element.firstName;
       });
-      return map;
+      return names;
     }
   } //end methods
 };

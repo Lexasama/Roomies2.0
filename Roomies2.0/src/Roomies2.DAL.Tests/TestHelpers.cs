@@ -11,6 +11,8 @@ namespace Roomies2.DAL.Tests
 
         public static string ConnectionString => Configuration["ConnectionStrings:Roomies2DB"];
 
+     
+
         private static IConfiguration Configuration =>
             _configuration ?? (_configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

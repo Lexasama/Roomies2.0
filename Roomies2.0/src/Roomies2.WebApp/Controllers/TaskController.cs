@@ -52,10 +52,40 @@ namespace Roomies2.WebApp.Controllers
         [HttpGet("getTasks/{colocId}")]
         public async Task<IActionResult> GetTaskList(int colocId)
         {
+            List<TaskSuper> tasks = new List<TaskSuper>();
 
-            IEnumerable<TasksRoomie> result = await _tasksGateway.GetTasks(colocId);
-            return Ok(result);
+            IEnumerable<TaskData> taskList = await _tasksGateway.GetTasks(colocId);
+            foreach (TaskData task in taskList)
+            {
+                var r = await _tasksGateway.GetAssignedRoomies(task.TaskId);
+                TaskSuper ts = new TaskSuper(task, r);
+                tasks.Add(ts);
+            }
 
+            return Ok(tasks);
+        }
+
+        [HttpGet("getActiveTasks/{colocId}/{isActive}")]
+        public async Task<IActionResult> getColocActiveTask(int colocId, bool isActive)
+        {
+            List<TaskSuper> tasks = new List<TaskSuper>();
+
+            IEnumerable<TaskData> taskList = await _tasksGateway.GetTasks(colocId, isActive);
+            foreach (TaskData task in taskList)
+            {
+                var r = await _tasksGateway.GetAssignedRoomies(task.TaskId);
+                TaskSuper ts = new TaskSuper(task, r);
+                tasks.Add(ts);
+            }
+
+            return Ok(tasks);
+        }
+
+        [HttpPost("updateState/{taskId}")]
+        public async Task<IActionResult> UpdateTaskState(int taskId)
+        {
+            Result result = await _tasksGateway.UpdateState(taskId);
+            return this.CreateResult(result);
         }
 
         [HttpDelete("{taskId}")]

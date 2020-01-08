@@ -10,12 +10,19 @@ export async function createTaskAsync(model) {
   return await postAsync(endpoint, model);
 }
 
-export async function getColocTaskList(colocId) {
+export async function getColocTaskListAsync(colocId) {
   return await getAsync(`${endpoint}/getTasks/${colocId}`);
 }
 
+export async function getColocFilteredTasksAsync(colocId, isActive) {
+  return await getAsync(`${endpoint}/getActiveTasks/${colocId}/${isActive}`);
+}
 export async function getRoomieTaskList() {
   return await getAsync();
+}
+
+export async function updateStateAsync(taskId) {
+  return await postAsync(`${endpoint}/updateState/${taskId}`);
 }
 
 export async function deleteTaskAsync(taskId) {

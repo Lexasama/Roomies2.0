@@ -9,10 +9,8 @@ namespace Roomies2.DAL.Tests.Tests
         [Test]
         public void can_send_email()
         {
-            EmailSender sut = new EmailSender();
-
-
-            sut.SendEmail("saxelsyeguillaume@gmail.com");
+            EmailSender emailSender = new EmailSender();
+           emailSender.SendEmail("saxelsyeguillaume@gmail.com");
         }
     }
 }

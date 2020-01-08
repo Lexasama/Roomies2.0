@@ -27,7 +27,7 @@ namespace Roomies2.WebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-          
+
             services.AddOptions();
 
             services.AddMvc(options =>
@@ -49,7 +49,7 @@ namespace Roomies2.WebApp
             string secretKey = Configuration["JwtBearer:SigningKey"];
             SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
-          
+
             services.Configure<TokenProviderOptions>(o =>
             {
                 o.Audience = Configuration["JwtBearer:Audience"];
@@ -89,10 +89,10 @@ namespace Roomies2.WebApp
                 })
                 .AddGoogle(o =>
                 {
-                o.SignInScheme = CookieAuthentication.AuthenticationScheme;
-                o.ClientId = Configuration["Authentication:Google:ClientId"];
-                o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                //o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+                    o.SignInScheme = CookieAuthentication.AuthenticationScheme;
+                    o.ClientId = Configuration["Authentication:Google:ClientId"];
+                    o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                    //o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
 
                     o.Events = new OAuthEvents
                     {
@@ -104,14 +104,14 @@ namespace Roomies2.WebApp
                 .AddFacebook(facebookOptions =>
                 {
                     facebookOptions.SignInScheme = CookieAuthentication.AuthenticationScheme;
-                                         
-                   facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-                   facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+
+                    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                     facebookOptions.Events = new OAuthEvents
                     {
                         OnCreatingTicket = ctx => ctx.HttpContext.RequestServices.GetRequiredService<FacebookAuthenticationManager>().OnCreatingTicket(ctx)
                     };
-                    
+
                 });
         }
 

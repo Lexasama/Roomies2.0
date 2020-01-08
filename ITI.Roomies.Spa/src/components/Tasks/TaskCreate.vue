@@ -113,32 +113,7 @@ export default {
           }
         ]
       },
-      roomies: [
-        // {
-        //   roomieId: 1,
-        //   firstName: "Axel"
-        // },
-        // {
-        //   roomieId: 2,
-        //   firstName: "Alex"
-        // },
-        // {
-        //   roomieId: 3,
-        //   firstName: "Al"
-        // },
-        // {
-        //   roomieId: 4,
-        //   firstName: "xel"
-        // },
-        // {
-        //   roomieId: 5,
-        //   firstName: "el"
-        // },
-        // {
-        //   roomieId: 6,
-        //   firstName: "Ax"
-        // }
-      ],
+      roomies: [],
       assigned: []
     };
   },
@@ -172,6 +147,7 @@ export default {
           try {
             var i = await createTaskAsync(task);
             if (i != null) {
+              this.$emit("update-tasklist");
               this.show("Task created", "success");
             } else {
               this.show("Try again", "error");

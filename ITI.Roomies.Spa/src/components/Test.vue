@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TasksCreate />
+    <taskHistory />
   </div>
 </template>
 
@@ -14,6 +14,8 @@ import ImageUploader from "@/components/Utility/ImageUploader";
 import colocList from "../components/Coloc/ColocList";
 import roomieList from "../components/Roomie/RoomieList";
 import TasksCreate from "../components/Tasks/TaskCreate";
+import taskHistory from "./Tasks/TaskHistory.vue";
+
 export default {
   components: {
     profile,
@@ -24,7 +26,8 @@ export default {
     ImageUploader,
     colocList,
     roomieList,
-    TasksCreate
+    TasksCreate,
+    taskHistory
   },
   data() {
     return {
