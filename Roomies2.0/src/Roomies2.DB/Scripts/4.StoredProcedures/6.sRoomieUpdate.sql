@@ -5,7 +5,7 @@ CREATE PROCEDURE rm2.sRoomieUpdate
   @FirstName   NVARCHAR(32),
   @LastName    NVARCHAR(32),
   @Phone       NVARCHAR(12),
-  @SEX         INT,
+  @Sex         INT,
   @BirthDate   DATETIME2,
   @Description NVARCHAR(225),
   @PicturePath NVARCHAR(225)

@@ -28,7 +28,7 @@ BEGIN
 
 
     INSERT INTO rm2.tGoogleUser(UserId, GoogleId, RefreshToken)
-						VALUES (@UserId, @GoogleId, @RefreshToken);
+						VALUES (@userId, @GoogleId, @RefreshToken);
     COMMIT;
     RETURN 0;
 
