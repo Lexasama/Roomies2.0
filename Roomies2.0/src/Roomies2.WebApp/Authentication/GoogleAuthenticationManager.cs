@@ -3,10 +3,6 @@ using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Model.People.OAuth;
-using System;
-using Newtonsoft.Json.Linq;
-using System.Net.Http;
 
 namespace Roomies2.WebApp.Authentication
 {

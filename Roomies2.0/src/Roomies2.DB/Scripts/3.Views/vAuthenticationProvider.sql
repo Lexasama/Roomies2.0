@@ -7,7 +7,7 @@ SELECT usr.UserId, usr.ProviderName
           UNION ALL
           SELECT UserId       = u.UserId,
                  ProviderName = 'Facebook'
-              FROM rm2.tfacebookUser u
+              FROM rm2.tFacebookUser u
           UNION ALL
           SELECT UserId       = u.UserId,
                  ProviderName = 'Google'

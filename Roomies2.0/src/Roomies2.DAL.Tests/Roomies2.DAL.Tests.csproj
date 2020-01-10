@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Roomies2.DAL\Roomies2.DAL.csproj" />
+    <ProjectReference Include="..\Roomies2.WebApp\Roomies2.WebApp.csproj" />
   </ItemGroup>
 
 </Project>

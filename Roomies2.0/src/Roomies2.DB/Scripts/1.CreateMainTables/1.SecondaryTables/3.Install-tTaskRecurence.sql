@@ -1,6 +1,6 @@
 CREATE TABLE rm2.tTaskRecurence
 (
-	taskRecurenceId INT IDENTITY(0,1) NOT NULL,
+	TaskRecurenceId INT IDENTITY(0,1) NOT NULL,
 	TaskId			INT				  NOT NULL,
 	[WeekDay]       TINYINT			  NOT NULL,
 	WeekNumber		INT			      NOT NULL,
