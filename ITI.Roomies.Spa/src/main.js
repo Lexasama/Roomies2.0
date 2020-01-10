@@ -23,44 +23,53 @@ Vue.use(VueCookies);
 Vue.use(Vueaxios, axios);
 
 class currentColoc {
-  constructor(colocId, colocName, picPath, date) {
+  constructor(colocId, colocName, creationDate, picPath) {
     this.colocId = colocId;
     this.colocName = colocName;
+    this.creationDate = creationDate;
     this.picPath = picPath;
-    this.creationDate = date;
-  }
-  setColocId(newId) {
-    this.colocId = newId;
   }
 
-  setColocName(newName) {
-    this.colocName = newName;
+  setCurrentColoc(coloc) {
+    this.colocId = coloc.colocId;
+    this.colocName = coloc.colocName;
+    this.creationDate = coloc.creationDate;
+    if (coloc.picPath != null) {
+      this.picPath = coloc.picPath;
+    }
+  }
+  setColocId(colocId) {
+    this.colocId = colocId;
+  }
+
+  setColocName(colocName) {
+    this.colocName = colocName;
+  }
+
+  setCreationDate(date) {
+    this.creationDate = date;
   }
 
   setPicPath(picPath) {
     this.picPath = picPath;
   }
-  setDate(date) {
-    this.creationDate = date;
+}
+class colocs {
+  constructor(list) {
+    this.colocList = list;
+  }
+  setList(list) {
+    this.colocList = list;
   }
 }
 class user {
-  constructor(
-    userId,
-    username,
-    email,
-    lastName,
-    firstName,
-    colocList,
-    picPath
-  ) {
+  constructor(userId, userName, email, lastName, firstName, picPath) {
     this.userId = userId;
-    this.username = username;
+    this.userName = userName;
     this.lastName = lastName;
     this.firstName = firstName;
     this.email = email;
     this.picPath = picPath;
-    this.colocList = colocList;
   }
   setId(id) {
     this.userId = id;
@@ -71,21 +80,37 @@ class user {
   setFirstName(name) {
     this.firstName = name;
   }
+  setUserName(userName) {
+    this.userName = userName;
+  }
   setLastName(name) {
     this.lastName = name;
   }
-  setColocList(list) {
-    this.colocList = list;
-  }
   setPicPath(picPath) {
     this.picPath = picPath;
+  }
+  getPicPath() {
+    return this.picPath;
   }
 }
 
 Vue.use(VueGlobalVariable, {
   globals: {
-    $currentColoc: new currentColoc(-1, "", "", ""),
-    $user: new user()
+    $colocs: new colocs(null),
+    $currentColoc: new currentColoc(
+      -1,
+      "",
+      new Date(),
+      "http://localhost:5000/Pictures/ColocPics/default.png"
+    ),
+    $user: new user(
+      -1,
+      "",
+      "",
+      "",
+      "",
+      "http://localhost:5000/Pictures/RoomiesPics/default.png"
+    )
   }
 });
 

@@ -32,9 +32,14 @@
   </div>
 </template>
 <script>
+import { inviteAsync } from "../../api/RoomieApi";
 export default {
   data() {
     return {
+      mailingModel: {
+        emails: [],
+        colocId: null
+      },
       colocName: "",
       emailList: {
         emails: [
@@ -44,6 +49,7 @@ export default {
           }
         ]
       },
+      list: [],
       emailRules: [
         {
           required: true,
@@ -63,9 +69,22 @@ export default {
   }, //end mounted
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          console.log(this.emailList);
+          console.log("emailList", this.emailList);
+
+          this.emailList.emails.forEach(e => {
+            this.list.push(e.value);
+          });
+          console.log("List", this.list);
+
+          this.mailingModel.emails = this.list;
+          this.mailingModel.colocId = 11;
+          console.log("invite result", this.mailingModel);
+
+          var r = await inviteAsync(this.mailingModel);
+          console.log("invite result", r);
+          this.list = [];
         } else {
           console.log("error submit!!");
           return false;

@@ -34,6 +34,7 @@ namespace Roomies2.WebApp
             services.AddSingleton(_ => new PictureGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new RoomieGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new ColocGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new InviteGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TokenService>();
@@ -84,7 +85,7 @@ namespace Roomies2.WebApp
                 o.SignInScheme = CookieAuthentication.AuthenticationScheme;
                 o.ClientId = Configuration["Authentication:Google:ClientId"];
                 o.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+                //o.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
 
                     o.Events = new OAuthEvents
                     {
@@ -124,7 +125,7 @@ namespace Roomies2.WebApp
             });
 
             string secretKey = Configuration["JwtBearer:SigningKey"];
-            var unused = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            SymmetricSecurityKey unused = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
             app.UseAuthentication();
 

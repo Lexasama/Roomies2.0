@@ -47,10 +47,19 @@ namespace Roomies2.WebApp
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static bool ByteArraysEqual(byte[] a, byte[] b)
         {
-            if (a == null && b == null) return true;
-            if (a == null || b == null || a.Length != b.Length) return false;
-            var areSame = true;
-            for (var i = 0; i < a.Length; i++) areSame &= a[i] == b[i];
+            if (a == null && b == null)
+            {
+                return true;
+            }
+            if (a == null || b == null || a.Length != b.Length)
+            {
+                return false;
+            }
+            bool areSame = true;
+            for (int i = 0; i < a.Length; i++)
+            {
+                areSame &= (a[i] == b[i]);
+            }
             return areSame;
         }
 
@@ -152,6 +161,7 @@ namespace Roomies2.WebApp
 
                 case 0x01:
                     if (VerifyHashedPasswordV3(hashedPassword, providedPassword, out int embeddedIterCount))
+                    {
                         // If this hasher was configured with a higher iteration count, change the entry now.
                         return embeddedIterCount < _iterCount
                             ? PasswordVerificationResult.SuccessRehashNeeded
@@ -197,13 +207,19 @@ namespace Roomies2.WebApp
                 var saltLength = (int) ReadNetworkByteOrder(hashedPassword, 9);
 
                 // Read the salt: must be >= 128 bits
-                if (saltLength < 128 / 8) return false;
+                if (saltLength < 128 / 8)
+                {
+                    return false;
+                }
                 var salt = new byte[saltLength];
                 Buffer.BlockCopy(hashedPassword, 13, salt, 0, salt.Length);
 
                 // Read the subkey (the rest of the payload): must be >= 128 bits
                 int subkeyLength = hashedPassword.Length - 13 - salt.Length;
-                if (subkeyLength < 128 / 8) return false;
+                if (subkeyLength < 128 / 8)
+                {
+                    return false;
+                }
                 var expectedSubkey = new byte[subkeyLength];
                 Buffer.BlockCopy(hashedPassword, 13 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 

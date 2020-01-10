@@ -15,10 +15,10 @@
     <el-divider></el-divider>
 
     <b-form @submit="onSubmit($event)">
-      <div class="alert alert-danger" v-if="errors.length > 0 ">
+      <div class="alert alert-danger" v-if="errors.length > 0">
         <b>The following fields are invalid:</b>
         <ul>
-          <li v-for="e of errors" :key="e">{{e}}</li>
+          <li v-for="e of errors" :key="e">{{ e }}</li>
         </ul>
       </div>
 
@@ -48,23 +48,23 @@
         <b-form-group
           id="nom"
           label-for="nom"
-          label="Lastname:"
+          label="Last name:"
           label-cols-sm="4"
           label-cols-lg="3"
         >
-          <b-input v-model="roomie.lastName" placeholder="Entrez your Lastname" required></b-input>
+          <b-input v-model="roomie.lastName" placeholder="Entrez your Last name" required></b-input>
         </b-form-group>
 
         <b-form-group
           id="prenom"
-          label="Votre prénom:"
+          label="First name:"
           label-for="prenom"
           label-cols-sm="4"
           label-cols-lg="3"
         >
           <b-form-input
             id="prenom"
-            placeholder="Entrer your Firstname"
+            placeholder="Entrer your First name"
             v-model="roomie.firstName"
             :value="roomie.firstName"
             required
@@ -85,7 +85,6 @@
             required
           />
         </b-form-group>
-        {{roomie.birthDate}}
         <b-form-group
           id="phone"
           label="Phone"
@@ -120,16 +119,14 @@
 
     <el-divider></el-divider>
 
-    <el-button-group>
-      <el-button v-if="active>=2" icon="el-icon-arrow-left" @click="previousStep">Previous step</el-button>
-      <el-button @click="nextStep" v-if="active<=2">
+    <el-button-group style="margin-bottom: 20px">
+      <el-button v-if="active >= 2" icon="el-icon-arrow-left" @click="previousStep">Previous step</el-button>
+      <el-button @click="nextStep" v-if="active <= 2">
         Next step
         <i class="el-icon-arrow-right el-icon-right"></i>
       </el-button>
-      <el-button v-if="active==3" @click="onSubmit($event)">Submit</el-button>
+      <el-button v-if="active == 3" @click="onSubmit($event)">Submit</el-button>
     </el-button-group>
-
-    <el-divider></el-divider>
   </div>
 </template>
 
@@ -210,7 +207,6 @@ export default {
 
       if (errors.length == 0) {
         try {
-          console.log(this.roomie);
           await createRoomieAsync(this.roomie);
           this.$router.replace("/profile");
         } catch (e) {

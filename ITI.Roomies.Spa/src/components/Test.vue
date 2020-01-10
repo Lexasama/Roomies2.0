@@ -1,24 +1,28 @@
 <template>
   <div>
-    <ImageUploader :id="roomieId" :isRoomie="true" />
+    <invite />
   </div>
 </template>
 
 <script>
 import profile from "../components/Coloc/ColocProfile.vue";
 import register from "../components/Register.vue";
-import roomieProfile from "../components/Roomie/RoomiesProfile";
+// import roomieProfile from "../components/Roomie/RoomiesProfile";
 import invite from "@//components/Roomie/Invite";
 import colocProfile from "@/components/Coloc/ColocProfile";
 import ImageUploader from "@/components/Utility/ImageUploader";
+import colocList from "../components/Coloc/ColocList";
+import roomieList from "../components/Roomie/RoomieList";
 export default {
   components: {
     profile,
     register,
-    roomieProfile,
+    // roomieProfile,
     invite,
     colocProfile,
-    ImageUploader
+    ImageUploader,
+    colocList,
+    roomieList
   },
   data() {
     return {
@@ -67,6 +71,12 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     }
+  },
+  mounted() {
+    console.log("user", this.$user);
+
+    this.$user;
+    console.log("user", this.$user);
   }
 };
 </script>

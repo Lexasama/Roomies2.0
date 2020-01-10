@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="NavMenu" v-if="auth.isConnected">
+    <div id="NavMenu" v-if="this.auth.isConnected">
       <!-- HEADER WITH NAVBAR -->
       <header>
         <navBar :navInfo="navbarInfo" />
@@ -22,15 +22,14 @@
 
 <script>
 import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 import "../directives/requiredProviders";
 import Loading from "../components/Utility/Loading.vue";
 import Login from "../components/Login.vue";
 import { state } from "../state";
 import styles from "../styles/styles";
-import { getUserAsync } from "../api/UserApi";
-import { getColocListAsync } from "../api/ColocApi";
 import NavBar from "../components/Utility/NavBar";
-import { findUserByEmailAsync } from "@/api/RoomieApi";
+import { getUserAsync } from "../api/UserApi";
 
 export default {
   components: {
@@ -53,16 +52,10 @@ export default {
     this.state = true;
     this.styles = styles;
     try {
-      this.roomie = await getUserAsync();
-      //this.roomie = await findUserByEmailAsync();
-
-      if (this.roomie.roomieId == null || this.roomie.roomieId == 0) {
-        this.$router.replace("/register");
-      } else {
-        await this.setUser();
-        await this.setColoc();
-        await this.setNavBar();
-      }
+      // this.roomie = await getUserAsync();
+      // if (this.roomie.userName != null) {
+      //   await this.setUser();
+      // }
     } catch (e) {
       console.error(e);
     } finally {
@@ -85,41 +78,15 @@ export default {
       return this.styles[this.themeIdx];
     },
     isLoading() {
-      this.refreshApp();
       return this.state.isLoading;
     },
-    auth: () => AuthService
+    auth: () => AuthService,
+    user: () => UserService
   },
   methods: {
     setTheme(themeIdx) {
       this.$cookies.set("themeIdx", themeIdx);
       this.themeIdx = themeIdx;
-    },
-
-    async setUser() {
-      this.$user.userId = this.roomie.roomieId;
-      this.$user.setId(this.roomie.roomieId);
-      this.$user.setEmail(AuthService.email);
-      this.$user.setLastName(this.roomie.lastName);
-      this.$user.setFirstName(this.roomie.firstName);
-      this.$user.setPicPath(this.roomie.picturePath);
-      let list = await getColocListAsync(this.$user.userId);
-      this.$user.setColocList(list);
-    },
-    async setNavBar() {
-      this.navbarInfo.email = this.$user.email;
-      this.navbarInfo.picPath = this.$user.picPath;
-      this.navbarInfo.colocList = this.$user.colocList;
-    },
-    async setColoc() {
-      var colocData = this.$user.colocList[0];
-
-      if (colocData !== null) {
-        this.$currentColoc.setColocId(colocData.colocId);
-        this.$currentColoc.setColocName(colocData.colocName);
-        this.$currentColoc.setPicPath(colocData.picPath);
-        this.$currentColoc.setDate(colocData.creationDate);
-      }
     }
   }
 };

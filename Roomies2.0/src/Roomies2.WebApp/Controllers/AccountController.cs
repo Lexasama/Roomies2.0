@@ -75,8 +75,8 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserService.CreatePasswordUser(model.UserName, model.Email, model.LastName,
-                    model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Password);
+
+                var result = await UserService.CreatePasswordUser( model.Email, model.Password);
                 if (result.HasError)
                 {
                     ModelState.AddModelError(string.Empty, result.ErrorMessage);
@@ -130,7 +130,7 @@ namespace Roomies2.WebApp.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            var token = TokenService.GenerateToken(userId, email);
+            Token token = TokenService.GenerateToken(userId, email);
             var providers = await UserGateway.GetAuthenticationProviders(userId);
             ViewData["SpaHost"] = SpaOptions.Value.Host;
             ViewData["BreachPadding"] = GetBreachPadding(); // Mitigate BREACH attack. See http://www.breachattack.com/

@@ -14,23 +14,14 @@ namespace Roomies2.DAL.Tests
         private static IConfiguration Configuration =>
             _configuration ?? (_configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true)
+                .AddJsonFile("appsettings.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build());
 
-        public static string RandomTestName()
-        {
-            return $"Test-{Guid.NewGuid().ToString().Substring(24)}";
-        }
-
-        public static DateTime RandomBirthDate(int age)
-        {
-            return DateTime.UtcNow.AddYears(-age).AddMonths(Random.Next(-11, 0)).Date;
-        }
-
-        public static string RandomPhone()
-        {
-            return $"+33-{Random.Next(0, 1000000000)}";
-        }
+        public static string RandomTestName() => $"Test-{Guid.NewGuid().ToString().Substring(24)}";
+        public static DateTime RandomBirthDate(int age) => DateTime.UtcNow.AddYears(-age).AddMonths(Random.Next(-11, 0)).Date;
+        public static DateTime RandomDate(int days) => DateTime.Today.AddDays(days);
+        public static string RandomEmail() => $"{Guid.NewGuid().ToString().Substring(12)}@test.com";
+        public static string RandomPhone() => $"+33{Random.Next(0,1000000000)}";
     }
 }

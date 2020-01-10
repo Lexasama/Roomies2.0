@@ -1,37 +1,30 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="/home">
-        <img src="../../../public/favicon.png" style="width: 60px; height: 60px" />
+      <b-navbar-brand>
+        <router-link to="/ColocProfile">
+          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit">
+            <div slot="placeholder" class="image-slot">
+              Loading
+              <span class="dot">...</span>
+            </div>
+          </el-image>
+        </router-link>
+        <!-- <img src="../../../public/favicon.png" style="width: 60px; height: 60px" /> -->
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
+          <!-- <b-nav-item href="#">Link</b-nav-item> -->
 
           <b-nav-item @click="refresh()">
-            <el-dropdown trigger="click" @command="handleCommand">
-              <span class="el-dropdown-link">
-                Coloc
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  :command="c.colocId"
-                  v-for="c in colocList"
-                  :key="c.colocId"
-                >{{c.colocName}}</el-dropdown-item>
-                <el-dropdown-item command="/coloc" divided>
-                  Create
-                  <i class="el-icon-circle-plus"></i>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <b-button variant="outline-primary" @click="drawerSwitch()">Flats</b-button>
           </b-nav-item>
         </b-navbar-nav>
-
-        <img src="../../../public/Logo.png" width="80" />
+        <router-link to="/home">
+          <img class="image" src="../../../public/Logo.png" width="80" />
+        </router-link>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -39,52 +32,70 @@
             <template v-slot:button-content>
               <em>{{ auth.email }}</em>
             </template>
-            <b-dropdown-item href="/profile">Profile</b-dropdown-item>
-            <b-dropdown-item href="/settings">Settings</b-dropdown-item>
-            <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+            <router-link to="/profile">
+              <b-dropdown-item href="/profile">Profile</b-dropdown-item>
+            </router-link>
+            <router-link to="/settings">
+              <b-dropdown-item href="/settings">Settings</b-dropdown-item>
+            </router-link>
+            <router-link to="/logout">
+              <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+            </router-link>
           </b-nav-item-dropdown>
         </b-navbar-nav>
         <b-navbar-nav>
-          <b-navbar-brand href="/profile">
-            <el-avatar :size="50" :src="path"></el-avatar>
+          <b-navbar-brand>
+            <div style>
+              <router-link to="/profile">
+                <el-image class="avatar" :src="getUserPic" fit="scale-down"></el-image>
+              </router-link>
+            </div>
           </b-navbar-brand>
         </b-navbar-nav>
       </b-collapse>
+
+      <el-drawer
+        title="List of your flats"
+        :visible.sync="drawer"
+        direction="ltr"
+        :with-header="false"
+      >
+        <colocList />
+      </el-drawer>
     </b-navbar>
   </div>
 </template>
 
 <script>
 import AuthService from "@/services/AuthService";
-import { getPicAsync } from "@/api/RoomieApi.js";
+import { getPicAsync } from "../../api/RoomieApi.js";
+import colocList from "../Coloc/ColocList";
 
 export default {
-  props: {
-    navInfo: {
-      type: Object,
-      required: true
-    }
+  components: {
+    colocList
   },
+
   data() {
     return {
       colocList: [],
-      path: null,
-      roomieId: null
+      drawer: false
     };
   },
-  async mounted() {
-    this.roomieId;
-    //this.path = await getPicAsync(this.roomieId);
-    console.log("this.navInfo");
-    console.log(this.navInfo);
-  },
+  async mounted() {},
   computed: {
-    auth: () => AuthService
+    auth: () => AuthService,
+    getUserPic: function() {
+      return this.$user.picPath;
+    },
+    getColocPic: function() {
+      return this.$currentColoc.picPath;
+    }
   },
   methods: {
     async refresh() {
       try {
-        this.colocList = this.$user.colocList;
+        this.colocList = this.$colocs.colocList;
       } catch (error) {
         console.error(error);
       }
@@ -98,6 +109,9 @@ export default {
     },
     errorHandler() {
       return true;
+    },
+    drawerSwitch() {
+      this.drawer = !this.drawer;
     }
   }
 };
@@ -105,7 +119,14 @@ export default {
 
 <style lang="scss">
 .image {
-  height: 50px !important;
-  width: auto !important;
+  position: absolute;
+  left: 50%;
+  margin: 0 auto;
+  width: 80;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50% !important;
 }
 </style>

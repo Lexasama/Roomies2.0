@@ -19,6 +19,8 @@
 <script>
 import axios from "axios";
 import AuthService from "../../services/AuthService";
+import { getPicAsync } from "../../api/RoomieApi";
+import { getColocAsync } from "../../api/ColocApi";
 export default {
   props: {
     id: {
@@ -34,17 +36,15 @@ export default {
   data() {
     return {
       files: new FormData(),
-      model: {},
       env: process.env.VUE_APP_BACKEND,
-      sizeMax: 5000000,
       file: new FormData(),
       env: process.env.VUE_APP_BACKEND
     };
   },
 
   async mounted() {
-    console.log(this.id);
-    console.log(this.isRoomie);
+    console.log("#ImageUploader id:", this.id);
+    console.log("#ImageUploader isRoomie:", this.isRoomie);
   },
 
   methods: {
@@ -65,10 +65,33 @@ export default {
         },
         responseType: "application/json"
       });
+      console.log("data", data);
+      if (data.status == 200) {
+        this.show();
+        this.setVariables();
+      }
     },
 
     async handleFileUpload(files) {
       this.file.append("file", files[0], files[0].name);
+    },
+    show() {
+      this.$message({
+        showClose: true,
+        message: "Success",
+        type: "success"
+      });
+    },
+    async setVariables() {
+      if (this.isRoomie == true) {
+        var path = await getPicAsync(this.id);
+        this.$user.setPicPath(path.picturePath);
+      }
+      if (this.isRoomie == false && this.$currentColoc.colocId == -1) {
+        var coloc = await getColocAsync(this.id);
+        console.log("coloc", coloc);
+        this.$currentColoc.setCurrentColoc(coloc);
+      }
     }
   }
 };

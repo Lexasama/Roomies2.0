@@ -10,7 +10,7 @@ using System.Net.Http;
 
 namespace Roomies2.WebApp.Authentication
 {
-    public class GoogleAuthenticationManager : AuthenticationManager<OAuthGoogle>
+    public class GoogleAuthenticationManager : AuthenticationManager<GoogleUserInfo>
     {
         public GoogleAuthenticationManager(UserService userService, UserGateway userGateway)
         {
@@ -18,23 +18,20 @@ namespace Roomies2.WebApp.Authentication
             Gateway = userGateway;
         }
 
-        public UserService UserService { get; }
-        public UserGateway Gateway { get; }
-
-        protected override async Task CreateOrUpdateUser(OAuthGoogle userInfo)
+        protected override async Task CreateOrUpdateUser(GoogleUserInfo userInfo)
         {
-            string userName = Guid.NewGuid().ToString();
             if (userInfo.RefreshToken != null)
-                await Gateway.CreateOrUpdateGoogleUser(userName, userInfo.Email, userInfo.GoogleId,
-                    userInfo.RefreshToken);
+            {
+                await Gateway.CreateOrUpdateGoogleUser(userInfo.Email, userInfo.GoogleId, userInfo.RefreshToken); 
+            }
         }
 
-        protected override Task<UserData> FindUser(OAuthGoogle userInfo)
+        protected override Task<UserData> FindUser(GoogleUserInfo userInfo)
         {
             return Gateway.FindByGoogleId(userInfo.GoogleId);
         }
 
-        protected override Task<OAuthGoogle> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
+        protected override Task<GoogleUserInfo> GetUserInfoFromContext(OAuthCreatingTicketContext ctx)
         {
            //using( HttpClient httpClient = new HttpClient())
            //{
@@ -42,12 +39,23 @@ namespace Roomies2.WebApp.Authentication
            //};
            
            
-            return Task.FromResult(new OAuthGoogle
+            return Task.FromResult(new GoogleUserInfo
             {
                 RefreshToken = ctx.RefreshToken,
                 Email = ctx.GetEmail(),
-                GoogleId = ctx.GetGoogleId()
+                GoogleId = ctx.GetGoogleId(),
+                
             });
         }
+    }
+
+
+    public class GoogleUserInfo
+    {
+        public string RefreshToken { get; set; }
+
+        public string Email { get; set; }
+
+        public string GoogleId { get; set; }
     }
 }

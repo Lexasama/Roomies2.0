@@ -1,9 +1,4 @@
-import {
-  getAsync,
-  postAsync,
-  putAsync,
-  deleteAsync
-} from "../helpers/apiHelper";
+import { getAsync, postAsync, putAsync } from "../helpers/apiHelper";
 
 const endpoint = process.env.VUE_APP_BACKEND + "/api/coloc";
 
@@ -15,7 +10,7 @@ export async function getColocListAsync(roomieId) {
   return await getAsync(`${endpoint}/colocList/${roomieId}`);
 }
 export function updateColocAsync(model) {
-  return putAsync(`${endpoint}/${model.colocId}`, model);
+  return putAsync(`${endpoint}`, model);
 }
 
 export function createColocAsync(model) {

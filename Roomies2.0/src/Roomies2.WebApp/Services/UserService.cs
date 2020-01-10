@@ -14,14 +14,9 @@ namespace Roomies2.WebApp.Services
             Hasher = passwordHasher;
         }
 
-        public UserGateway Gateway { get; }
-        public PasswordHasher Hasher { get; }
-
-        public Task<Result<int>> CreatePasswordUser(string userName, string email, string lastName, string firstName,
-            string phone, int sex, DateTime birthDate, string password)
+        public Task<Result<int>> CreatePasswordUser(string email, string password)
         {
-            return Gateway.CreatePasswordUser(userName, email, lastName, firstName, phone, sex, birthDate,
-                Hasher.HashPassword(password));
+            return Gateway.CreatePasswordUser(email, Hasher.HashPassword(password));
         }
 
         public async Task<UserData> FindUser(string email, string password)

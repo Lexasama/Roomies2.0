@@ -17,23 +17,26 @@ namespace Roomies2.WebApp.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
     public class ColocController : Controller
     {
-        private readonly ColocGateway _colocGateway;
+        public ColocGateway Gateway { get; }
 
         public ColocController(ColocGateway colocGateway)
         {
-            _colocGateway = colocGateway;
+            Gateway = colocGateway;
+
         }
 
         [HttpGet("{colocId}", Name = "GetColoc")]
         public async Task<IActionResult> GetColoc(int colocId)
         {
-            var result = await _colocGateway.FindById(colocId);
+            var result = await Gateway.FindById(colocId);
             return this.CreateResult(result);
         }
         [HttpGet("colocList/{roomieId}")]
-        public async Task<IActionResult> getColocList(int roomieId)
+        public async Task<IActionResult> GetColocList(int roomieId)
         {
-            Result<IEnumerable<ColocData>> colocList = await _colocGateway.getList(roomieId);
+            if (roomieId <= 0) roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            var colocList = await Gateway.GetList(roomieId);
             return this.CreateResult(colocList);
         }
 
@@ -42,7 +45,7 @@ namespace Roomies2.WebApp.Controllers
         {
             int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            Result<int> result = await _colocGateway.Create(roomieId, model.ColocName);
+            var result = await Gateway.Create(roomieId, model.ColocName);
             return this.CreateResult(result, o =>
             {
                 o.RouteName = "GetColoc";
@@ -54,7 +57,7 @@ namespace Roomies2.WebApp.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ColocViewModel model)
         {
-            Result result = await _colocGateway.Update(model.ColocName, model.PicPath);
+            Result result = await Gateway.Update(model.ColocId, model.ColocName, model.PicPath);
             return this.CreateResult(result);
         }
     }

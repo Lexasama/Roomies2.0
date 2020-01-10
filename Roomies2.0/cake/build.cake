@@ -11,7 +11,7 @@ var configuration = Argument("configuration", "Release");
 
 
 Task("Default")
-    .IsDependentOn("Tests");
+    .IsDependentOn("Build");
 
 Task("Clean")
     .Does(() =>
@@ -36,20 +36,20 @@ Task("Build")
     });
 });
 
-Task("Tests")
-    .IsDependentOn("Build")
-    .Does(() =>
-{
-    var testLocation = File("../src/Roomies2.DAL.Tests/Roomies2.DAL.Tests.csproj");
-    DotNetCoreTest(testLocation, new DotNetCoreTestSettings {
-        Configuration = configuration,
-        NoBuild = true,
-        ArgumentCustomization = args => 
-            args.Append("--collect")
-                .AppendQuoted("Code Coverage")
-                .Append("--logger")
-                .Append("trx") 
-    });
-});
+// Task("Tests")
+//     .IsDependentOn("Build")
+//     .Does(() =>
+// {
+//     var testLocation = File("../src/Roomies2.DAL.Tests/Roomies2.DAL.Tests.csproj");
+//     DotNetCoreTest(testLocation, new DotNetCoreTestSettings {
+//         Configuration = configuration,
+//         NoBuild = true,
+//         ArgumentCustomization = args => 
+//             args.Append("--collect")
+//                 .AppendQuoted("Code Coverage")
+//                 .Append("--logger")
+//                 .Append("trx") 
+//     });
+// });
 
 RunTarget(target);

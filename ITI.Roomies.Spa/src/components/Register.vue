@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div>
-      <b-form-select v-model="userType" :options="options"></b-form-select>
-    </div>
+    <b-card>
+      <b-form inline>
+        <label for="select">Create an acocount as:</label>
+        <b-form-select id="select" v-model="userType" :options="options" style="margin-left: 70px ">
+          <template></template>
+        </b-form-select>
+      </b-form>
+    </b-card>
     <div v-if="userType == 'roomie'">
       <roomie />
     </div>

@@ -17,7 +17,8 @@ import ColocProfile from "./components/Coloc/ColocProfile.vue";
 import Test from "./components/Test.vue";
 
 const routes = [
-  { path: "", component: Home, beforeEnter: requireAuth },
+  { path: "/", component: Home, beforeEnter: requireAuth },
+  { path: "/home", component: Home, beforeEnter: requireAuth },
 
   { path: "/login", component: Login },
   { path: "/logout", component: Logout, beforeEnter: requireAuth },
@@ -30,6 +31,7 @@ const routes = [
     component: ColocProfile,
     beforeEnter: requireAuth
   }
+  //{ path: "/createRoomie", component: CreateRoomie }
 ];
 
 export default new VueRouter({

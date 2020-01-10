@@ -6,15 +6,18 @@ namespace Roomies2.WebApp.Models.AccountViewModels
     public class RoomieViewModel
     {
         [Required]
-        [Display(Name = "UserName")]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
 
+        [Display(Name ="Email")]
+        public string Email { get; set; }
+
         [Required]
-        [Display(Name = "LastName")]
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
 
         [Required]
-        [Display(Name = "FirstName")]
+        [Display(Name = "First name")]
         public string FirstName { get; set; }
 
         [Required]
