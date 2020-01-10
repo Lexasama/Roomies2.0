@@ -1,6 +1,6 @@
 <template>
   <div>
-    <taskHistory />
+    <taskUpdate />
   </div>
 </template>
 
@@ -15,6 +15,7 @@ import colocList from "../components/Coloc/ColocList";
 import roomieList from "../components/Roomie/RoomieList";
 import TasksCreate from "../components/Tasks/TaskCreate";
 import taskHistory from "./Tasks/TaskHistory.vue";
+import taskUpdate from "./Tasks/TaskUpdate.vue";
 
 export default {
   components: {
@@ -27,7 +28,8 @@ export default {
     colocList,
     roomieList,
     TasksCreate,
-    taskHistory
+    taskHistory,
+    taskUpdate
   },
   data() {
     return {

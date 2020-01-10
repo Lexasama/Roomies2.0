@@ -1,5 +1,4 @@
 CREATE VIEW rm2.vTaskRoomies AS
-
 SELECT 
 t.TaskId,
 i.RoomieId,

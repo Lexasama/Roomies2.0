@@ -21,7 +21,7 @@ export default {
   components: {
     tasksCreate,
     TaskHistory
-  }, //end component
+  }, //end components
   methods: {
     async refreshList() {
       await this.$refs.taskHistoryComp.refreshActiveTasks();

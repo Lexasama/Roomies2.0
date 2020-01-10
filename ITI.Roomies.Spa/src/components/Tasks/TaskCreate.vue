@@ -31,7 +31,6 @@
               >{{r.firstName}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          {{task.roomies}}
           <el-form-item label="Description">
             <el-input type="textarea" placeholder="Describe your task" v-model="task.taskDes"></el-input>
           </el-form-item>

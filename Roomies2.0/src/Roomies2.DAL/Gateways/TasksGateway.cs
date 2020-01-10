@@ -70,7 +70,7 @@ namespace Roomies2.DAL.Gateways
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TaskRoomies>> GetAssignedRoomies(int taskId)
+        public async Task<IEnumerable<TaskRoomies>> GetAssignedRoomies(int taskId)  
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
