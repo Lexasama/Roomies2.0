@@ -20,7 +20,11 @@ namespace Roomies2.DAL.Tests.Tests
         {
             string name = TestHelpers.RandomTestName();
 
-            var result = await Sut.Create(1, name);
+            ///create a roomie 
+            var roomieResult = await TestStubs.StubRoomie();
+            int roomieId = roomieResult.Content;
+
+            var result = await Sut.Create(roomieId, name);
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
             int colocId = result.Content;

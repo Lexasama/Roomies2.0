@@ -1,7 +1,9 @@
 ﻿using Dapper;
+using Roomies2.DAL.Model;
 using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -27,9 +29,58 @@ namespace Roomies2.DAL.Gateways
                     new { TaskId = taskId });
 
                 if (task == null) return Result.Failure<TaskData>(Status.NotFound, "Not found.");
-                return Result.Success(task);
+                return Result.Success(Status.Ok, task);
             }
         }
+
+
+        public async Task<IEnumerable<TaskData>> GetTasks(int colocId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                
+                return await con.QueryAsync<TaskData>(
+                    @"SELECT * FROM rm2.tTasks WHERE ColocId = @ColocId;", 
+                    new {ColocId = colocId });
+            }
+        }
+
+        public async Task<IEnumerable<TaskData>> GetTasks(int colocId, bool isActive)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                if (isActive)
+                {
+                    return await con.QueryAsync<TaskData>(
+                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 0;",
+                    new { ColocId = colocId });
+                }
+                else { 
+               
+                    return await con.QueryAsync<TaskData>(
+                    @"SELECT * FROM rm2.tTasks t WHERE t.ColocId = @ColocId and t.State = 1;",
+                    new { ColocId = colocId });
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Get roomieId and firstName of Roomies assigned to a task
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<TaskRoomies>> GetAssignedRoomies(int taskId)  
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                return await con.QueryAsync<TaskRoomies>(
+                    @"SELECT firstName, roomieId FROM rm2.vTaskRoomies WHERE TaskId = @TaskId;",
+                    new { TaskId = taskId });
+            }
+        }
+
+
 
         public async Task<Result<int>> Create(string taskName, string des, DateTime date, int colocId)
         {
@@ -95,7 +146,6 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result> Assign(int taskId, int roomieId)
         {
-
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 var p = new DynamicParameters();

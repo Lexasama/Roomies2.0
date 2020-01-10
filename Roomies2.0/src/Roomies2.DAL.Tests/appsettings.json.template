@@ -1,5 +1,15 @@
 ﻿{
   "ConnectionStrings": {
     "Roomies2DB": "Server=.\\;Database=RoomiesV2;Trusted_Connection=True;"
+  },
+
+  "EmailSender": {
+
+    "SMTPAddress": "",
+    "Port": "",
+    "SSL": "",
+    "Email": "",
+    "Password": ""
+
   }
 }

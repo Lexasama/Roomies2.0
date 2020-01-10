@@ -2,7 +2,7 @@
   <div>
     <b-card>
       <b-form inline>
-        <label for="select">Create an acocount as:</label>
+        <label for="select">Create an account as:</label>
         <b-form-select id="select" v-model="userType" :options="options" style="margin-left: 70px ">
           <template></template>
         </b-form-select>

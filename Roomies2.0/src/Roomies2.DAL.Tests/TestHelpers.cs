@@ -11,6 +11,8 @@ namespace Roomies2.DAL.Tests
 
         public static string ConnectionString => Configuration["ConnectionStrings:Roomies2DB"];
 
+     
+
         private static IConfiguration Configuration =>
             _configuration ?? (_configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -23,5 +25,7 @@ namespace Roomies2.DAL.Tests
         public static DateTime RandomDate(int days) => DateTime.Today.AddDays(days);
         public static string RandomEmail() => $"{Guid.NewGuid().ToString().Substring(12)}@test.com";
         public static string RandomPhone() => $"+33{Random.Next(0,1000000000)}";
+    
+    
     }
 }

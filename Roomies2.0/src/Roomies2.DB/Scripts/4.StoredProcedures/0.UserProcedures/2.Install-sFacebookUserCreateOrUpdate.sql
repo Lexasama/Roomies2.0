@@ -26,7 +26,7 @@ BEGIN
 	END;
 
     INSERT INTO rm2.tFacebookUser(UserId, FacebookId, RefreshToken)
-        VALUES (@UserId, @FacebookId, @RefreshToken);
+        VALUES (@userId, @FacebookId, @RefreshToken);
     COMMIT;
     RETURN 0;
     
