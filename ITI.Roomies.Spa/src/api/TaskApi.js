@@ -1,4 +1,9 @@
-import { getAsync, postAsync, deleteAsync } from "../helpers/apiHelper";
+import {
+  getAsync,
+  postAsync,
+  deleteAsync,
+  putAsync
+} from "../helpers/apiHelper";
 
 const endpoint = process.env.VUE_APP_BACKEND + "/api/task";
 
@@ -23,6 +28,10 @@ export async function getRoomieTaskList() {
 
 export async function updateStateAsync(taskId) {
   return await postAsync(`${endpoint}/updateState/${taskId}`);
+}
+
+export async function updateTaskAsync(task) {
+  return await putAsync(endpoint, task);
 }
 
 export async function deleteTaskAsync(taskId) {

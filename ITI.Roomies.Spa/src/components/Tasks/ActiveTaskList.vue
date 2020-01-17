@@ -19,7 +19,7 @@
             <el-table-column label="Options">
               <template slot-scope="scope">
                 <el-button-group>
-                  <el-button size="mini" icon="el-icon-edit" @click="visible = !visible"></el-button>
+                  <el-button size="mini" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
                   <el-button size="mini" icon="el-icon-delete" @click="deleteTask(scope.row)"></el-button>
                 </el-button-group>
               </template>
@@ -31,7 +31,7 @@
                 <span>Edit task</span>
               </div>
               <div>
-                <taskUpdate :task="this.task" />
+                <taskUpdate :task="this.task" @task-updated="openClose()" />
               </div>
             </el-card>
           </b-collapse>
@@ -45,7 +45,6 @@
 import {
   deleteTaskAsync,
   updateStateAsync,
-  updateTaskAsync,
   getColocFilteredTasksAsync
 } from "@/api/TaskApi";
 import taskUpdate from "./TaskUpdate.vue";
@@ -61,7 +60,7 @@ export default {
       visible: false,
       activeNames: []
     };
-  },
+  }, //en data
 
   async mounted() {
     this.colocId = this.$currentColoc.colocId;
@@ -95,12 +94,19 @@ export default {
         console.error(e);
       }
     },
+    handleUpdate(task) {
+      this.visible = !this.visible;
+      this.task = task;
+    },
     formatter(row, colunm) {
       var names = "";
       row.roomies.forEach(element => {
         names = names + " " + element.firstName;
       });
       return names;
+    },
+    openClose() {
+      this.visible = !this.visible;
     }
   } //end methods
 };

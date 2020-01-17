@@ -6,6 +6,7 @@ namespace Roomies2.WebApp.Models
 {
     public class TaskViewModel
     {
+        public int TaskId { get; set; }
         [Required]
         public string TaskName { get; set; }
 

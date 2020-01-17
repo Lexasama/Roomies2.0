@@ -16,6 +16,7 @@ import Profile from "./components/Roomie/Profile.vue";
 import ColocProfile from "./components/Coloc/ColocProfile.vue";
 import Test from "./components/Test.vue";
 import Tasks from "./components/Tasks/Tasks.vue";
+import Settings from "./components/Settings/Settings.vue";
 
 const routes = [
   { path: "/", component: Home, beforeEnter: requireAuth },
@@ -32,7 +33,8 @@ const routes = [
     component: ColocProfile,
     beforeEnter: requireAuth
   },
-  { path: "/Tasks", component: Tasks, beforeEnter: requireAuth }
+  { path: "/Tasks", component: Tasks, beforeEnter: requireAuth },
+  { path: "/settings", component: Settings, beforeEnter: requireAuth }
   //{ path: "/createRoomie", component: CreateRoomie }
 ];
 

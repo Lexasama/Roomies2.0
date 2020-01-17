@@ -31,7 +31,6 @@ import { getRoomieAsync } from "../api/RoomieApi";
 import { getColocListAsync } from "../api/ColocApi";
 import checkUser from "../components/Utility/CheckUser";
 import AuthService from "../services/AuthService";
-import { get } from "http";
 
 export default {
   components: {
@@ -79,6 +78,9 @@ export default {
 
       if (item == "Tasks") {
         this.$router.push("/Tasks");
+      }
+      if (item == "Settings") {
+        this.$router.push("/settings");
       }
     },
 

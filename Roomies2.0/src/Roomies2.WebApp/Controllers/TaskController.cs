@@ -32,15 +32,11 @@ namespace Roomies2.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TaskViewModel model)
         {
-
             Result<int> result = await _tasksGateway.Create(model.TaskName, model.TaskDes, model.TaskDate, model.ColocId);
             int taskId = result.Content;
             if (result.Status == Status.Created)
             {
-                foreach (int roomieId in model.Roomies)
-                {
-                    await _tasksGateway.Assign(taskId, roomieId);
-                }
+                AssignRoomies(taskId, model.Roomies);
             }
             return this.CreateResult(result, o =>
             {
@@ -63,6 +59,21 @@ namespace Roomies2.WebApp.Controllers
             }
 
             return Ok(tasks);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTask([FromBody] TaskViewModel model)
+        {
+            Result result = await _tasksGateway.Update(model.TaskId, model.TaskName, model.TaskDate, model.TaskDes );
+            if(result.Status == Status.Ok)
+            {
+                 result = await _tasksGateway.UnassignAll(model.TaskId);
+                if (result.Status == Status.Ok)
+                {
+                    AssignRoomies(model.TaskId, model.Roomies);
+                }
+            }
+            return this.CreateResult(result);
         }
 
         [HttpGet("getActiveTasks/{colocId}/{isActive}")]
@@ -93,6 +104,22 @@ namespace Roomies2.WebApp.Controllers
         {
             Result result = await _tasksGateway.Delete(taskId);
             return this.CreateResult(result);
+        }
+
+        private async void AssignRoomies(int taskId, IEnumerable<int> roomies)
+        {
+            foreach (int roomieId in roomies)
+            {
+                await _tasksGateway.Assign(taskId, roomieId);
+            }
+        }
+
+        private async void UnassignRoomies(int taskId, IEnumerable<int> roomies)
+        {
+            foreach(int roomieId in roomies)
+            {
+                await _tasksGateway.Unassign(taskId, roomieId);
+            }
         }
     }
 }
