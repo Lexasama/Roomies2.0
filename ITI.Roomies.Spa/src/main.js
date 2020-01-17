@@ -22,6 +22,13 @@ Vue.use(ElementUI, { locale });
 Vue.use(VueCookies);
 Vue.use(Vueaxios, axios);
 
+class styles {
+  contructor(name, style, appStyle) {
+    this.name = name;
+    this.style = style;
+    this.appStyle = appStyle;
+  }
+}
 class currentColoc {
   constructor(colocId, colocName, creationDate, picPath) {
     this.colocId = colocId;
@@ -110,7 +117,8 @@ Vue.use(VueGlobalVariable, {
       "",
       "",
       "http://localhost:5000/Pictures/RoomiesPics/default.png"
-    )
+    ),
+    $styles: new styles()
   }
 });
 

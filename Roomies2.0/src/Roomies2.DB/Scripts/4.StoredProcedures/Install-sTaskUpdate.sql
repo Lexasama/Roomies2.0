@@ -3,8 +3,7 @@ create proc rm2.sTasksUpdate
 	@TaskId		INT, 
 	@TaskName   NVARCHAR(32),
     @TaskDes	NVARCHAR(200),
-	@TaskDate	DATETIME2,
-	@State		BIT
+	@TaskDate	DATETIME2
 )
 AS
 BEGIN
@@ -18,7 +17,7 @@ BEGIN
 	END;
 
 	UPDATE rm2.tTasks
-	SET TaskName = @TaskName, TaskDate = @TaskDate, TaskDes = @TaskDes, [State] = @State
+	SET TaskName = @TaskName, TaskDate = @TaskDate, TaskDes = @TaskDes
 	WHERE TaskId = @TaskId;
 
 	COMMIT;

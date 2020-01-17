@@ -46,34 +46,17 @@
 <script>
 import { createTaskAsync } from "../../api/TaskApi";
 import { getRoomiesAsync } from "../../api/RoomieApi";
-import { DateTime } from "luxon";
+
+import rules from "../Tasks/rules";
+import pickerOptions from "../Tasks/PickerOptions";
 
 export default {
   data() {
     return {
       date: "",
       time: "",
-      rules: {
-        taskName: [
-          { required: true, message: "Please input task name", trigger: "blur" }
-        ],
-        date: [
-          {
-            type: "date",
-            required: true,
-            message: "Please pick a date",
-            trigger: "change"
-          }
-        ],
-        roomies: [
-          {
-            type: "array",
-            required: true,
-            message: "Please assign at least one roomie",
-            trigger: "change"
-          }
-        ]
-      },
+      rules: rules,
+      pickerOptions: pickerOptions,
       task: {
         taskName: "",
         taskDate: "",
@@ -81,45 +64,12 @@ export default {
         colocId: null,
         roomies: []
       },
-      pickerOptions: {
-        disabledDate(time) {
-          let date = new Date();
-          date.setDate(date.getDate() - 1);
-          return time.getTime() <= date;
-        },
-        shortcuts: [
-          {
-            text: "Today",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
-          },
-          {
-            text: "Tomorrow",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() + 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
-          },
-          {
-            text: "In a week",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      },
-      roomies: [],
-      assigned: []
+      roomies: []
     };
   },
   async mounted() {
     this.roomies = await getRoomiesAsync(this.$currentColoc.colocId);
   }, //end mounted
-  computed: {}, //end computed
   methods: {
     async onSubmit(event) {
       event.preventDefault;

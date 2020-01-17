@@ -80,7 +80,22 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
+        public async Task<Result> UnassignAll(int taskId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@TaskId", taskId);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sTaskUnassignAll", p, commandType: CommandType.StoredProcedure);
 
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.BadRequest, "Task has never been assigned to this roomie");
+
+                Debug.Assert(status == 0);
+                return Result.Success(Status.Ok);
+            }
+        }
 
         public async Task<Result<int>> Create(string taskName, string des, DateTime date, int colocId)
         {
@@ -121,7 +136,7 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public async  Task<Result> Update(int taskId, string taskName, DateTime date, string des, bool state)
+        public async  Task<Result> Update(int taskId, string taskName, DateTime date, string des)
         {
             if (!IsNameValid(taskName)) return Result.Failure<int>(Status.BadRequest, "The name is not valid");
 
@@ -132,7 +147,6 @@ namespace Roomies2.DAL.Gateways
                 p.Add("@TaskName", taskName);
                 p.Add("@TaskDate", date);
                 p.Add("@TaskDes", des);
-                p.Add("@State", state);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
                 await con.ExecuteAsync("rm2.sTasksUpdate", p, commandType: CommandType.StoredProcedure);
 

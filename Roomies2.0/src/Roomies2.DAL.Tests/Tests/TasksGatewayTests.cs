@@ -44,7 +44,7 @@ namespace Roomies2.DAL.Tests.Tests
                 taskName = TestHelpers.RandomTestName();
                 date = TestHelpers.RandomDate(5);
                 des = TestHelpers.RandomTestName() + "New DesCription";
-                Result t = await Gateway.Update(taskId, taskName, date, des, true);
+                Result t = await Gateway.Update(taskId, taskName, date, des);
                 Assert.That(t.Status, Is.EqualTo(Status.Ok));
 
                 task = await Gateway.Find(taskId);
