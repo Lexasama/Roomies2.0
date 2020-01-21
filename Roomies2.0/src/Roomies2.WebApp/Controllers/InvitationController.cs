@@ -20,10 +20,10 @@ namespace Roomies2.WebApp.Controllers
         public EmailSender _emailSender = new EmailSender(@"./wwwroot/assets/invite/Emails/InviteEmail.html");                                 
 
 
-        public InvitationController( InviteGateway invitationGateway)
+        public InvitationController( InviteGateway invitationGateway, EmailSender emailSender)
         {
             _invitationGateway = invitationGateway;
-            
+            _emailSender = emailSender;
         }
 
 
