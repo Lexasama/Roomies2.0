@@ -166,9 +166,7 @@ namespace Roomies2.WebApp
                         return embeddedIterCount < _iterCount
                             ? PasswordVerificationResult.SuccessRehashNeeded
                             : PasswordVerificationResult.Success;
-                    }
                     else
-                    {
                         return PasswordVerificationResult.Failed;
                     }
                 default:
