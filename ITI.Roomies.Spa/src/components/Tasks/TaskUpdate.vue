@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{task}}
     <el-form :model="updatedTask" :rules="rules" ref="taskUpdate">
       <el-form-item label="Task name">
         <el-input v-model="task.taskName" style="width: 75%;" required></el-input>

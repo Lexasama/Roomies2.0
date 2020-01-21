@@ -76,10 +76,10 @@ export default {
           this.emailList.emails.forEach(e => {
             this.list.push(e.value);
           });
-          console.log("List", this.list);
+          
 
           this.mailingModel.emails = this.list;
-          this.mailingModel.colocId = 11;
+          this.mailingModel.colocId = this.$currentColoc.colocId;
           console.log("invite result", this.mailingModel);
 
           var r = await inviteAsync(this.mailingModel);

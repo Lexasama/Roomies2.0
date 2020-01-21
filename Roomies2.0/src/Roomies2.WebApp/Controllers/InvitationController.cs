@@ -17,7 +17,7 @@ namespace Roomies2.WebApp.Controllers
     public class InvitationController: Controller
     {
         public InviteGateway _invitationGateway;
-        public EmailSender _emailSender = new EmailSender(@"D:\invite.html");                                 
+        public EmailSender _emailSender = new EmailSender(@"./wwwroot/assets/invite/Emails/InviteEmail.html");                                 
 
 
         public InvitationController( InviteGateway invitationGateway)
@@ -51,5 +51,11 @@ namespace Roomies2.WebApp.Controllers
             return this.CreateResult(result);
 
         }
+
+        //[HttpGet("roomie/{guid}")]
+        //public async Task<IActionResult> Accept(string guid){
+            
+
+        //}
     }
 }
