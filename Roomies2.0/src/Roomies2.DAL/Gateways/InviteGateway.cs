@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Roomies2.DAL.Services;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -20,57 +19,81 @@ namespace Roomies2.DAL.Gateways
             ConnectionString = connectionString;
         }
 
-        public async Task<Result<InviteData>> FindInvite(string email){
+        //public async Task<Result<InviteData>> FindInvite(string email)
+        //{
 
-            using (SqlConnection con = new SqlConnection(ConnectionString)){
+        //    using (SqlConnection con = new SqlConnection(ConnectionString))
+        //    {
+        //        InviteData i = await con.QueryFirstOrDefaultAsync<InviteData>(
+        //            @"SELECT * FROM rm2.tInvite i WHERE i.Email = @Email;",
+        //            new { Email = email });
+
+        //        return i == null
+        //            ? Result.Failure<InviteData>(Status.NotFound, "Not found.")
+        //            : Result.Success(i);
+        //    }
+        //}
+
+        public async Task<Result<InviteData>> FindInvite(string guid)
+        {
+
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
                 InviteData i = await con.QueryFirstOrDefaultAsync<InviteData>(
-                    @"SELECT * FROM rm2.tInvite i WHERE i.Email = @Email;",
-                    new { Email = email });
+                    @"SELECT * FROM rm2.tInvite i WHERE i.Code = @Code;",
+                    new { Guid = guid });
 
-                return i == null 
-                    ? Result.Failure<InviteData>(Status.NotFound, "Not found.") 
-                    : ( Result<InviteData> ) Result.Success(i);
+                if (i == null) return Result.Failure<InviteData>(Status.NotFound, "Not found.");
+                return Result.Success(Status.Ok, i);
+
             }
-}
+        }
 
-public async Task<Result> DeleteInvite(string email, int colocId)
-{
-    using (SqlConnection con = new SqlConnection(ConnectionString))
-    {
-        var p = new DynamicParameters();
-        p.Add("@ColocId", colocId);
-        p.Add("@Email", email);
-        p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-        await con.ExecuteAsync("rm2.sInviteDelete", p, commandType: CommandType.StoredProcedure);
+        public async Task<Result> DeleteInvite(string email, int colocId)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@ColocId", colocId);
+                p.Add("@Email", email);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sInviteDelete", p, commandType: CommandType.StoredProcedure);
 
-        int status = p.Get<int>("@Status");
-        if (status == 1) return Result.Failure(Status.NotFound, "Invite not found");
+                int status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.NotFound, "Invite not found");
 
-        Debug.Assert(status == 0);
-        return Result.Success();
-    }
-}
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+        }
 
-public async Task<Result> Invite(object roomieId, int colocId, string email)
-{
-    string code = Guid.NewGuid().ToString().Substring(0,12);
+        public object AddRoomie(Result invite)
+        {
+            throw new NotImplementedException();
+        }
 
-    await using (SqlConnection con = new SqlConnection(ConnectionString))
-    {
-        DynamicParameters p = new DynamicParameters();
-        p.Add("@RoomieId", roomieId);
-        p.Add("@ColocId", colocId);
-        p.Add("@Email", email);
-        p.Add("@Code", code);
-        p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-        await con.ExecuteAsync("rm2.sInviteCreate", p, commandType: CommandType.StoredProcedure);
+        public async Task<Result> Invite(object roomieId, int colocId, string email)
+        {
+            string code = Guid.NewGuid().ToString().Substring(0, 12);
 
-        int status = p.Get<int>("@Status");
+            await using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                DynamicParameters p = new DynamicParameters();
+                p.Add("@RoomieId", roomieId);
+                p.Add("@ColocId", colocId);
+                p.Add("@Email", email);
+                p.Add("@Code", code);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sInviteCreate", p, commandType: CommandType.StoredProcedure);
 
-        Debug.Assert(status == 0);
-        return Result.Success();
-    }
+                int status = p.Get<int>("@Status");
 
-}
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+
+
+
+        }
     }
 }

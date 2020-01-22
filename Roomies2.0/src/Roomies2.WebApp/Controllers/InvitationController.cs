@@ -13,23 +13,21 @@ using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/api/[controller]")]
     public class InvitationController: Controller
     {
         public InviteGateway _invitationGateway;
         public EmailSender _emailSender = new EmailSender(@"./wwwroot/assets/invite/Emails/InviteEmail.html");                                 
 
 
-        public InvitationController( InviteGateway invitationGateway, EmailSender emailSender)
+        public InvitationController( InviteGateway invitationGateway)
         {
             _invitationGateway = invitationGateway;
-            _emailSender = emailSender;
         }
 
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
-
         public async Task<IActionResult> Invite([FromBody] InviteViewModel model)
         {
             int roomieId = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
@@ -52,10 +50,21 @@ namespace Roomies2.WebApp.Controllers
 
         }
 
-        //[HttpGet("roomie/{guid}")]
-        //public async Task<IActionResult> Accept(string guid){
-            
+        [HttpGet("/roomie/{guid}")]
+        public async Task<IActionResult> Accept(string guid)
+        {
+           Result result =  await _invitationGateway.FindInvite(guid);
 
-        //}
+          ///  var r = _invitationGateway.AddRoomie(invite);
+
+            //if (invite.Status == Status.Ok)
+            //{
+            //    var result = _invitationGateway.AddRoomie(invite);
+            //}
+            //var result = _invitationGateway.AddRoomie(invite);
+
+            return this.CreateResult(result);
+            
+        }
     }
 }

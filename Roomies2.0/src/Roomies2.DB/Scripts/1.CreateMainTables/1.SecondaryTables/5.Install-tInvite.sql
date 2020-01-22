@@ -13,6 +13,4 @@ CREATE TABLE rm2.tInvite
     CONSTRAINT FK_tInvite_tRoomie
         FOREIGN KEY (RoomieId)
             REFERENCES rm2.tRoomie (RoomieId)
-)
-
-
+);

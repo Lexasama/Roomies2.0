@@ -6,9 +6,9 @@
     <div>
       <radial-menu
         style="margin: auto; margin-top: 300px; background-color: white"
-        :itemSize="50"
+        :itemSize="65"
         :radius="130"
-        :angle-restriction="360"
+        :angle-restriction="180"
       >
         <radial-menu-item
           v-for="(item, index) in items"
@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      items: ["Tasks", "Calendar", "Groceries", "Settings", "more", "Axel"],
+      items: ["Flat", "Tasks", "Profile"],
       lastClicked: "click on something!",
       roomie: {}
     };
@@ -81,6 +81,12 @@ export default {
       }
       if (item == "Settings") {
         this.$router.push("/settings");
+      }
+      if (item == "Profile") {
+        this.$router.push("/profile");
+      }
+      if (item == "Flat") {
+        this.$router.push("/coloc");
       }
     },
 
