@@ -1,5 +1,6 @@
 CREATE PROCEDURE rm2.sRoomieCreate
 ( @RoomieId    INT,
+  @UserName    NVARCHAR(32),
   @FirstName   NVARCHAR(32),
   @LastName    NVARCHAR(32),
   @Phone       NVARCHAR(12),
@@ -10,29 +11,19 @@ CREATE PROCEDURE rm2.sRoomieCreate
 )
 AS
 BEGIN
-
+    
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-    IF exists(SELECT * FROM tUser WHERE UserId = @RoomieId)
-            BEGIN
-                UPDATE tUser
-                SET FirstName   = @FirstName,
-                    LastName    = @LastName,
-                    tUser.Phone = @Phone,
-                    Sex         = @Sex,
-                    BirthDate   = @BirthDate
-                    WHERE UserId = @RoomieId;
+	IF EXISTS (SELECT * FROM rm2.tRoomie r WHERE r.UserName = @UserName)
+	BEGIN 
+		ROLLBACK;
+		RETURN 1;
+	END;
 
-                INSERT INTO rm2.tRoomie(RoomieId, [Description], PicturePath)
-                    VALUES (@RoomieId, @Description, @PicturePath);
-                COMMIT;
-                RETURN 0;
-            END;
-        ELSE
-            BEGIN
-                ROLLBACK;
-                RETURN 1;
-            END;
 
+    INSERT INTO rm2.tRoomie(RoomieId, UserName, FirstName, LastName, Phone, Sex, BirthDate, [Description], PicturePath)
+					VALUES (@RoomieId,@UserName, @FirstName, @LastName, @Phone, @Sex, @BirthDate, @Description, @PicturePath);
+    COMMIT;
+    RETURN 0;
 END;

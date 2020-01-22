@@ -1,6 +1,6 @@
 <template>
   <div>
-    <theme />
+    <itemList />
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
     TasksCreate,
     taskHistory,
     taskUpdate,
-    theme
+    theme,
   },
   data() {
     return {};

@@ -5,9 +5,6 @@ using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
 using Roomies2.WebApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
