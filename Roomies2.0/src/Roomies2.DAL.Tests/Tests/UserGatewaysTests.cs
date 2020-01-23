@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.DAL.Tests.Tests
 {
