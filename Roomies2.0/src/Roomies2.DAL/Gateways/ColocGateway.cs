@@ -32,6 +32,18 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
+        public async Task<Result<ColocPicture>> GetPic(int colocId)
+        {
+            using(var con = new SqlConnection(ConnectionString))
+            {
+                var picPath = await con.QueryFirstOrDefaultAsync<ColocPicture>(
+                    @"SELECT * FROM rm2.tColoc c WHERE c.ColocId = @ColocId;",
+                    new {ColocId = colocId});
+                if (picPath == null) return Result.Failure<ColocPicture>(Status.NotFound, "Not found.");
+                return Result.Success(picPath);
+            }
+        }
+
         public async Task<Result<int>> Create(int roomieId, string name)
         {
             if (!IsNameValid(name)) return Result.Failure<int>(Status.BadRequest, "The name is not valid");
@@ -51,6 +63,8 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success(Status.Created, p.Get<int>("@ColocId"));
             }
         }
+
+     
 
         public async Task<Result<IEnumerable<ColocData>>> GetList(int roomieId)
         {

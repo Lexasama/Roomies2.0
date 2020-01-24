@@ -18,7 +18,6 @@
 <script>
 import axios from "axios";
 import AuthService from "../../services/AuthService";
-import { getPicAsync } from "../../api/RoomieApi";
 export default {
   props: {
     id: {
@@ -63,7 +62,8 @@ export default {
         console.log("data", data);
 
         if (data.status == 200) {
-          this.show("Succes", "succes");
+          this.show("Succes", "success");
+          data = null;
         }
       } catch (error) {
         console.error(error);

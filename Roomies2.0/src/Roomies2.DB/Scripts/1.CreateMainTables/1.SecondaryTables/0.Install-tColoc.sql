@@ -10,4 +10,4 @@ CREATE TABLE rm2.tColoc
 );
 
 INSERT INTO rm2.tColoc(ColocName, PicPath)
-    VALUES (left(convert(NVARCHAR(36), newid()), 32), N'');
+    VALUES (left(convert(NVARCHAR(36), newid()), 32), 'http://localhost:5000/Default/favicon.png');
