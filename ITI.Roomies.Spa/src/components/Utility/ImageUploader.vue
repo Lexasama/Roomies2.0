@@ -9,18 +9,16 @@
           accept="image/x-png, image/jpg, image/jpeg"
           @change="handleFileUpload($event.target.files)"
         />
-        <el-button type="button" @click="submitFile()">Submit picture</el-button>
+        <el-button type="button" @click="submitFile($event)">Submit</el-button>
       </form>
     </div>
   </div>
 </template>
 
-//action="http://localhost:5000/api/picture/uploadColoc"
 <script>
 import axios from "axios";
 import AuthService from "../../services/AuthService";
 import { getPicAsync } from "../../api/RoomieApi";
-import { getColocAsync } from "../../api/ColocApi";
 export default {
   props: {
     id: {
@@ -35,10 +33,7 @@ export default {
   },
   data() {
     return {
-      files: new FormData(),
-      env: process.env.VUE_APP_BACKEND,
-      file: new FormData(),
-      env: process.env.VUE_APP_BACKEND
+      file: new FormData()
     };
   },
 
@@ -48,7 +43,7 @@ export default {
   },
 
   methods: {
-    async submitFile() {
+    async submitFile(event) {
       event.preventDefault();
       const endpoint = process.env.VUE_APP_BACKEND + "/api/picture";
       const file = this.file;
@@ -57,41 +52,33 @@ export default {
 
       var id = this.roomieId;
       var isRoomie = this.isRoomie;
+      try {
+        let data = await axios.post(`${endpoint}/uploadImage`, this.file, {
+          headers: {
+            "Content-type": "multipart/form-data",
+            Authorization: `Bearer ${AuthService.accessToken}`
+          },
+          responseType: "application/json"
+        });
+        console.log("data", data);
 
-      let data = await axios.post(`${endpoint}/uploadImage`, this.file, {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: `Bearer ${AuthService.accessToken}`
-        },
-        responseType: "application/json"
-      });
-      console.log("data", data);
-      if (data.status == 200) {
-        this.show();
-        this.setVariables();
+        if (data.status == 200) {
+          this.show("Succes", "succes");
+        }
+      } catch (error) {
+        console.error(error);
+        this.show("Try again", "error");
       }
     },
-
     async handleFileUpload(files) {
       this.file.append("file", files[0], files[0].name);
     },
-    show() {
+    show(text, type) {
       this.$message({
         showClose: true,
-        message: "Success",
-        type: "success"
+        message: text,
+        type: type
       });
-    },
-    async setVariables() {
-      if (this.isRoomie == true) {
-        var path = await getPicAsync(this.id);
-        this.$user.setPicPath(path.picturePath);
-      }
-      if (this.isRoomie == false && this.$currentColoc.colocId == -1) {
-        var coloc = await getColocAsync(this.id);
-        console.log("coloc", coloc);
-        this.$currentColoc.setCurrentColoc(coloc);
-      }
     }
   }
 };

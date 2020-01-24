@@ -57,7 +57,6 @@ export default {
   methods: {
     async refresh() {
       this.groceries = await getGroceriesAsync(this.colocId);
-      console.log("groceries", this.groceries);
     },
 
     dateFormatter(row, colunm) {

@@ -75,6 +75,11 @@ namespace Roomies2.DAL.Gateways
             }
 
         }
+        /// <summary>
+        /// Return All the roomies of a Flat
+        /// </summary>
+        /// <param name="colocId"></param>
+        /// <returns></returns>
         public async Task<Result<IEnumerable<RoomieProfile>>> GetRoomies(int colocId)
         {
             await using SqlConnection con = new SqlConnection(_connectionString);
@@ -85,6 +90,11 @@ namespace Roomies2.DAL.Gateways
             return Result.Success(Status.Ok, roomies);
         }
 
+        /// <summary>
+        /// Return the picture of a roomie
+        /// </summary>
+        /// <param name="roomieId"></param>
+        /// <returns></returns>
         public async Task<Result<Picture>> GetPicture(int roomieId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))

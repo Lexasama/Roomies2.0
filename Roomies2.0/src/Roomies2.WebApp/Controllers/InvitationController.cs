@@ -48,5 +48,11 @@ namespace Roomies2.WebApp.Controllers
             return this.CreateResult(result);
 
         }
+
+        //[HttpPost("roomie/invite/{code}")]
+        //public async Task<IActionResult> Invited(string code)
+        //{
+        //}
+
     }
 }

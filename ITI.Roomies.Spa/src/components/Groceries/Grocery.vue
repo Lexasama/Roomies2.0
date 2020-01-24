@@ -1,7 +1,13 @@
 <template>
   <div>
-    <GroceryList />
-    <!-- <b-col><ItemList /></b-col> -->
+    <b-row>
+      <b-col>
+        <GroceryList />
+      </b-col>
+      <!-- <b-col>
+        <ReccurentItemList />
+      </b-col>-->
+    </b-row>
   </div>
 </template>
 
@@ -10,7 +16,8 @@ import GroceryList from "./GroceryList.vue";
 import ReccurentItemList from "./ReccurentItemList.vue";
 export default {
   components: {
-    GroceryList
+    GroceryList,
+    ReccurentItemList
   }
 };
 </script>
