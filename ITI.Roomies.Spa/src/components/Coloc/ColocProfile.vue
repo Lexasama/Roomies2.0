@@ -1,12 +1,7 @@
 <template>
   <div>
     <div>
-      <el-image :src="getColocPic" fit="scale-down" style="width: 150px; height: 150px">
-        <div slot="placeholder" class="image-slot">
-          Loading
-          <span class="dot">...</span>
-        </div>
-      </el-image>
+      <el-image :src="getColocPic" fit="scale-down" style="width: 150px; height: 150px"></el-image>
     </div>
 
     <div>

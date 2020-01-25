@@ -71,7 +71,7 @@ export default {
   }, //End mounted
 
   computed: {
-    getPic() {
+    getPic: function() {
       return this.roomie.picturePath;
       this.$user.setPicPath(this.roomie.picturePath);
     }

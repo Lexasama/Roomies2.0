@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card>
-      <el-image style="width: 100px; height: 100px" :src="roomie.picturePath" fit="scale-down"></el-image>
+      <el-image style="width: 100px; height: 100px" :src="getPic" fit="scale-down"></el-image>
 
       <el-divider></el-divider>
 
@@ -33,13 +33,17 @@ export default {
   props: {
     roomie: {
       type: Object,
-      required: false,
-      default: () => {}
+      required: false
     }
   }, //end props
   data() {
     return {};
   }, //End data
+  computed: {
+    getPic: function() {
+      return this.$user.picPath;
+    }
+  }, //end computed
   async mounted() {
     if (this.roomie == null) {
       this.roomie = this.$user;

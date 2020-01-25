@@ -3,47 +3,28 @@
     <div>
       <checkUser />
     </div>
+
     <div>
-      <radial-menu
-        style="margin: auto; margin-top: 300px; background-color: white"
-        :itemSize="65"
-        :radius="130"
-        :angle-restriction="180"
-      >
-        <radial-menu-item
-          v-for="(item, index) in items"
-          :key="index"
-          style="background-color: white"
-          @click="() => handleClick(item)"
-        >
-          <span>{{ item }}</span>
-        </radial-menu-item>
-      </radial-menu>
-      <div style="color: rgba(0,0,0,0.6); margin-top: 16px;">
-        {{ lastClicked }}
-      </div>
+      <RadialMenu />
     </div>
   </div>
 </template>
 
 <script>
-import { RadialMenu, RadialMenuItem } from "vue-radial-menu";
 import { getUserAsync } from "@/api/UserApi";
 import { getRoomieAsync } from "../api/RoomieApi";
 import { getColocListAsync } from "../api/ColocApi";
 import checkUser from "../components/Utility/CheckUser";
 import AuthService from "../services/AuthService";
+import RadialMenu from "./Utility/RadialMenu.vue";
 
 export default {
   components: {
-    RadialMenu,
-    RadialMenuItem,
-    checkUser
+    checkUser,
+    RadialMenu
   },
   data() {
     return {
-      items: ["Flat", "Tasks", "Profile"],
-      lastClicked: "click on something!",
       roomie: {}
     };
   },
@@ -74,27 +55,6 @@ export default {
   }, //end computed
 
   methods: {
-    handleClick(item) {
-      console.log("item", item);
-      this.lastClicked = item;
-
-      if (item == "Tasks") {
-        this.$router.push("/Tasks");
-      }
-      if (item == "Settings") {
-        this.$router.push("/settings");
-      }
-      if (item == "Groceries") {
-        this.$router.push("/Groceries");
-      }
-      if (item == "Profile") {
-        this.$router.push("/profile");
-      }
-      if (item == "Flat") {
-        this.$router.push("/coloc");
-      }
-    },
-
     async setUser() {
       this.$user.setId(this.roomie.roomieId);
       this.$user.setEmail(AuthService.email);

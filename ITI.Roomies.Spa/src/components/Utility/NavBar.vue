@@ -3,14 +3,8 @@
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand>
         <router-link to="/ColocProfile">
-          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit">
-            <div slot="placeholder" class="image-slot">
-              Loading
-              <span class="dot">...</span>
-            </div>
-          </el-image>
+          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit"></el-image>
         </router-link>
-        <!-- <img src="../../../public/favicon.png" style="width: 60px; height: 60px" /> -->
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -22,9 +16,11 @@
             <b-button variant="outline-primary" @click="drawerSwitch()">Flats</b-button>
           </b-nav-item>
         </b-navbar-nav>
+
         <router-link to="/home">
           <img class="image" src="../../../public/Logo.png" width="80" />
         </router-link>
+
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -71,17 +67,18 @@ import AuthService from "@/services/AuthService";
 import { getPicAsync } from "../../api/RoomieApi.js";
 import { getColocPicAsync } from "../../api/ColocApi.js";
 import colocList from "../Coloc/ColocList";
-
+import RadialMenu from "./RadialMenu.vue";
 export default {
   components: {
-    colocList
+    colocList,
+    RadialMenu
   },
 
   data() {
     return {
       drawer: false,
-      roomiePic: "http://localhost:5000/Default/favicon.png",
-      colocPic: "",
+      roomiePic: "http://localhost:5000/Default/user.png",
+      colocPic: "http://localhost:5000/Default/favicon.png",
       roomieId: null,
       colocId: null
     };

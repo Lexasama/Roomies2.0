@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Roomies2.DAL.Model.People;
+using Dapper;
 
 namespace Roomies2.DAL.Gateways
 {
