@@ -10,10 +10,10 @@ namespace Roomies2.WebApp.Authentication
     {
         public async Task OnCreatingTicket(OAuthCreatingTicketContext ctx)
         {
-            TUserInfo userInfo = await GetUserInfoFromContext(ctx);
+            var userInfo = await GetUserInfoFromContext(ctx);
 
             await CreateOrUpdateUser(userInfo);
-            UserData account = await FindUser(userInfo);
+            var account = await FindUser(userInfo);
             ctx.Principal = CreatePrincipal(account);
         }
 
@@ -23,14 +23,15 @@ namespace Roomies2.WebApp.Authentication
 
         protected abstract Task<UserData> FindUser(TUserInfo userInfo);
 
-        ClaimsPrincipal CreatePrincipal(UserData account)
+        private ClaimsPrincipal CreatePrincipal(UserData account)
         {
             var claims = new List<Claim>
             {
-                new Claim( ClaimTypes.NameIdentifier, account.UserId.ToString(), ClaimValueTypes.String ),
-                new Claim( ClaimTypes.Email, account.Email )
+                new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString(), ClaimValueTypes.String),
+                new Claim(ClaimTypes.Email, account.Email)
             };
-            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email, string.Empty));
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType,
+                ClaimTypes.Email, string.Empty));
             return principal;
         }
     }

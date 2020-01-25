@@ -1,11 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Roomies2.WebApp.Authentication
 {
     public class TokenProviderOptions
     {
-
         public string Issuer { get; set; }
 
         public string Audience { get; set; }

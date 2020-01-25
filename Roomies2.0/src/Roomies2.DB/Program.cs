@@ -1,15 +1,22 @@
-﻿using DbUp;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
+using DbUp;
 using DbUp.Engine;
+using Microsoft.Extensions.Configuration;
 
 namespace Roomies2.DB
 {
     public class Program
     {
         private static IConfiguration _configuration;
+
+        private static IConfiguration Configuration =>
+            _configuration ?? (_configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false)
+                .AddEnvironmentVariables()
+                .Build());
 
         public static int Main()
         {
@@ -40,12 +47,5 @@ namespace Roomies2.DB
             Console.ResetColor();
             return 0;
         }
-
-        private static IConfiguration Configuration =>
-            _configuration ?? (_configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddEnvironmentVariables()
-                .Build());
     }
 }

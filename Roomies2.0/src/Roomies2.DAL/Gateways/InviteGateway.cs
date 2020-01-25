@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Roomies2.DAL.Services;
+﻿using Roomies2.DAL.Services;
 using System;
 using System.Data;
 using System.Data.SqlClient;

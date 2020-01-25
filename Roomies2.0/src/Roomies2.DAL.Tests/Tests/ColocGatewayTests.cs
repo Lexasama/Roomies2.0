@@ -7,7 +7,7 @@ using Roomies2.DAL.Services;
 namespace Roomies2.DAL.Tests.Tests
 {
     [TestFixture]
-    class ColocGatewayTests
+    internal class ColocGatewayTests
     {
         public ColocGatewayTests()
         {

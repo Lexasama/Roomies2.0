@@ -61,19 +61,5 @@ namespace Roomies2.DAL.Tests.Tests
                 Assert.That(roomie.Status, Is.EqualTo(Status.NotFound));
             }
         }
-
-        private static void CheckRoomie(Result<RoomieData> r, string lastName, string firstName, string phone, int sex,
-            DateTime birthDate, string desc, string pic)
-        {
-            Assert.That(r.HasError, Is.False);
-            Assert.That(r.Status, Is.EqualTo(Status.Ok));
-            Assert.That(r.Content.LastName, Is.EqualTo(lastName));
-            Assert.That(r.Content.FirstName, Is.EqualTo(firstName));
-            Assert.That(r.Content.BirthDate, Is.EqualTo(birthDate));
-            Assert.That(r.Content.Phone, Is.EqualTo(phone));
-            Assert.That(r.Content.Description, Is.EqualTo(desc));
-            Assert.That(r.Content.PicPath, Is.EqualTo(pic));
-            Assert.That(r.Content.Sex, Is.EqualTo(sex));
-        }
     }
 }

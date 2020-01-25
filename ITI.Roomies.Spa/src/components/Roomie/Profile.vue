@@ -2,11 +2,11 @@
   <div>
     <div>
       <el-card>
-        <el-image style="width: 100px; height: 100px" :src="roomie.picturePath" fit="scale-down"></el-image>
+        <el-image style="width: 100px; height: 100px" :src="getPic" fit="scale-down"></el-image>
 
         <el-popover placement="bottom" title="Upload a new profile picture" trigger="click">
           <el-button slot="reference" type="primary" icon="el-icon-edit" circle></el-button>
-          <ImageUploader :id="this.roomieId" :isRoomie="true" />
+          <ImageUploader v-bind:id="this.roomieId" :isRoomie="true" />
         </el-popover>
 
         <el-divider></el-divider>
@@ -63,19 +63,25 @@ export default {
   async mounted() {
     try {
       this.roomie = await getRoomieProfileAsync();
-
+      console.log("picpath", this.roomie.picturePath);
       this.roomieId = this.roomie.roomieId;
     } catch (error) {
       console.error(error);
     }
   }, //End mounted
 
-  computed: {}, //End computed
+  computed: {
+    getPic() {
+      return this.roomie.picturePath;
+      this.$user.setPicPath(this.roomie.picturePath);
+    }
+  }, //End computed
   methods: {
     async refreshInfo() {
       try {
         this.roomie = await getRoomieProfileAsync();
         this.roomieId = this.roomie.roomieId;
+        this.$user.setId(this.roomieId);
       } catch (error) {
         console.error(error);
       }

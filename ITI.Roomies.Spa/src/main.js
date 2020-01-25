@@ -108,7 +108,7 @@ Vue.use(VueGlobalVariable, {
       -1,
       "",
       new Date(),
-      "http://localhost:5000/Pictures/ColocPics/default.png"
+      "http://localhost:5000/Default/favicon.png"
     ),
     $user: new user(
       -1,
@@ -116,7 +116,7 @@ Vue.use(VueGlobalVariable, {
       "",
       "",
       "",
-      "http://localhost:5000/Pictures/RoomiesPics/default.png"
+      "http://localhost:5000/Default/user.png"
     ),
     $styles: new styles()
   }

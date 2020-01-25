@@ -20,3 +20,7 @@ export function createColocAsync(model) {
 export function getColocByRoomieIdAsync(roomieId) {
   return getAsync(`${endpoint}/roomieColoc/${roomieId}`);
 }
+
+export function getColocPicAsync(colocId) {
+  return getAsync(`${endpoint}/getPicture/${colocId}`);
+}

@@ -39,7 +39,7 @@
               <b-dropdown-item href="/settings">Settings</b-dropdown-item>
             </router-link>
             <router-link to="/logout">
-              <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
             </router-link>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -69,6 +69,7 @@
 <script>
 import AuthService from "@/services/AuthService";
 import { getPicAsync } from "../../api/RoomieApi.js";
+import { getColocPicAsync } from "../../api/ColocApi.js";
 import colocList from "../Coloc/ColocList";
 
 export default {
@@ -78,28 +79,29 @@ export default {
 
   data() {
     return {
-      colocList: [],
-      drawer: false
+      drawer: false,
+      roomiePic: "http://localhost:5000/Default/favicon.png",
+      colocPic: "",
+      roomieId: null,
+      colocId: null
     };
   },
-  async mounted() {},
+  async mounted() {
+    this.roomieId = this.$user.roomieId;
+    this.colocId = this.$currentColoc.colocId;
+
+    await this.refresh();
+  },
   computed: {
     auth: () => AuthService,
     getUserPic: function() {
-      return this.$user.picPath;
+      return this.roomiePic;
     },
     getColocPic: function() {
-      return this.$currentColoc.picPath;
+      return this.colocPic;
     }
   },
   methods: {
-    async refresh() {
-      try {
-        this.colocList = this.$colocs.colocList;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     handleCommand(command) {
       if (command == "/coloc") {
         this.$router.push("/coloc");
@@ -112,8 +114,21 @@ export default {
     },
     drawerSwitch() {
       this.drawer = !this.drawer;
+    },
+    async refresh() {
+      try {
+        let p = await getPicAsync(this.roomieId);
+        let c = await getColocPicAsync(this.colocId);
+        this.colocPic = c.picPath;
+        this.roomiePic = p.picturePath;
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.$user.setPicPath(this.roomiePic);
+      this.$currentColoc.setPicPath(this.colocPic);
     }
-  }
+  } //end methods
 };
 </script>
 

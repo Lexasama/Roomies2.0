@@ -16,10 +16,12 @@
           style="background-color: white"
           @click="() => handleClick(item)"
         >
-          <span>{{item}}</span>
+          <span>{{ item }}</span>
         </radial-menu-item>
       </radial-menu>
-      <div style="color: rgba(0,0,0,0.6); margin-top: 16px;">{{ lastClicked }}</div>
+      <div style="color: rgba(0,0,0,0.6); margin-top: 16px;">
+        {{ lastClicked }}
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +84,9 @@ export default {
       if (item == "Settings") {
         this.$router.push("/settings");
       }
+      if (item == "Groceries") {
+        this.$router.push("/Groceries");
+      }
       if (item == "Profile") {
         this.$router.push("/profile");
       }
@@ -122,5 +127,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

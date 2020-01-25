@@ -72,7 +72,7 @@ export default {
   }, //end mounted
   methods: {
     async onSubmit(event) {
-      event.preventDefault;
+      event.preventDefault();
 
       this.$refs["taskForm"].validate(async valid => {
         if (valid) {

@@ -12,20 +12,17 @@ namespace Roomies2.WebApp
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            new WebHostBuilder()
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            return new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-
                     config.AddJsonFile("appsettings.json", false, true);
                     config.AddEnvironmentVariables();
 
-                    if (args != null)
-                    {
-                        config.AddCommandLine(args);
-                    }
+                    if (args != null) config.AddCommandLine(args);
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
@@ -35,5 +32,6 @@ namespace Roomies2.WebApp
                 })
                 .UseStartup<Startup>()
                 .Build();
+        }
     }
 }

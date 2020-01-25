@@ -2,29 +2,21 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Roomies2.WebApp.Authentication;
-using Roomies2.WebApp.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.People;
-using Roomies2.DAL.Services;
+using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models.AccountViewModels;
+using Roomies2.WebApp.Services;
 
 namespace Roomies2.WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        public UserGateway UserGateway { get; }
-        public UserService UserService { get; }
-        public TokenService TokenService { get; }
-        public IAuthenticationSchemeProvider AuthenticationSchemeProvider { get; }
-        public Random Random { get; }
-        public IOptions<SpaOptions> SpaOptions { get; }
-
-        public AccountController(UserGateway userGateway, UserService userService, TokenService tokenService, IAuthenticationSchemeProvider authenticationSchemeProvider, IOptions<SpaOptions> spaOptions)
+        public AccountController(UserGateway userGateway, UserService userService, TokenService tokenService,
+            IAuthenticationSchemeProvider authenticationSchemeProvider, IOptions<SpaOptions> spaOptions)
         {
             UserGateway = userGateway;
             UserService = userService;
@@ -33,6 +25,13 @@ namespace Roomies2.WebApp.Controllers
             SpaOptions = spaOptions;
             Random = new Random();
         }
+
+        public UserGateway UserGateway { get; }
+        public UserService UserService { get; }
+        public TokenService TokenService { get; }
+        public IAuthenticationSchemeProvider AuthenticationSchemeProvider { get; }
+        public Random Random { get; }
+        public IOptions<SpaOptions> SpaOptions { get; }
 
         [HttpGet]
         [AllowAnonymous]
@@ -48,12 +47,13 @@ namespace Roomies2.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserData account = await UserService.FindUser(model.Email, model.Password);
+                var account = await UserService.FindUser(model.Email, model.Password);
                 if (account == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
+
                 await SignIn(account.Email, account.UserId.ToString());
                 return RedirectToAction(nameof(Authenticated));
             }
@@ -82,6 +82,7 @@ namespace Roomies2.WebApp.Controllers
                     ModelState.AddModelError(string.Empty, result.ErrorMessage);
                     return View(model);
                 }
+
                 await SignIn(model.Email, result.Content.ToString());
                 return RedirectToAction(nameof(Authenticated));
             }
@@ -105,21 +106,15 @@ namespace Roomies2.WebApp.Controllers
         {
             // Note: the "provider" parameter corresponds to the external
             // authentication provider choosen by the user agent.
-            if (string.IsNullOrWhiteSpace(provider))
-            {
-                return BadRequest();
-            }
+            if (string.IsNullOrWhiteSpace(provider)) return BadRequest();
 
-            if (await AuthenticationSchemeProvider.GetSchemeAsync(provider) == null)
-            {
-                return BadRequest();
-            }
+            if (await AuthenticationSchemeProvider.GetSchemeAsync(provider) == null) return BadRequest();
 
             // Instruct the middleware corresponding to the requested external identity
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
             string redirectUri = Url.Action(nameof(ExternalLoginCallback), "Account");
-            return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, provider);
+            return Challenge(new AuthenticationProperties {RedirectUri = redirectUri}, provider);
         }
 
         [HttpGet]
@@ -146,19 +141,20 @@ namespace Roomies2.WebApp.Controllers
             return View();
         }
 
-        async Task SignIn(string email, string userId)
+        private async Task SignIn(string email, string userId)
         {
             var claims = new List<Claim>
             {
-                new Claim( ClaimTypes.Email, email, ClaimValueTypes.String ),
-                new Claim( ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String )
+                new Claim(ClaimTypes.Email, email, ClaimValueTypes.String),
+                new Claim(ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String)
             };
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email, string.Empty);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(claims, CookieAuthentication.AuthenticationType, ClaimTypes.Email,
+                string.Empty);
+            var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthentication.AuthenticationScheme, principal);
         }
 
-        string GetBreachPadding()
+        private string GetBreachPadding()
         {
             var data = new byte[Random.Next(64, 256)];
             Random.NextBytes(data);
@@ -166,4 +162,3 @@ namespace Roomies2.WebApp.Controllers
         }
     }
 }
-
