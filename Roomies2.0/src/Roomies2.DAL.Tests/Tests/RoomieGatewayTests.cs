@@ -61,5 +61,10 @@ namespace Roomies2.DAL.Tests.Tests
                 Assert.That(roomie.Status, Is.EqualTo(Status.NotFound));
             }
         }
+
+        private static void CheckRoomie(Result<RoomieData> roomie, string lastName, string firstName, string phone, in int sex, in DateTime birthDate, string desc, object p7)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

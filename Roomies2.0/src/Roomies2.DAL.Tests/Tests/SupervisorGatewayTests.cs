@@ -49,7 +49,8 @@ namespace Roomies2.DAL.Tests.Tests
                 supervisor = await sut.Find(superId);
                 CheckSupervisor(supervisor, lastName, firstName, phone, email);
             }
-
+            
+            //TODO
             //Work on supervisor Delete
             //{
             //    Result r = await sut.Delete(superId);
@@ -64,8 +65,6 @@ namespace Roomies2.DAL.Tests.Tests
             Assert.That(s.HasError, Is.False);
             Assert.That(s.Status, Is.EqualTo(Status.Ok));
             Assert.That(s.Content.LastName, Is.EqualTo(lastname));
-
-           
         }
             
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,8 @@ namespace Roomies2.WebApp.Controllers
         public async Task<List<Item>> GetAllItems() => await Gateway.GetAllItems();
 
         [HttpPost(Name = "AddItem")]
-        public async Task<IActionResult> AddItem([FromBody] string itemName, [FromBody] float unitPrice) => this.CreateResult(await Gateway.AddItem(itemName, unitPrice));
+        public async Task<IActionResult> AddItem([FromBody] string itemName, [FromBody] int unitPrice) =>
+            this.CreateResult(await Gateway.AddItem(itemName, unitPrice));
 
         [HttpDelete("{itemId}", Name = "DeleteItem")]
         public async Task<int> DeleteItem(int itemId) => await Gateway.DeleteItem(itemId);

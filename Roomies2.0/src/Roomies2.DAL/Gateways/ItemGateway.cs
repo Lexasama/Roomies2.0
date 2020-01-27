@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
 using Roomies2.DAL.Model.Grocery;
@@ -24,7 +26,36 @@ namespace Roomies2.DAL.Gateways
             return (List<Item>) await connection.QueryAsync<Item>("SELECT * FROM rm2.tItem WHERE ItemId <> 0");
         }
 
-        public async Task<Result<int>> AddItem(string itemName, float unitPrice)
+        public async Task<Result<Item>> FindItemById(int id)
+        {
+            await using var connection = new SqlConnection(ConnectionString);
+            
+            var item = await connection.QueryFirstOrDefaultAsync<Item>("SELECT * FROM rm2.tItem WHERE ItemId = @itemId",
+                new {itemId = id});
+            
+            return item == null 
+                ? Result.Failure<Item>(Status.NotFound,"Item not found") 
+                : Result.Success(Status.Ok, item);
+        }
+        
+        public async Task<Result> UpdateItem(int itemId, string itemName, int unitPrice)
+        {
+            await using var con = new SqlConnection(ConnectionString);
+            var p = new DynamicParameters();
+            p.Add("@itemId", itemId);
+            p.Add("@itemName", itemName);
+            p.Add("@unitPrice", unitPrice);
+            p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+            await con.ExecuteAsync("rm2.sItemUpdate", p, commandType: CommandType.StoredProcedure);
+
+            var status = p.Get<int>("@Status");
+                
+            return status == 1 
+                ? Result.Failure<int>(Status.NotFound, "Not found") 
+                : Result.Success();
+        }
+
+        public async Task<Result<int>> AddItem(string itemName, int unitPrice)
         {
             await using var con = new SqlConnection(ConnectionString);
             var p = new DynamicParameters();
@@ -39,7 +70,7 @@ namespace Roomies2.DAL.Gateways
 
             return status switch
             {
-                0 => Result.Success(p.Get<int>("@Status")),
+                0 => Result.Success(Status.Created,p.Get<int>("@ItemId")),
                 _ => Result.Failure<int>(Status.BadRequest, "Something went wrong")
             };
         }
@@ -48,8 +79,8 @@ namespace Roomies2.DAL.Gateways
         {
             await using SqlConnection connection = new SqlConnection(ConnectionString);
             return await connection.ExecuteAsync(
-                "Delete from rm2.tItem where ItemId = @itemId",
-                new { ItemId = itemId});
+                "Delete from rm2.tItem where ItemId = @id",
+                new { id = itemId});
         }
     }
 }
