@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.Grocery;
+using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 
 #endregion
@@ -26,7 +27,7 @@ namespace Roomies2.WebApp.Controllers
             await Gateway.GetAllGroceryListFromColocId(colocId);
 
         [HttpGet("{GroceryListId}", Name = "GetGroceryListById")]
-        public async Task<GroceryList> GetGroceryListById(int groceryListId) =>
+        public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId) =>
             await Gateway.GetGroceryListById(groceryListId);
 
         [HttpPost(Name = "CreateGroceryList")]
