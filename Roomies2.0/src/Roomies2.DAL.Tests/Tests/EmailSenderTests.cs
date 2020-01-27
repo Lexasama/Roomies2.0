@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Roomies2.WebApp.Services;
+using System;
 
 namespace Roomies2.DAL.Tests.Tests
 {
@@ -10,7 +11,7 @@ namespace Roomies2.DAL.Tests.Tests
         public void can_send_email()
         {
             EmailSender emailSender = new EmailSender();
-           emailSender.SendEmail("saxelsyeguillaume@gmail.com");
+            emailSender.SendEmail("saxelsyeguillaume@gmail.com", new Guid().ToString().Substring(0, 12)) ;
         }
     }
 }

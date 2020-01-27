@@ -77,6 +77,41 @@ namespace Roomies2.DAL.Gateways
                 : Result.Success(l);
         }
 
+        public async Task<Result> DeleteInvite(string code)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                var p = new DynamicParameters();
+                p.Add("@Code", code);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sInviteDelete", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.NotFound, "Invite not found");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+        }
+
+        public async Task<Result> AddToColoc(int colocId, string email)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString)) 
+            {
+                var p = new DynamicParameters();
+                p.Add("@ColocId", colocId);
+                p.Add("Email", email);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sRoomieAddToColoc", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<int>("@Status");
+                if (status == 1) return Result.Failure(Status.NotFound, "Coloc not found");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+        }
+
         public async Task<Result> Delete(int colocId)
         {
             using (var con = new SqlConnection(ConnectionString))

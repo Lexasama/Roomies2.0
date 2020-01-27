@@ -2,14 +2,15 @@
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Roomies2.WebApp.Services
 {
-    public   class EmailSender
-    { 
+    public class EmailSender
+    {
         static IConfiguration _configuration;
-       public string Path { get; }
+        public string Path { get; }
 
         public static string SMTPAddress
         {
@@ -22,7 +23,7 @@ namespace Roomies2.WebApp.Services
 
         public static string SenderEmail => Configuration["EmailSender:Email"];
         public static string Password => Configuration["EmailSender:Password"];
-       
+
         static IConfiguration Configuration
         {
             get
@@ -47,12 +48,11 @@ namespace Roomies2.WebApp.Services
         {
 
         }
-        public  void SendEmail(string email)
+        public async void SendEmail(string email, string code)
         {
-            string smtpAddress = Configuration["EmailSender:SMTPAddress"];
-         
-            string body = "bienvenue";
-            //EmailContent(Path);
+
+            string body = await File.ReadAllTextAsync(@"./wwwroot/assets/Emails/InviteEmail.html");
+            body = body.Replace("{0}", code);
 
             using (MailMessage mail = new MailMessage())
             {

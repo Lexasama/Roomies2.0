@@ -10,8 +10,8 @@ namespace Roomies2.DAL.Tests.Tests
     [TestFixture]
     internal class RoomieGatewayTests
     {
-         
-       
+
+
         [Test]
         public async Task can_create_find_update_and_delete_roomie()
         {
@@ -28,15 +28,15 @@ namespace Roomies2.DAL.Tests.Tests
             var password = Guid.NewGuid().ToByteArray();
 
 
-           var userResult = await userGateway.CreatePasswordUser(userName, password);
-           int roomieId = userResult.Content;
-            
+            var userResult = await userGateway.CreatePasswordUser(userName, password);
+            int roomieId = userResult.Content;
+
             //Create
             var result = await sut.Create(roomieId, userName, lastName, firstName, phone, sex, birthDate, desc, null);
 
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
-             roomieId = result.Content;
+            roomieId = result.Content;
 
             Result<RoomieData> roomie;
             {
@@ -60,6 +60,11 @@ namespace Roomies2.DAL.Tests.Tests
                 roomie = await sut.FindById(roomieId);
                 Assert.That(roomie.Status, Is.EqualTo(Status.NotFound));
             }
+        }
+
+        private void CheckRoomie(Result<RoomieData> roomie, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, object p)
+        {
+            throw new NotImplementedException();
         }
     }
 }

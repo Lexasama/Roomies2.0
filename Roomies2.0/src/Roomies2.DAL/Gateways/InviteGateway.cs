@@ -3,7 +3,6 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using Roomies2.DAL.Model.People;
 using Dapper;
@@ -19,33 +18,16 @@ namespace Roomies2.DAL.Gateways
             ConnectionString = connectionString;
         }
 
-        //public async Task<Result<InviteData>> FindInvite(string email)
-        //{
-
-        //    using (SqlConnection con = new SqlConnection(ConnectionString))
-        //    {
-        //        InviteData i = await con.QueryFirstOrDefaultAsync<InviteData>(
-        //            @"SELECT * FROM rm2.tInvite i WHERE i.Email = @Email;",
-        //            new { Email = email });
-
-        //        return i == null
-        //            ? Result.Failure<InviteData>(Status.NotFound, "Not found.")
-        //            : Result.Success(i);
-        //    }
-        //}
-
-        public async Task<Result<InviteData>> FindInvite(string guid)
+        public async Task<Result<InviteData>> FindInvite(string code)
         {
-
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 InviteData i = await con.QueryFirstOrDefaultAsync<InviteData>(
                     @"SELECT * FROM rm2.tInvite i WHERE i.Code = @Code;",
-                    new { Guid = guid });
+                    new { Code = code });
 
                 if (i == null) return Result.Failure<InviteData>(Status.NotFound, "Not found.");
                 return Result.Success(Status.Ok, i);
-
             }
         }
 
@@ -67,15 +49,8 @@ namespace Roomies2.DAL.Gateways
             }
         }
 
-        public object AddRoomie(Result invite)
+        public async Task<Result> Invite(object roomieId, int colocId, string email, string code)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Result> Invite(object roomieId, int colocId, string email)
-        {
-            string code = Guid.NewGuid().ToString().Substring(0, 12);
-
             await using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 DynamicParameters p = new DynamicParameters();
@@ -91,9 +66,6 @@ namespace Roomies2.DAL.Gateways
                 Debug.Assert(status == 0);
                 return Result.Success();
             }
-
-
-
         }
     }
 }

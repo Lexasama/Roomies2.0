@@ -5,6 +5,7 @@ using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
 using Roomies2.WebApp.Services;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,12 +15,14 @@ namespace Roomies2.WebApp.Controllers
     public class InvitationController: Controller
     {
         public InviteGateway _invitationGateway;
+        public ColocGateway _colocGateway;
         public EmailSender _emailSender = new EmailSender(@"./wwwroot/assets/invite/Emails/InviteEmail.html");                                 
 
 
-        public InvitationController( InviteGateway invitationGateway)
+        public InvitationController( InviteGateway invitationGateway, ColocGateway colocGateway)
         {
             _invitationGateway = invitationGateway;
+            _colocGateway = colocGateway;
         }
 
 
@@ -32,11 +35,11 @@ namespace Roomies2.WebApp.Controllers
             Result result = null;
             foreach(string email in model.Emails)
             {
-                result = await _invitationGateway.Invite(roomieId, model.ColocId, email);
-
+                string code = Guid.NewGuid().ToString().Replace(" ", "9").Substring(0, 12);
+                result = await _invitationGateway.Invite(roomieId, model.ColocId, email, code);
                 if (result.Status == Status.Ok )
                 {
-                    _emailSender.SendEmail(email);
+                    _emailSender.SendEmail(email, code);
 
                 }
 
@@ -47,21 +50,18 @@ namespace Roomies2.WebApp.Controllers
 
         }
 
-        [HttpGet("/roomie/{guid}")]
-        public async Task<IActionResult> Accept(string guid)
+        [HttpPost("join/{code}")]
+        public async void Invite(string code)
         {
-           Result result =  await _invitationGateway.FindInvite(guid);
-
-          ///  var r = _invitationGateway.AddRoomie(invite);
-
-            //if (invite.Status == Status.Ok)
-            //{
-            //    var result = _invitationGateway.AddRoomie(invite);
-            //}
-            //var result = _invitationGateway.AddRoomie(invite);
-
-            return this.CreateResult(result);
+            var result = await _invitationGateway.FindInvite(code);
             
+            if(result.Status == Status.Ok)
+            {
+                var invitation = result.Content;
+                await _colocGateway.AddToColoc(invitation.ColocId, invitation.Email);
+                await _colocGateway.DeleteInvite(code);
+            }
+
         }
     }
 }

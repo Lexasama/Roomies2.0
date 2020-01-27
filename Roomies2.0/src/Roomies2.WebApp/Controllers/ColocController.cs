@@ -2,14 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.BuildingManagement;
-using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Controllers
 {

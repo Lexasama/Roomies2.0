@@ -39,3 +39,7 @@ export async function getRoomiesAsync(colocId) {
 export async function inviteAsync(model) {
   return await postAsync(invite, model);
 }
+
+export async function invitedAsync(code) {
+  return await postAsync(`${invite}/join/${code}`);
+}
