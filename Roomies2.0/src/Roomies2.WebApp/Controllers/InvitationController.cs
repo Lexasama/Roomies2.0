@@ -54,16 +54,19 @@ namespace Roomies2.WebApp.Controllers
         }
 
         [HttpPost("join/{code}")]
-        public async void Invite(string code)
+        public async Task<IActionResult> Invite(string code)
         {
             var result = await _invitationGateway.FindInvite(code);
             
             if(result.Status == Status.Ok)
             {
                 var invitation = result.Content;
-                await _colocGateway.AddToColoc(invitation.ColocId, invitation.Email);
+                var r = await _colocGateway.AddToColoc(invitation.ColocId, invitation.Email);
                 await _colocGateway.DeleteInvite(code);
+                return this.CreateResult(r);
             }
+
+           return this.CreateResult(result);
 
         }
     }

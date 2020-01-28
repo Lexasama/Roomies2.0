@@ -18,7 +18,7 @@ import Test from "./components/Test.vue";
 import Tasks from "./components/Tasks/Tasks.vue";
 import Settings from "./components/Settings/Settings.vue";
 import Grocery from "./components/Groceries/Grocery.vue";
-import Invitation from "./components/Roomie/Invitation.vue";
+import CreateOrInvite from "./components/Coloc/ColocCreateOrJoin.vue";
 
 const routes = [
   { path: "/", component: Home, beforeEnter: requireAuth },
@@ -38,7 +38,7 @@ const routes = [
   { path: "/Tasks", component: Tasks, beforeEnter: requireAuth },
   { path: "/settings", component: Settings, beforeEnter: requireAuth },
   { path: "/groceries", component: Grocery, beforeEnter: requireAuth },
-  { path: "/invited", component: Invitation }
+  { path: "/invited", component: CreateOrInvite }
 ];
 
 export default new VueRouter({

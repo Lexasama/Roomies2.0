@@ -8,15 +8,15 @@ BEGIN
 	SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-	IF EXISTS(SELECT * FROM rm2.vRoomie r WHERE r.Email= @Email)
+	IF NOT EXISTS(SELECT * FROM rm2.vRoomie r WHERE r.Email= @Email)
 	BEGIN
-		declare @RoomieId as int 
-		set @RoomieId = (select RoomieId from rm2.vRoomie r WHERE r.Email = @Email);
+		
 		ROLLBACK;
 		RETURN 1;
 	END;
 
-	
+	DECLARE @RoomieId AS INT 
+	SET @RoomieId = (SELECT RoomieId FROM rm2.vRoomie r WHERE r.Email = @Email);
 	
 	INSERT INTO rm2.itColRoom(RoomieId, ColocId, ColocAdminId )
 	VALUES( @RoomieId, @ColocId, 0);

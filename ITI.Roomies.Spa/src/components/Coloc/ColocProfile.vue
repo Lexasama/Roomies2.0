@@ -69,6 +69,7 @@ import roomieList from "../Roomie/RoomieList";
 import {
   getColocAsync,
   getColocListAsync,
+  getColocPicAsync,
   updateColocAsync
 } from "../../api/ColocApi";
 import { getRoomiesAsync } from "@/api/RoomieApi";
@@ -110,14 +111,14 @@ export default {
       if (this.colocId == undefined) {
         this.colocId = this.$currentColoc.colocId;
       }
-      this.refresh();
+      await this.refresh();
     } catch (error) {
       console.error(error);
     }
   },
   computed: {
     getColocPic: function() {
-      return this.coloc.picPath;
+      return this.picPath;
     },
     getColocId: function() {
       return this.colocId;
@@ -162,7 +163,9 @@ export default {
     },
     async refresh() {
       this.coloc = await getColocAsync(this.colocId);
-      this.picPath = this.coloc.picPath;
+      var p = await getColocPicAsync(this.colocId);
+      this.picPath = p.picPath;
+      console.log(this.picPath);
       this.$currentColoc.setPicPath(this.picPath);
     }
   }

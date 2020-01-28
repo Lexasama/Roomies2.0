@@ -9,8 +9,8 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 	BEGIN TRAN;
 	
-	INSERT INTO rm2.tColoc  ( ColocName )
-	                  values( @ColocName )
+	INSERT INTO rm2.tColoc  ( ColocName, PicPath )
+	                  values( @ColocName,'http://localhost:5000/Default/favicon.png' )
 	set @ColocId = SCOPE_IDENTITY();
 	insert into rm2.itColRoom(ColocId, RoomieId, ColocAdminId)
 		values(@ColocId, @RoomieId, 1);
