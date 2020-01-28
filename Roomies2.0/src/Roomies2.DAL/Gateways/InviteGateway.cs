@@ -30,6 +30,19 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success(Status.Ok, i);
             }
         }
+        
+        public async Task<Result<InviteInfo>> FindInviteInfo(string code)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                InviteInfo i = await con.QueryFirstOrDefaultAsync<InviteInfo>(
+                    @"SELECT * FROM rm2.vInvite i WHERE i.Code = @Code;",
+                    new { Code = code });
+
+                if (i == null) return Result.Failure<InviteInfo>(Status.NotFound, "Not found.");
+                return Result.Success(Status.Ok, i);
+            }
+        }
 
         public async Task<Result> DeleteInvite(string email, int colocId)
         {
@@ -48,6 +61,7 @@ namespace Roomies2.DAL.Gateways
                 return Result.Success();
             }
         }
+
 
         public async Task<Result> Invite(object roomieId, int colocId, string email, string code)
         {

@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Roomies2.DAL.Model.People;
 
 namespace Roomies2.WebApp.Services
 {
@@ -48,11 +49,11 @@ namespace Roomies2.WebApp.Services
         {
 
         }
-        public async void SendEmail(string email, string code)
+        public async void SendEmail(string email, InviteInfo invite)
         {
 
             string body = await File.ReadAllTextAsync(@"./wwwroot/assets/Emails/InviteEmail.html");
-            body = body.Replace("{0}", code);
+            body = body.Replace("{0}", invite.Code);
 
             using (MailMessage mail = new MailMessage())
             {

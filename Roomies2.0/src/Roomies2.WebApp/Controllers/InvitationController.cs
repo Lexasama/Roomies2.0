@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
+using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
@@ -37,9 +38,11 @@ namespace Roomies2.WebApp.Controllers
             {
                 string code = Guid.NewGuid().ToString().Replace(" ", "9").Substring(0, 12);
                 result = await _invitationGateway.Invite(roomieId, model.ColocId, email, code);
+                var i = await _invitationGateway.FindInviteInfo(code);
+                var invite = i.Content;
                 if (result.Status == Status.Ok )
                 {
-                    _emailSender.SendEmail(email, code);
+                    _emailSender.SendEmail(email, invite);
 
                 }
 
