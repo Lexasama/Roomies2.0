@@ -43,7 +43,7 @@ namespace Roomies2.WebApp.Controllers
             });
         }
 
-        [HttpDelete("{ListId}", Name = "DeleteGroceryList")]
+        [HttpDelete("{listId}")]
         public async Task<IActionResult> DeleteGroceryList(int listId) =>
             this.CreateResult(await Gateway.DeleteGroceryList(listId));
 
