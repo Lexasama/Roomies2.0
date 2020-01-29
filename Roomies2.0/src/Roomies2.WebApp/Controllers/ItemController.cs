@@ -16,7 +16,7 @@ namespace Roomies2.WebApp.Controllers
         public ItemController(ItemGateway gateway) => Gateway = gateway;
         public ItemGateway Gateway { get; set; }
 
-        [HttpGet(Name = "GetAllItems")]
+        [HttpGet("GetAllItems")]
         public async Task<List<Item>> GetAllItems() => await Gateway.GetAllItems();
 
         [HttpPost(Name = "AddItem")]

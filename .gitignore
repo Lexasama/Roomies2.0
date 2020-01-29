@@ -480,3 +480,6 @@ Roomies2.0/src/Roomies2.WebApp/wwwroot/pictures/ RoomiesPics /
 Roomies2.0/src/Roomies2.WebApp/wwwroot/pictures/ColocPics/
 Roomies2.0/packages
 *.user
+gource.bat
+
+profil/
