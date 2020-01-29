@@ -6,3 +6,5 @@
 
     CONSTRAINT PK_tItem PRIMARY KEY (ItemId),
 );
+
+INSERT INTO rm2.tItem (ItemName, UnitPrice) VALUES ('dummy',0);
