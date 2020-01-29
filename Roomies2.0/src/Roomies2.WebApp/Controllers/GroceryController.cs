@@ -27,11 +27,7 @@ namespace Roomies2.WebApp.Controllers
         public async Task<List<GroceryList>> GetAllList(int colocId) =>
             await Gateway.GetAllGroceryListFromColocId(colocId);
 
-        [HttpGet("{GroceryListId}", Name = "GetGroceryListById")]
-        public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId) =>
-            await Gateway.GetGroceryListById(groceryListId);
-
-        [HttpPost("CreateGroceryList")]
+        [HttpPost]
         public async Task<IActionResult> CreateGroceryList(
             [FromBody] GroceryListModel model) =>
             this.CreateResult(
