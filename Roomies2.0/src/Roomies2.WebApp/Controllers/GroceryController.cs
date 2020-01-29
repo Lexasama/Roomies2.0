@@ -32,16 +32,16 @@ namespace Roomies2.WebApp.Controllers
             await Gateway.GetGroceryListById(groceryListId);
 
         [HttpPost]
-        public async Task<IActionResult> CreateGroceryList(
-            [FromBody] GroceryListModel model) =>
-            this.CreateResult(
-                await Gateway.CreateGroceryList(
-                    model.ColocId,
-                    model.RoomieId,
-                    model.Name,
-                    model.DueDate
-                )
-            );
+        public async Task<IActionResult> CreateGroceryList([FromBody] GroceryListModel model)
+        {
+            var result = await Gateway.CreateGroceryList( model.ColocId,model.RoomieId,model.Name, model.DueDate
+                );
+            return this.CreateResult( result, o =>
+            {
+                o.RouteName = "GetGroceryList";
+                o.RouteValues = groceryListId => new { groceryListId };
+            });
+        }
 
         [HttpDelete("{ListId}", Name = "DeleteGroceryList")]
         public async Task<IActionResult> DeleteGroceryList(int listId) =>

@@ -1,12 +1,16 @@
 <template>
-  <div>
-    Create an Item
-    Add and item to a list take the grocery list Id as props
-  </div>
+  <div>{{groceryListId}}</div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    groceryListId: {
+      type: Number,
+      required: true
+    }
+  }
+};
 </script>
 
 <style>

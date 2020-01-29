@@ -29,7 +29,7 @@ const routes = [
   { path: "/register", component: Register },
   { path: "/test", component: Test, beforeEnter: requireAuth },
   { path: "/profile", component: Profile, beforeEnter: requireAuth },
-  { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth },
+  { path: "/coloc", component: CreateOrInvite },
   {
     path: "/colocProfile/:colocId?",
     component: ColocProfile,
@@ -37,8 +37,8 @@ const routes = [
   },
   { path: "/Tasks", component: Tasks, beforeEnter: requireAuth },
   { path: "/settings", component: Settings, beforeEnter: requireAuth },
-  { path: "/groceries", component: Grocery, beforeEnter: requireAuth },
-  { path: "/invited", component: CreateOrInvite }
+  { path: "/groceries", component: Grocery, beforeEnter: requireAuth }
+  // { path: "/invited", component: CreateOrInvite }
 ];
 
 export default new VueRouter({

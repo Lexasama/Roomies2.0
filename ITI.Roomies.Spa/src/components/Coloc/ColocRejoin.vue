@@ -14,10 +14,9 @@
         <el-form-item>
           <el-input placeholder="Enter your invite code" v-model="code"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="submit($event)">Add</el-button>
-        </el-form-item>
+        <el-button @click="submit($event)">Add</el-button>
       </el-form>
+      <el-divider></el-divider>
     </el-card>
   </div>
 </template>
@@ -39,11 +38,10 @@ export default {
         try {
           var p = await invitedAsync(this.code);
           console.log(p);
-          debugger;
-          // if (p != "undefined") {
-          //   this.show("You have been added succesfully", "success");
-          //   this.$router.push("/");
-          // }
+          if (p !== "undefined") {
+            this.show("You have been added succesfully", "success");
+            this.$router.push("/");
+          }
         } catch (e) {
           console.error(e);
           this.show("Invalid invite code", "error");

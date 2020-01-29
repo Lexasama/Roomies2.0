@@ -9,7 +9,10 @@
       <template>
         <el-table :data="itemList" style="width: 100%">
           <el-table-column prop="itemName" label="Name" width="180"></el-table-column>
-          <el-table-column prop="itemPrice" label="Price" width="180"></el-table-column>
+          <el-table-column prop="itemPrice" label="Unit Price" width="180"></el-table-column>
+          <el-table-column prop="itemPrice" label="Quantity" width="180"></el-table-column>
+
+          <el-table-column prop="itemPrice" label="Total Price" width="180"></el-table-column>
           <el-table-column label="Options">
             <template slot-scope="scope">
               <el-button-group>
@@ -30,6 +33,7 @@
    
 
 <script>
+import { getItemsAsync } from "./../../api/GroceryApi.js";
 import itemEdit from "../Items/ItemEdit.vue";
 export default {
   component: {
@@ -39,11 +43,7 @@ export default {
     return {
       drawer: false,
       item: {},
-      itemList: [
-        { itemId: 1, itemName: "ItemName", itemPrice: "100" },
-        { itemId: 2, itemName: "ItemName1", itemPrice: "30" },
-        { itemId: 3, itemName: "ItemName2", itemPrice: "10" }
-      ]
+      itemList: []
     };
   }, //end data
   props: {
@@ -70,7 +70,7 @@ export default {
     },
     //* update the item list
     async refreshItemList() {
-      //this.itemList = await getItemsAsync(this.id);
+      this.itemList = await getItemsAsync(this.id);
     }
   } //end methods
 };

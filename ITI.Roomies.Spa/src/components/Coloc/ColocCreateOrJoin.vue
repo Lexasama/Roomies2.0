@@ -1,14 +1,13 @@
 <template>
   <div>
-    <el-row>
-      <el-col>
+    <b-row>
+      <b-col>
         <Create />
-      </el-col>
-
-      <el-col>
+      </b-col>
+      <b-col>
         <Join />
-      </el-col>
-    </el-row>
+      </b-col>
+    </b-row>
   </div>
 </template>
 

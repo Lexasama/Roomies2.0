@@ -53,7 +53,7 @@ namespace Roomies2.WebApp.Services
         {
 
             string body = await File.ReadAllTextAsync(@"./wwwroot/assets/Emails/InviteEmail.html");
-            body = body.Replace("{0}", invite.Code);
+            body = body.Replace("{Code}", invite.Code).Replace("{FirstName}", invite.FirstName).Replace("{ColocName}", invite.ColocName).Replace("{Link}","http://localhost:8080/api/invitation/join/"+invite.Code);
 
             using (MailMessage mail = new MailMessage())
             {

@@ -93,7 +93,6 @@ export default {
 
       if (this.errors.length == 0) {
         try {
-          debugger;
           await updateTaskAsync(task);
           this.show("Task updated", "success");
           this.$emit("task-updated");
