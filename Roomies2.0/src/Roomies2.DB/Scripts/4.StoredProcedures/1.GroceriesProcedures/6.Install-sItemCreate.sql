@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE rm2.sItemCreate
 ( @Name   NVARCHAR(20),
-  @Price  DECIMAL(2),
+  @Price  int,
   @ItemId INT OUT
 )
 AS

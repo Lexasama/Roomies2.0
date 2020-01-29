@@ -25,12 +25,16 @@ namespace Roomies2.DAL.Gateways
                 new {ColocId = colocId}) as List<GroceryList>;
         }
 
-        public async Task<GroceryList> GetGroceryListById(int groceryListId)
+        public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId)
         {
             await using var con = new SqlConnection(ConnectionString);
-            return await con.QueryFirstOrDefaultAsync<GroceryList>(
+            var list = await con.QueryFirstOrDefaultAsync<GroceryList>(
                 "Select * from rm2.tGroceryList WHERE GroceryListId = @GroceryListId",
                 new {GroceryListId = groceryListId});
+            
+            return list == null 
+                ? Result.Failure<GroceryList>(Status.NotFound,"Item not found") 
+                : Result.Success(Status.Ok, list);
         }
 
         public async Task<Result<int>> CreateGroceryList(int colocId, int roomieId, string name, DateTime dueDate)
@@ -50,7 +54,7 @@ namespace Roomies2.DAL.Gateways
 
             return status switch
             {
-                0 => Result.Success(p.Get<int>("@Status")),
+                0 => Result.Success(Status.Created,p.Get<int>("@GroceryListId")),
                 _ => Result.Failure<int>(Status.BadRequest, "Something went wrong")
             };
         }
@@ -76,19 +80,19 @@ namespace Roomies2.DAL.Gateways
             };
         }
 
-        public async Task<Result<int>> DeleteGroceryList(int groceryListId)
+        public async Task<Result> DeleteGroceryList(int groceryListId)
         {
             await using var con = new SqlConnection(ConnectionString);
             var p = new DynamicParameters();
             p.Add("@GroceryListId", groceryListId);
             p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-            await con.ExecuteAsync("rm2.sCreateGroceryList", p, commandType: CommandType.StoredProcedure);
+            await con.ExecuteAsync("rm2.sGroceryListDelete", p, commandType: CommandType.StoredProcedure);
             var status = p.Get<int>("@Status");
 
             return status switch
             {
-                0 => Result.Success(p.Get<int>("@Status")),
+                0 => Result.Success(Status.Ok,status),
                 _ => Result.Failure<int>(Status.BadRequest, "Grocery list doesn't exists")
             };
         }

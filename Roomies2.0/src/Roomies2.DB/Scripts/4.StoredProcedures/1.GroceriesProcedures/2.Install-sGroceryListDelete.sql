@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE sGroceryListDelete
+﻿CREATE PROCEDURE rm2.sGroceryListDelete
 ( @GroceryListId INT
 ) AS
 BEGIN

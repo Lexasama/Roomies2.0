@@ -62,7 +62,7 @@ namespace Roomies2.DAL.Tests.Tests
             }
         }
 
-        private void CheckRoomie(Result<RoomieData> roomie, string lastName, string firstName, string phone, int sex, DateTime birthDate, string desc, object p)
+        private static void CheckRoomie(Result<RoomieData> roomie, string lastName, string firstName, string phone, in int sex, in DateTime birthDate, string desc, object p7)
         {
             throw new NotImplementedException();
         }
