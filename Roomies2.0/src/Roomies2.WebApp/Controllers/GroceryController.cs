@@ -9,6 +9,7 @@ using Roomies2.DAL.Gateways;
 using Roomies2.DAL.Model.Grocery;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
+using Roomies2.WebApp.Models;
 
 #endregion
 
@@ -30,23 +31,33 @@ namespace Roomies2.WebApp.Controllers
         public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId) =>
             await Gateway.GetGroceryListById(groceryListId);
 
-        [HttpPost(Name = "CreateGroceryList")]
+        [HttpPost("CreateGroceryList")]
         public async Task<IActionResult> CreateGroceryList(
-            [FromBody] int colocId, [FromBody] int roomieId,
-            [FromBody] string name, [FromBody] DateTime dueDate) =>
-            this.CreateResult(await Gateway.CreateGroceryList(colocId, roomieId, name, dueDate));
+            [FromBody] GroceryListModel model) =>
+            this.CreateResult(
+                await Gateway.CreateGroceryList(
+                    model.ColocId,
+                    model.RoomieId,
+                    model.Name,
+                    model.DueDate
+                )
+            );
 
         [HttpDelete("{ListId}", Name = "DeleteGroceryList")]
         public async Task<IActionResult> DeleteGroceryList(int listId) =>
             this.CreateResult(await Gateway.DeleteGroceryList(listId));
 
-        [HttpPost(Name = "UpdateGroceryList")]
+        [HttpPost("UpdateGroceryList")]
         public async Task<IActionResult> UpdateGroceryList(
-            [FromBody] int groceryListId,
-            [FromBody] int roomieId,
-            [FromBody] string name,
-            [FromBody] DateTime dueDate) =>
-            this.CreateResult(await Gateway.UpdateGroceryList(groceryListId, roomieId, name, dueDate));
+            [FromBody] GroceryListModel model) =>
+            this.CreateResult(
+                await Gateway.UpdateGroceryList(
+                    model.GroceryListId,
+                    model.RoomieId,
+                    model.Name,
+                    model.DueDate
+                    )
+                );
 
         [HttpGet("{groceryListId}", Name = "GetAllItemsInGroceryList")]
         public async Task<List<Item>> GetAllItemsInGroceryList(int groceryListId) =>
