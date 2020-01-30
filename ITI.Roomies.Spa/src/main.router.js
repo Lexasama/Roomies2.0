@@ -15,6 +15,10 @@ import UserChoise from "./components/UserChoise.vue";
 import Profile from "./components/Roomie/Profile.vue";
 import ColocProfile from "./components/Coloc/ColocProfile.vue";
 import Test from "./components/Test.vue";
+import Tasks from "./components/Tasks/Tasks.vue";
+import Settings from "./components/Settings/Settings.vue";
+import Grocery from "./components/Groceries/Grocery.vue";
+import CreateOrInvite from "./components/Coloc/ColocCreateOrJoin.vue";
 
 const routes = [
   { path: "/", component: Home, beforeEnter: requireAuth },
@@ -25,13 +29,16 @@ const routes = [
   { path: "/register", component: Register },
   { path: "/test", component: Test, beforeEnter: requireAuth },
   { path: "/profile", component: Profile, beforeEnter: requireAuth },
-  { path: "/coloc", component: ColocEdit, beforeEnter: requireAuth },
+  { path: "/coloc", component: CreateOrInvite },
   {
     path: "/colocProfile/:colocId?",
     component: ColocProfile,
     beforeEnter: requireAuth
-  }
-  //{ path: "/createRoomie", component: CreateRoomie }
+  },
+  { path: "/Tasks", component: Tasks, beforeEnter: requireAuth },
+  { path: "/settings", component: Settings, beforeEnter: requireAuth },
+  { path: "/groceries", component: Grocery, beforeEnter: requireAuth }
+  // { path: "/invited", component: CreateOrInvite }
 ];
 
 export default new VueRouter({

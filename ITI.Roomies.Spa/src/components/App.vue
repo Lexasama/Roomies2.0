@@ -30,12 +30,14 @@ import { state } from "../state";
 import styles from "../styles/styles";
 import NavBar from "../components/Utility/NavBar";
 import { getUserAsync } from "../api/UserApi";
+import RadialMenu from "./Utility/RadialMenu.vue";
 
 export default {
   components: {
     Loading,
     Login,
-    NavBar
+    NavBar,
+    RadialMenu
   },
 
   data() {
@@ -62,7 +64,7 @@ export default {
       this.state = false;
     }
 
-    if (this.$cookies.get("themeIdx") != undefined) {
+    if (this.$cookies.get("themeIdx") !== undefined) {
       this.themeIdx = this.$cookies.get("themeIdx");
     } else {
       this.setTheme(0);

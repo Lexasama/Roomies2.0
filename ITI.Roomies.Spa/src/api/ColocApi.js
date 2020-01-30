@@ -2,7 +2,7 @@ import { getAsync, postAsync, putAsync } from "../helpers/apiHelper";
 
 const endpoint = process.env.VUE_APP_BACKEND + "/api/coloc";
 
-export function getColocAsync(colocId) {
+export async function getColocAsync(colocId) {
   return getAsync(`${endpoint}/${colocId}`);
 }
 
@@ -19,4 +19,8 @@ export function createColocAsync(model) {
 
 export function getColocByRoomieIdAsync(roomieId) {
   return getAsync(`${endpoint}/roomieColoc/${roomieId}`);
+}
+
+export function getColocPicAsync(colocId) {
+  return getAsync(`${endpoint}/getPicture/${colocId}`);
 }

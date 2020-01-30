@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
-using Roomies2.DAL.Model.BuildingManagement;
-using Roomies2.DAL.Model.People;
 using Roomies2.DAL.Services;
 using Roomies2.WebApp.Authentication;
 using Roomies2.WebApp.Models;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Roomies2.WebApp.Controllers
 {
@@ -38,6 +35,12 @@ namespace Roomies2.WebApp.Controllers
             var colocList = await Gateway.GetList(roomieId);
             return this.CreateResult(colocList);
         }
+        [HttpGet("getPicture/{colocId}")]
+        public async Task<IActionResult> GetPicture(int colocId)
+        {
+            var colocPic = await Gateway.GetPic(colocId);
+            return this.CreateResult(colocPic);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateColoc([FromBody] ColocViewModel model)
@@ -49,9 +52,11 @@ namespace Roomies2.WebApp.Controllers
             {
                 o.RouteName = "GetColoc";
                 o.RouteValues = colocId => new { colocId };
-            }) ;
+            });
 
         }
+
+  
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ColocViewModel model)

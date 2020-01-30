@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Roomies2.WebApp.Controllers
 {
     public class ActionResultOptions<T>
     {
-
         public ActionResultOptions(Controller controller)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));

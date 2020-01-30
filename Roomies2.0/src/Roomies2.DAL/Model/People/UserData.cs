@@ -15,6 +15,5 @@
         public string GoogleId { get; set; }
 
         public string GoogleRefreshToken { get; set; }
-    
     }
 }

@@ -1,69 +1,61 @@
 <template>
   <div>
-    <el-card>
-      <b-media>
-        <template style="width: 100px; height: 100px;">
-          <el-image
-            style="width: 150px; height: 150px; border-radius: 50% !important; "
-            :src="getColocPic"
-            fit="scale-down"
-          ></el-image>
-        </template>
+    <div>
+      <el-image :src="getColocPic" fit="scale-down" style="width: 150px; height: 150px"></el-image>
+    </div>
 
-        <div>
-          <b-button v-b-toggle.collapse-1 variant="primary">Change Picture</b-button>
-          <b-collapse id="collapse-1" class="mt-2">
-            <b-card>
-              <ImageUploader :id="parseInt(colocId, 10)" :isRoomie="false" />
-            </b-card>
-          </b-collapse>
-        </div>
-      </b-media>
+    <div>
+      <b-button v-b-toggle.collapse-1 variant="primary">Change Picture</b-button>
+      <b-collapse id="collapse-1" class="mt-2">
+        <b-card>
+          <ImageUploader :id="parseInt(colocId, 10)" :isRoomie="false" />
+        </b-card>
+      </b-collapse>
+    </div>
 
+    <el-divider></el-divider>
+
+    <!-- ColocName Creationdate and Members -->
+
+    <div style="margin: 20px;"></div>
+    <el-form label-position="right" label-width="100px" v-model="coloc" inline>
+      <el-button @click="colocDawer = true">Flatsharings</el-button>
+
+      <el-form-item label="Name">
+        <el-input v-model="coloc.colocName"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="updateColoc">Change Name</el-button>
+      <el-form-item></el-form-item>
+
+      <el-form-item label="Creation date">
+        <el-date-picker v-model="coloc.creationDate" disabled></el-date-picker>
+      </el-form-item>
+    </el-form>
+    <el-divider></el-divider>
+
+    <div>
+      <el-button v-b-toggle.collapse-2 type="primary" icon="el-icon-plus">Invite</el-button>
+      <b-collapse id="collapse-2" class="mt-2">
+        <b-card>
+          <invite />
+        </b-card>
+      </b-collapse>
       <el-divider></el-divider>
 
-      <!-- ColocName Creationdate and Members -->
+      <el-popover
+        placement="bottom"
+        title="Upload a new profile picture"
+        trigger="click"
+      >Invite form</el-popover>
+    </div>
+    <roomieList :colocId="getColocId" />
 
-      <div style="margin: 20px;"></div>
-      <el-form label-position="right" label-width="100px" v-model="coloc" inline>
-        <el-button @click="colocDawer = true">Flatsharings</el-button>
-
-        <el-form-item label="Name">
-          <el-input v-model="coloc.colocName"></el-input>
-        </el-form-item>
-        <el-button type="primary" @click="updateColoc">Change Name</el-button>
-        <el-form-item></el-form-item>
-
-        <el-form-item label="Creation date">
-          <el-date-picker v-model="coloc.creationDate" disabled></el-date-picker>
-        </el-form-item>
-      </el-form>
-      <el-divider></el-divider>
-
+    <el-drawer title="Your list" :visible.sync="colocDawer" direction="ltr" size="50%">
       <div>
-        <el-button v-b-toggle.collapse-2 type="primary" icon="el-icon-plus">Invite</el-button>
-        <b-collapse id="collapse-2" class="mt-2">
-          <b-card>
-            <invite />
-          </b-card>
-        </b-collapse>
-        <el-divider></el-divider>
-
-        <el-popover
-          placement="bottom"
-          title="Upload a new profile picture"
-          trigger="click"
-        >Invite form</el-popover>
+        <colocList />
       </div>
-      <roomieList :colocId="getColocId" />
-
-      <el-drawer title="Your list" :visible.sync="colocDawer" direction="ltr" size="50%">
-        <div>
-          <colocList />
-        </div>
-        <div></div>
-      </el-drawer>
-    </el-card>
+      <div></div>
+    </el-drawer>
   </div>
 </template>
 
@@ -77,6 +69,7 @@ import roomieList from "../Roomie/RoomieList";
 import {
   getColocAsync,
   getColocListAsync,
+  getColocPicAsync,
   updateColocAsync
 } from "../../api/ColocApi";
 import { getRoomiesAsync } from "@/api/RoomieApi";
@@ -105,41 +98,27 @@ export default {
       innerDrawer: false,
       currentRow: null,
       coloc: {},
-      selectedColoc: {}
+      selectedColoc: {},
+      picPath: ""
     };
   },
 
   async mounted() {
+    this.picPath = process.env.DEFAULT_PIC_PATH;
+
     try {
       this.colocId = this.$route.params.colocId;
-      console.log("params", this.$route.params.colocId);
       if (this.colocId == undefined) {
-        //this.coloc = this.$currentColoc;
-        //this.colocId = this.$currentColoc.colocId;
-        console.log("curentcoloc Id", this.$currentColoc.colocId);
-        if (this.$currentColoc.colocId == -1) {
-          console.log("user Id", this.$user.userId);
-          if (this.$user.userId == -1) {
-            var colocs = getColocListAsync();
-          }
-          var colocs = getColocListAsync(this.$user.userId);
-          if (colocs.length > 0) {
-            this.$colocs.setList(colocs);
-            this.$currentColoc.setCurrentColoc(colocs[0]);
-          }
-        }
-
-        this.coloc = this.$currentColoc;
-      } else {
-        this.coloc = await getColocAsync(this.colocId);
+        this.colocId = this.$currentColoc.colocId;
       }
+      await this.refresh();
     } catch (error) {
       console.error(error);
     }
   },
   computed: {
     getColocPic: function() {
-      return this.$currentColoc.picPath;
+      return this.picPath;
     },
     getColocId: function() {
       return this.colocId;
@@ -181,6 +160,13 @@ export default {
     async updateColoc() {
       let r = await updateColocAsync(this.coloc);
       this.show();
+    },
+    async refresh() {
+      this.coloc = await getColocAsync(this.colocId);
+      var p = await getColocPicAsync(this.colocId);
+      this.picPath = p.picPath;
+      console.log(this.picPath);
+      this.$currentColoc.setPicPath(this.picPath);
     }
   }
 }; //end export default

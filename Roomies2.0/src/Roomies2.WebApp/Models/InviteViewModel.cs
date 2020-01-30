@@ -8,6 +8,7 @@ namespace Roomies2.WebApp.Models
 {
     public class InviteViewModel
     {
+        [Required]
         public IEnumerable<string> Emails { get; set; }
 
         [Required]

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card>
-      <H1>Invite to {{colocName}}</H1>
+      <H1>Invite to {{ colocName }}</H1>
 
       <el-divider></el-divider>
       <el-form ref="emailList" :model="emailList">
@@ -23,7 +23,9 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('emailList')">Submit</el-button>
+          <el-button type="primary" @click="submitForm('emailList')"
+            >Submit</el-button
+          >
           <el-button @click="addEmail">New Email</el-button>
           <el-button @click="resetForm('emailList')">Reset</el-button>
         </el-form-item>
@@ -45,7 +47,7 @@ export default {
         emails: [
           {
             key: 1,
-            value: ""
+            value: "saxelsyeguillaume@gmail.com"
           }
         ]
       },
@@ -76,10 +78,10 @@ export default {
           this.emailList.emails.forEach(e => {
             this.list.push(e.value);
           });
-          console.log("List", this.list);
+          
 
           this.mailingModel.emails = this.list;
-          this.mailingModel.colocId = 11;
+          this.mailingModel.colocId = this.$currentColoc.colocId;
           console.log("invite result", this.mailingModel);
 
           var r = await inviteAsync(this.mailingModel);

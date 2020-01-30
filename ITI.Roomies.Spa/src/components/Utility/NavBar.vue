@@ -3,14 +3,8 @@
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand>
         <router-link to="/ColocProfile">
-          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit">
-            <div slot="placeholder" class="image-slot">
-              Loading
-              <span class="dot">...</span>
-            </div>
-          </el-image>
+          <el-image style="width: 80px; height: 80px" :src="getColocPic" fit="fit"></el-image>
         </router-link>
-        <!-- <img src="../../../public/favicon.png" style="width: 60px; height: 60px" /> -->
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -22,9 +16,16 @@
             <b-button variant="outline-primary" @click="drawerSwitch()">Flats</b-button>
           </b-nav-item>
         </b-navbar-nav>
+
         <router-link to="/home">
-          <img class="image" src="../../../public/Logo.png" width="80" />
+          <img
+            class="image"
+            src="https://media.discordapp.net/attachments/577862561534574634/672007130156367872/Logo.png?width=1434&height=677"
+            width="80"
+            alt="Picture"
+          />
         </router-link>
+
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -39,7 +40,7 @@
               <b-dropdown-item href="/settings">Settings</b-dropdown-item>
             </router-link>
             <router-link to="/logout">
-              <b-dropdown-item href="/logout" @click="refreshApp()">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
             </router-link>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -69,37 +70,40 @@
 <script>
 import AuthService from "@/services/AuthService";
 import { getPicAsync } from "../../api/RoomieApi.js";
+import { getColocPicAsync } from "../../api/ColocApi.js";
 import colocList from "../Coloc/ColocList";
-
+import RadialMenu from "./RadialMenu.vue";
 export default {
   components: {
-    colocList
+    colocList,
+    RadialMenu
   },
 
   data() {
     return {
-      colocList: [],
-      drawer: false
+      drawer: false,
+      roomiePic: "http://localhost:5000/Default/user.png",
+      colocPic: "http://localhost:5000/Default/favicon.png",
+      roomieId: null,
+      colocId: null
     };
   },
-  async mounted() {},
+  async mounted() {
+    this.roomieId = this.$user.roomieId;
+    this.colocId = this.$currentColoc.colocId;
+
+    await this.refresh();
+  },
   computed: {
     auth: () => AuthService,
     getUserPic: function() {
-      return this.$user.picPath;
+      return this.roomiePic;
     },
     getColocPic: function() {
-      return this.$currentColoc.picPath;
+      return this.colocPic;
     }
   },
   methods: {
-    async refresh() {
-      try {
-        this.colocList = this.$colocs.colocList;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     handleCommand(command) {
       if (command == "/coloc") {
         this.$router.push("/coloc");
@@ -112,8 +116,21 @@ export default {
     },
     drawerSwitch() {
       this.drawer = !this.drawer;
+    },
+    async refresh() {
+      try {
+        let p = await getPicAsync(this.roomieId);
+        let c = await getColocPicAsync(this.colocId);
+        this.colocPic = c.picPath;
+        this.roomiePic = p.picturePath;
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.$user.setPicPath(this.roomiePic);
+      this.$currentColoc.setPicPath(this.colocPic);
     }
-  }
+  } //end methods
 };
 </script>
 

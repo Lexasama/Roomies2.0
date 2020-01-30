@@ -10,8 +10,8 @@ namespace Roomies2.DAL.Tests.Tests
     [TestFixture]
     internal class RoomieGatewayTests
     {
-         
-       
+
+
         [Test]
         public async Task can_create_find_update_and_delete_roomie()
         {
@@ -28,15 +28,15 @@ namespace Roomies2.DAL.Tests.Tests
             var password = Guid.NewGuid().ToByteArray();
 
 
-           var userResult = await userGateway.CreatePasswordUser(userName, password);
-           int roomieId = userResult.Content;
-            
+            var userResult = await userGateway.CreatePasswordUser(userName, password);
+            int roomieId = userResult.Content;
+
             //Create
             var result = await sut.Create(roomieId, userName, lastName, firstName, phone, sex, birthDate, desc, null);
 
             Assert.That(result.Status, Is.EqualTo(Status.Created));
 
-             roomieId = result.Content;
+            roomieId = result.Content;
 
             Result<RoomieData> roomie;
             {
@@ -62,18 +62,9 @@ namespace Roomies2.DAL.Tests.Tests
             }
         }
 
-        private static void CheckRoomie(Result<RoomieData> r, string lastName, string firstName, string phone, int sex,
-            DateTime birthDate, string desc, string pic)
+        private static void CheckRoomie(Result<RoomieData> roomie, string lastName, string firstName, string phone, in int sex, in DateTime birthDate, string desc, object p7)
         {
-            Assert.That(r.HasError, Is.False);
-            Assert.That(r.Status, Is.EqualTo(Status.Ok));
-            Assert.That(r.Content.LastName, Is.EqualTo(lastName));
-            Assert.That(r.Content.FirstName, Is.EqualTo(firstName));
-            Assert.That(r.Content.BirthDate, Is.EqualTo(birthDate));
-            Assert.That(r.Content.Phone, Is.EqualTo(phone));
-            Assert.That(r.Content.Description, Is.EqualTo(desc));
-            Assert.That(r.Content.PicPath, Is.EqualTo(pic));
-            Assert.That(r.Content.Sex, Is.EqualTo(sex));
+            throw new NotImplementedException();
         }
     }
 }

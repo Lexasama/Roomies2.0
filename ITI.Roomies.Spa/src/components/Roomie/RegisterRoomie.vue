@@ -194,7 +194,7 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
 
-      var errors = [];
+      let errors = [];
 
       if (!this.roomie.userName) errors.push("Username");
       if (!this.roomie.lastName) errors.push("Lastname");

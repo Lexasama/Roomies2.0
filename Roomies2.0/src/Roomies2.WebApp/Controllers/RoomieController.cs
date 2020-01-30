@@ -20,10 +20,10 @@ namespace Roomies2.WebApp.Controllers
 
         public RoomieController(RoomieGateway roomieGateway) => Gateway = roomieGateway;
 
-        [HttpGet("{id}", Name = "GetRoomie")]
+        [HttpGet("{roomieId}", Name = "getRoomie")]
         public async Task<IActionResult> GetRoomie(int id)
         {
-            if(id == 0) id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            if(id <= 0) id = int.Parse(HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var result = await Gateway.FindById(id);
             return this.CreateResult(result);
         }
@@ -78,8 +78,8 @@ namespace Roomies2.WebApp.Controllers
             var result = await Gateway.Create( id, model.UserName, model.LastName, model.FirstName, model.Phone, model.Sex, model.BirthDate, model.Description, model.PicturePath);
             return this.CreateResult(result, o=>
             {
-                o.RouteName = "GetRoomie";
-                o.RouteValues = id => new { id = id };
+                o.RouteName = "getRoomie";
+                o.RouteValues = roomieId => new { roomieId };
             });
         }
 

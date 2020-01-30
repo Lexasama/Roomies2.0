@@ -1,5 +1,4 @@
 ﻿@using Roomies2.WebApp.Services
-
 @{
     string spaHost = (string)ViewData["SpaHost"];
     Token token = (Token)ViewData["Token"];
@@ -13,11 +12,11 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width"/>
     <title>Authenticated</title>
 </head>
 <body>
-    <script>
+<script>
         (function () {
             window.opener.postMessage({
                 type: 'authenticated',
@@ -27,13 +26,13 @@
                         expires_in: @token.ExpiresIn
                     },
                     email: '@email',
-                    boundProviders: [@Html.Raw( providerNames )]
+                    boundProviders: [@Html.Raw(providerNames)]
                 }
             }, '@spaHost');
 
             window.close();
         })();
     </script>
-    <!-- @breachPadding -->
+<!-- @breachPadding -->
 </body>
 </html>

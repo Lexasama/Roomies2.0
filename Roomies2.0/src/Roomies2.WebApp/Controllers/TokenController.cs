@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Roomies2.WebApp.Authentication;
-using Roomies2.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Roomies2.DAL.Gateways;
+using Roomies2.WebApp.Authentication;
+using Roomies2.WebApp.Services;
 
 namespace Roomies2.WebApp.Controllers
 {
     [Route("/api/[controller]")]
     public class TokenController : Controller
     {
-        readonly UserGateway _userGateway;
-        readonly TokenService _tokenService;
+        private readonly TokenService _tokenService;
+        private readonly UserGateway _userGateway;
 
         public TokenController(UserGateway userGateway, TokenService tokenService)
         {

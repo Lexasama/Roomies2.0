@@ -1,6 +1,9 @@
 <template>
   <div>
     <el-card>
+      <div slot="header">
+        <span>Create</span>
+      </div>
       <el-form :inline="true" :model="coloc">
         <el-form-item label="Enter name:" required>
           <el-input v-model="coloc.colocName"></el-input>
@@ -59,7 +62,6 @@ export default {
     },
     async setColocs(colocId) {
       var coloc = await getColocAsync(colocId);
-
       this.$currentColoc.setCurrentColoc(coloc);
     }
   }
