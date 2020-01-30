@@ -1,54 +1,31 @@
 <template>
   <div>
     <div>
-      <div class="container p-3">
+      <div class="container p-5">
         <div class="text-center">
           <h1 class="my-4">Bienvenue sur Roomies</h1>
-          <b-card-group deck>
-            <b-card header="Connexion" class="text-center">
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-primary"
-                @click="login('Google')"
-              >
-                <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google
-              </button>
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-primary"
-                @click="login('Facebook')"
-              >
-                <i class="fa fa-facebook" aria-hidden="true"></i> Se connecter via Facebook
-              </button>
+          <el-image
+            style="width: 500px; "
+            src="https://cdn.discordapp.com/attachments/563257761333510145/644455183799287832/Asset_4800_.png"
+          ></el-image>
+          <b-card header="Connexion" class="text-center">
+            <button type="button" class="btn btn-lg btn-block btn-primary" @click="login('Google')">
+              <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google
+            </button>
+            <button
+              type="button"
+              class="btn btn-lg btn-block btn-primary"
+              @click="login('Facebook')"
+            >
+              <i class="fa fa-facebook" aria-hidden="true"></i> Se connecter via Facebook
+            </button>
 
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-default"
-                @click="login('Base')"
-              >Se Connecter via Roomies</button>
-            </b-card>
-            <b-card header="Creer un compte">
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-primary"
-                @click="createAccount('Roomie')"
-              >
-                <i class="fa fa-users" aria-hidden="true"></i> Compte Roomie
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-primary"
-                @click="dialogVisible = true"
-              >
-                <i class="fa fa-user" aria-hidden="true"></i> Supervisor Account
-              </button>
-              <el-dialog title="Sorry" :visible.sync="dialogVisible" width="30%">
-                <span>We are working on this feature rigth now</span>
-                <span slot="footer" class="dialog-footer"></span>
-              </el-dialog>
-            </b-card>
-          </b-card-group>
+            <button
+              type="button"
+              class="btn btn-lg btn-block btn-default"
+              @click="login('Base')"
+            >Se Connecter via Roomies</button>
+          </b-card>
         </div>
       </div>
     </div>

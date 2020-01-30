@@ -63,6 +63,7 @@ export default {
           var p = await createGroceryListAsync(this.groceryList);
           this.show("Grocery list created", "success");
           this.$emit("list-created");
+          this.groceryList = {};
         } catch (e) {
           console.error(e);
           this.show("Try again", "error");

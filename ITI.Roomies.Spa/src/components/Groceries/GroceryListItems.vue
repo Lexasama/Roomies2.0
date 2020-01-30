@@ -8,22 +8,21 @@
 
           <el-table-column prop="itemAmount" label="Quantity" width="180"></el-table-column>
 
-          <el-table-column  prop="totalPrice" label="Total Price" width="180"></el-table-column>
           <el-table-column label="Options">
             <template slot-scope="scope">
-                <el-button-group>
-                <el-button size="mini">-</el-button>
-                <el-button size="mini">+</el-button>
+              <el-button-group>
+                <el-button size="mini" @click="quantityDecrease(scope.row)">-</el-button>
+                <el-button size="mini" @click="quantityIncrease(scope.row)">+</el-button>
               </el-button-group>
-              <el-button style="margin-left:10px"
-                      size="mini"
-                      type="danger"
-                      @click="handleDelete(scope.$index, scope.row)"
+              <el-button
+                style="margin-left:10px"
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
               >Delete</el-button>
             </template>
           </el-table-column>
-          <el-table-column >
-           </el-table-column>
+          <el-table-column></el-table-column>
         </el-table>
       </template>
     </div>
@@ -33,11 +32,13 @@
 
 <script>
 import { getItemsAsync } from "./../../api/GroceryApi.js";
-import itemEdit from "../Items/ItemEdit.vue";
+import {
+  deleteItemAsync,
+  decreaseQuantityAsync,
+  increaseQuantityAsync
+} from "../../api/ItemApi.js";
 export default {
-  component: {
-    itemEdit
-  }, //end component
+  component: {}, //end component
   data() {
     return {
       drawer: false,
@@ -52,9 +53,7 @@ export default {
       required: true
     }
   }, //end props
-  computed:{
-
-  }, //end computed
+  computed: {}, //end computed
   async mounted() {
     await this.refreshItemList();
   }, //end mounted
@@ -63,8 +62,9 @@ export default {
       this.item = row;
       this.handleEditDrawer();
     },
-    handleDelete(index, row) {
-      console.log(index, row);
+    async handleDelete(index, row) {
+      await deleteItemAsync(row.itemId);
+      await this.refreshItemList();
     },
     handleEditDrawer() {
       this.drawer = true;
@@ -73,11 +73,25 @@ export default {
     //* update the item list
     async refreshItemList() {
       this.itemList = await getItemsAsync(this.id);
-      this.itemList =  this.itemList.forEach(i => {
-        console.log(i);
-        i.totalPrice = (i.unitPrice * i.itemAmount)
-      });
-      console.log(this.itemList);
+    },
+    async quantityDecrease(row) {
+      console.log(row.itemId);
+      try {
+        if (row.itemAmount == 0) {
+          await deleteItemAsync(row.itemId);
+        } else {
+          await decreaseQuantityAsync(row.itemId);
+        }
+      } catch (error) {
+        console.error;
+      } finally {
+        await this.refreshItemList();
+      }
+    },
+    async quantityIncrease(row) {
+      console.log(row.itemId);
+      await increaseQuantityAsync(row.itemId);
+      await this.refreshItemList();
     }
   } //end methods
 };

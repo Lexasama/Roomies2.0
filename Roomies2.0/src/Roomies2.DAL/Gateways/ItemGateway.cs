@@ -55,6 +55,28 @@ namespace Roomies2.DAL.Gateways
                 : Result.Success();
         }
 
+        public async Task<Result> IncreaseQuantity(int itemId)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                await con.ExecuteAsync(
+                    @"UPDATE rm2.itGroceryListItem SET ItemAmount= ItemAmount + 1 WHERE ItemId = @ItemId and ItemAmount > 0;", 
+                new { ItemId = itemId});
+            }
+            return Result.Success(Status.Ok);
+        }
+
+        public async Task<Result> DecreaseQuantity(int itemId)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                await con.ExecuteAsync(
+                    @"UPDATE rm2.itGroceryListItem SET ItemAmount= ItemAmount - 1 WHERE ItemId = @ItemId and ItemAmount > 0;",
+                new { ItemId = itemId });
+            }
+            return Result.Success(Status.Ok);
+        }
+
         public async Task<Result<int>> AddItem(string itemName, int unitPrice)
         {
             await using var con = new SqlConnection(ConnectionString);
@@ -79,7 +101,8 @@ namespace Roomies2.DAL.Gateways
         {
             await using SqlConnection connection = new SqlConnection(ConnectionString);
             return await connection.ExecuteAsync(
-                "Delete from rm2.tItem where ItemId = @id",
+                @"DELETE FROM rm2.itGroceryListItem WHERE ItemId = @id
+                    Delete from rm2.tItem where ItemId = @id",
                 new { id = itemId});
         }
     }

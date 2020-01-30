@@ -22,18 +22,25 @@
             <el-table-column prop="dueDate" label="Date" :formatter="dateFormatter"></el-table-column>
             <el-table-column>
               <template slot-scope="props">
-              <el-button-group>
-                <el-button @click="drawer=!drawer">Add Item</el-button>
-                <el-button @click="deleteGroceryList(props.row.groceryListId)">Delete</el-button>
-              </el-button-group>
-        </template>
+                <el-button-group>
+                  <el-button @click="toggle(props.row.groceryListId)">Add Item</el-button>
+                  <el-button @click="deleteGroceryList(props.row.groceryListId)">Delete</el-button>
+                </el-button-group>
+              </template>
             </el-table-column>
           </el-table>
         </template>
       </div>
 
       <el-drawer :visible.sync="drawer" direction="rtl">
-        <ItemCreate :groceryListId="groceryListId" />
+        <el-tabs type="border-card">
+          <el-tab-pane label="Add">
+            <ItemAdd :groceryListId="groceryListId" @item-added="refresh()" />
+          </el-tab-pane>
+          <el-tab-pane label="Create">
+            <ItemCreate :groceryListId="groceryListId" />
+          </el-tab-pane>
+        </el-tabs>
       </el-drawer>
     </el-card>
   </div>
@@ -41,8 +48,9 @@
 
 <script>
 import Items from "./GroceryListItems";
-import ItemCreate from "./../Items/ItemCreate.vue";
+import ItemAdd from "./../Groceries/ReccurentItemList";
 import GroceryListCreate from "./GroceryListCreate.vue";
+import ItemCreate from "../Items/ItemCreate";
 import { getGroceriesAsync, deleteGroceryListAsync } from "@/api/GroceryApi.js";
 import { DateTime } from "luxon";
 
@@ -50,15 +58,16 @@ export default {
   components: {
     Items,
     GroceryListCreate,
+    ItemAdd,
     ItemCreate
   }, //end components
   data() {
     return {
-      visible:false,
+      visible: false,
       drawer: false,
       groceries: [],
       colocId: null,
-      groceryListId: 0
+      groceryListId: null
     };
   }, //end data
   async mounted() {
@@ -84,12 +93,19 @@ export default {
       let date = c.getDate() + "/" + (c.getMonth() + 1) + "/" + c.getFullYear();
       return date;
     },
-    async deleteGroceryList(id){
-      try{
-        await deleteGroceryListAsync(id)
-      }catch(e){
+    async deleteGroceryList(id) {
+      try {
+        await deleteGroceryListAsync(id);
+        await this.refresh();
+      } catch (e) {
         console.error(e);
+      } finally {
+        await this.refresh();
       }
+    },
+    toggle(id) {
+      this.drawer = !this.drawer;
+      this.groceryListId = id;
     }
   } //end methods
 };

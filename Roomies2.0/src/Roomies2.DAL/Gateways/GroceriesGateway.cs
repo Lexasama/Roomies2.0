@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
 using Roomies2.DAL.Model.Grocery;
@@ -18,11 +19,17 @@ namespace Roomies2.DAL.Gateways
 
         private string ConnectionString { get; }
 
-        public async Task<List<GroceryList>> GetAllGroceryListFromColocId(int colocId)
+        public async Task<Result<IEnumerable<GroceryList>>> GetAllGroceryListFromColocId(int colocId)
         {
-            await using var con = new SqlConnection(ConnectionString);
-            return await con.QueryAsync<GroceryList>("Select * from rm2.tGroceryList WHERE ColocId = @ColocId",
-                new {ColocId = colocId}) as List<GroceryList>;
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+              var i =   await con.QueryAsync<GroceryList>(
+                  "Select * from rm2.tGroceryList WHERE ColocId = @ColocId",
+                  new { ColocId = colocId });
+
+                return Result.Success(Status.Ok, i);
+            }
+               
         }
 
         public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId)
@@ -80,6 +87,26 @@ namespace Roomies2.DAL.Gateways
             };
         }
 
+        public async Task<Result> AddItemToList(int itemId, int groceryListId)
+        {
+            int amount = 1;
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                DynamicParameters p = new DynamicParameters();
+                p.Add("@ItemId", itemId);
+                p.Add("@Amount", amount);
+                p.Add("@GroceryListId", groceryListId);
+                p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                await con.ExecuteAsync("rm2.sAddItemToList", p, commandType: CommandType.StoredProcedure);
+
+                int status = p.Get<int>("@Status");
+
+                Debug.Assert(status == 0);
+                return Result.Success();
+            }
+        }
+
+   
         public async Task<Result> DeleteGroceryList(int groceryListId)
         {
             await using var con = new SqlConnection(ConnectionString);
@@ -97,12 +124,16 @@ namespace Roomies2.DAL.Gateways
             };
         }
 
-        public async Task<List<Item>> GetAllItemsFromGroceryListId(int groceryListId)
+        public async Task<Result<IEnumerable<Item>>> GetAllItemsFromGroceryListId(int groceryListId)
         {
-            await using var con = new SqlConnection(ConnectionString);
-            return await con.QueryAsync<Item>(
-                "Select * from rm2.vGroceryListItems where GroceryListId = @GroceryListId",
-                new {GroceryListId = groceryListId}) as List<Item>;
+            using( SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                var i =  await con.QueryAsync<Item>(
+               "Select * from rm2.vGroceryListItems where GroceryListId = @GroceryListId",
+               new { GroceryListId = groceryListId });
+                return Result.Success(Status.Ok, i);
+            }
+           
         }
 
         public async Task<int> RemoveItemFromGroceryList(int groceryListId, int itemId)

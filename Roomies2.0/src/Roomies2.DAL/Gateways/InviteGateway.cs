@@ -65,7 +65,7 @@ namespace Roomies2.DAL.Gateways
 
         public async Task<Result> Invite(object roomieId, int colocId, string email, string code)
         {
-            await using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 DynamicParameters p = new DynamicParameters();
                 p.Add("@RoomieId", roomieId);
@@ -74,7 +74,7 @@ namespace Roomies2.DAL.Gateways
                 p.Add("@Code", code);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
                 await con.ExecuteAsync("rm2.sInviteCreate", p, commandType: CommandType.StoredProcedure);
-
+                
                 int status = p.Get<int>("@Status");
 
                 Debug.Assert(status == 0);

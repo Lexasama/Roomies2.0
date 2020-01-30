@@ -24,9 +24,11 @@ namespace Roomies2.WebApp.Controllers
         private GroceriesGateway Gateway { get; }
 
         [HttpGet("GetAllList/{colocId}")]
-        public async Task<List<GroceryList>> GetAllList(int colocId) =>
-            await Gateway.GetAllGroceryListFromColocId(colocId);
-
+        public async Task<IActionResult> GetAllList(int colocId)
+        {
+            var result = await Gateway.GetAllGroceryListFromColocId(colocId);
+            return this.CreateResult(result);
+        }
         [HttpGet("{GroceryListId}", Name = "GetGroceryList")]
         public async Task<Result<GroceryList>> GetGroceryListById(int groceryListId) =>
             await Gateway.GetGroceryListById(groceryListId);
@@ -60,13 +62,24 @@ namespace Roomies2.WebApp.Controllers
                 );
 
         [HttpGet("getItems/{groceryListId}")]
-        public async Task<List<Item>> GetAllItemsInGroceryList(int groceryListId) =>
-            await Gateway.GetAllItemsFromGroceryListId(groceryListId);
+        public async Task<IActionResult> GetAllItemsInGroceryList(int groceryListId)
+        {
+            var result = await Gateway.GetAllItemsFromGroceryListId(groceryListId);
+         return this.CreateResult(result);
+        }
 
-        //[HttpGet(Name = "AddUpdateOrDeleteItemsInGroceryList")]
-        //public async Task AddUpdateOrDeleteItemsInGroceryList(
-        //    [FromBody] int groceryListId, [FromBody] int itemId, [FromBody] int amount) =>
-        //    this.CreateResult(
-        //        await Gateway.AddUpdateOrDeleteItemToGroceryList(groceryListId, itemId, amount));
+        [HttpPost("AddToList")]
+        public async Task<IActionResult> AddItemToList([FromBody] GroceryListItemsViewModel model)
+        {
+            Result result = null;
+
+            foreach(int id in model.ItemIdList)
+            {
+               result =  await Gateway.AddItemToList(id, model.GroceryListId);
+            }
+
+            return this.CreateResult(result);
+        
+        }
     }
 }
