@@ -7,7 +7,7 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRAN;
 
-    IF (SELECT ItemAmount FROM rm2.itGroceryListItem WHERE GroceryListId = @GroceryListId AND ItemId = @ItemId > 1)
+    IF ((SELECT ItemAmount FROM rm2.itGroceryListItem WHERE GroceryListId = @GroceryListId AND ItemId = @ItemId) > 1 )
             BEGIN
                 UPDATE rm2.itGroceryListItem
                 SET ItemAmount = ItemAmount - 1
