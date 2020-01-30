@@ -47,7 +47,7 @@ namespace Roomies2.WebApp.Controllers
         public async Task<IActionResult> DeleteGroceryList(int listId) =>
             this.CreateResult(await Gateway.DeleteGroceryList(listId));
 
-        [HttpPost("UpdateGroceryList")]
+        [HttpPut("UpdateGroceryList")]
         public async Task<IActionResult> UpdateGroceryList(
             [FromBody] GroceryListModel model) =>
             this.CreateResult(
@@ -59,14 +59,14 @@ namespace Roomies2.WebApp.Controllers
                     )
                 );
 
-        [HttpGet("{groceryListId}", Name = "GetAllItemsInGroceryList")]
+        [HttpGet("getItems/{groceryListId}")]
         public async Task<List<Item>> GetAllItemsInGroceryList(int groceryListId) =>
             await Gateway.GetAllItemsFromGroceryListId(groceryListId);
 
-        [HttpGet(Name = "AddUpdateOrDeleteItemsInGroceryList")]
-        public async Task AddUpdateOrDeleteItemsInGroceryList(
-            [FromBody] int groceryListId, [FromBody] int itemId, [FromBody] int amount) =>
-            this.CreateResult(
-                await Gateway.AddUpdateOrDeleteItemToGroceryList(groceryListId, itemId, amount));
+        //[HttpGet(Name = "AddUpdateOrDeleteItemsInGroceryList")]
+        //public async Task AddUpdateOrDeleteItemsInGroceryList(
+        //    [FromBody] int groceryListId, [FromBody] int itemId, [FromBody] int amount) =>
+        //    this.CreateResult(
+        //        await Gateway.AddUpdateOrDeleteItemToGroceryList(groceryListId, itemId, amount));
     }
 }

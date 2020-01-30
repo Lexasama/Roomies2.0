@@ -2,7 +2,7 @@
   <div>
     <el-form v-model="item">
       <el-input v-model="item.itemName"></el-input>
-      <el-input-number v-model="item.itemQuantity" @change="handleChange" :min="1"></el-input-number>
+      <el-input-number v-model="item.itemAmount" @change="handleChange" :min="1"></el-input-number>
     </el-form>
   </div>
 </template>

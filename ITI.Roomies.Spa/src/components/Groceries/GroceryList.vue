@@ -21,16 +21,18 @@
             <el-table-column prop="listName" label="Name"></el-table-column>
             <el-table-column prop="dueDate" label="Date" :formatter="dateFormatter"></el-table-column>
             <el-table-column>
+              <template slot-scope="props">
               <el-button-group>
                 <el-button @click="drawer=!drawer">Add Item</el-button>
-                <el-button>Update</el-button>
+                <el-button @click="deleteGroceryList(props.row.groceryListId)">Delete</el-button>
               </el-button-group>
+        </template>
             </el-table-column>
           </el-table>
         </template>
       </div>
 
-      <el-drawer :visible.sync="drawer" :direction="rtl">
+      <el-drawer :visible.sync="drawer" direction="rtl">
         <ItemCreate :groceryListId="groceryListId" />
       </el-drawer>
     </el-card>
@@ -41,7 +43,7 @@
 import Items from "./GroceryListItems";
 import ItemCreate from "./../Items/ItemCreate.vue";
 import GroceryListCreate from "./GroceryListCreate.vue";
-import { getGroceriesAsync } from "@/api/GroceryApi.js";
+import { getGroceriesAsync, deleteGroceryListAsync } from "@/api/GroceryApi.js";
 import { DateTime } from "luxon";
 
 export default {
@@ -52,10 +54,11 @@ export default {
   }, //end components
   data() {
     return {
+      visible:false,
       drawer: false,
       groceries: [],
       colocId: null,
-      groceryListId: null
+      groceryListId: 0
     };
   }, //end data
   async mounted() {
@@ -80,6 +83,13 @@ export default {
       let c = new Date(row.dueDate);
       let date = c.getDate() + "/" + (c.getMonth() + 1) + "/" + c.getFullYear();
       return date;
+    },
+    async deleteGroceryList(id){
+      try{
+        await deleteGroceryListAsync(id)
+      }catch(e){
+        console.error(e);
+      }
     }
   } //end methods
 };

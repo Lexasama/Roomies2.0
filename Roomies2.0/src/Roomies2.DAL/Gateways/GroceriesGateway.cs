@@ -101,7 +101,7 @@ namespace Roomies2.DAL.Gateways
         {
             await using var con = new SqlConnection(ConnectionString);
             return await con.QueryAsync<Item>(
-                "Select * from rm2.itGroceryListItem where GroceryListId = @GroceryListId",
+                "Select * from rm2.vGroceryListItems where GroceryListId = @GroceryListId",
                 new {GroceryListId = groceryListId}) as List<Item>;
         }
 

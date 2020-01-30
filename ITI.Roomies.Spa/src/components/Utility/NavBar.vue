@@ -22,6 +22,7 @@
             class="image"
             src="https://media.discordapp.net/attachments/577862561534574634/672007130156367872/Logo.png?width=1434&height=677"
             width="80"
+            alt="Picture"
           />
         </router-link>
 
@@ -47,7 +48,7 @@
           <b-navbar-brand>
             <div style>
               <router-link to="/profile">
-                <elimage class="avatar" :src="getUserPic" fit="scale-down"></elimage>
+                <el-image class="avatar" :src="getUserPic" fit="scale-down"></el-image>
               </router-link>
             </div>
           </b-navbar-brand>

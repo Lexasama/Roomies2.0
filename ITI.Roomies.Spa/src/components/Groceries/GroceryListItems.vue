@@ -1,30 +1,29 @@
 <template>
   <div>
     <div>
-      <el-drawer title="Edit item" :visible.sync="drawer" direction="rtl">
-        <itemEdit :item="this.item" />
-      </el-drawer>
-    </div>
-    <div>
       <template>
         <el-table :data="itemList" style="width: 100%">
           <el-table-column prop="itemName" label="Name" width="180"></el-table-column>
-          <el-table-column prop="itemPrice" label="Unit Price" width="180"></el-table-column>
-          <el-table-column prop="itemPrice" label="Quantity" width="180"></el-table-column>
+          <el-table-column prop="unitPrice" label="Unit Price" width="180"></el-table-column>
 
-          <el-table-column prop="itemPrice" label="Total Price" width="180"></el-table-column>
+          <el-table-column prop="itemAmount" label="Quantity" width="180"></el-table-column>
+
+          <el-table-column  prop="totalPrice" label="Total Price" width="180"></el-table-column>
           <el-table-column label="Options">
             <template slot-scope="scope">
-              <el-button-group>
-                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                >Delete</el-button>
+                <el-button-group>
+                <el-button size="mini">-</el-button>
+                <el-button size="mini">+</el-button>
               </el-button-group>
+              <el-button style="margin-left:10px"
+                      size="mini"
+                      type="danger"
+                      @click="handleDelete(scope.$index, scope.row)"
+              >Delete</el-button>
             </template>
           </el-table-column>
+          <el-table-column >
+           </el-table-column>
         </el-table>
       </template>
     </div>
@@ -53,6 +52,9 @@ export default {
       required: true
     }
   }, //end props
+  computed:{
+
+  }, //end computed
   async mounted() {
     await this.refreshItemList();
   }, //end mounted
@@ -71,6 +73,11 @@ export default {
     //* update the item list
     async refreshItemList() {
       this.itemList = await getItemsAsync(this.id);
+      this.itemList =  this.itemList.forEach(i => {
+        console.log(i);
+        i.totalPrice = (i.unitPrice * i.itemAmount)
+      });
+      console.log(this.itemList);
     }
   } //end methods
 };

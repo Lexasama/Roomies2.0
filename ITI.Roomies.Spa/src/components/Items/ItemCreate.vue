@@ -1,9 +1,20 @@
 <template>
-  <div>{{groceryListId}}</div>
+
+  <div>
+
+      <div slot="header" >
+        <span>Add or create an Item</span>
+      <RecurrentList/>
+      </div>
+  </div>
 </template>
 
 <script>
-export default {
+import RecurrentList from "../../components/Groceries/ReccurentItemList"
+  export default {
+  components:{
+    RecurrentList
+  }, //end components
   props: {
     groceryListId: {
       type: Number,

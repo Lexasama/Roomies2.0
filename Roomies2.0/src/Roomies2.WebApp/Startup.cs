@@ -38,6 +38,8 @@ namespace Roomies2.WebApp
             services.AddSingleton(_ => new TasksGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new InviteGateway(Configuration["ConnectionStrings:Roomies2DB"]));
             services.AddSingleton(_ => new GroceriesGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+            services.AddSingleton(_ => new ItemGateway(Configuration["ConnectionStrings:Roomies2DB"]));
+
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TokenService>();

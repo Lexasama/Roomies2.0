@@ -1,6 +1,5 @@
 <template>
   <div>
-    <itemEdit />
   </div>
 </template>
 
@@ -9,8 +8,7 @@ import itemEdit from "./Items/ItemEdit.vue";
 
 export default {
   components: {
-    itemEdit
-  },
+    itemEdit,
   data() {
     return {};
   },
