@@ -61,7 +61,7 @@
         direction="ltr"
         :with-header="false"
       >
-        <colocList />
+        <colocList @coloc-rejoin="refresh()" />
       </el-drawer>
     </b-navbar>
   </div>

@@ -6,7 +6,7 @@ CREATE TABLE rm2.tInvite
     Email    NVARCHAR(64) COLLATE Latin1_General_CI_AI NOT NULL ,
 
     CONSTRAINT PK_tInvite PRIMARY KEY (ColocId, RoomieId),
-
+	CONSTRAINT UK_tInvite UNIQUE(Code, Email),
     CONSTRAINT FK_tInvite_tColoc
         FOREIGN KEY (ColocId)
             REFERENCES rm2.tColoc (ColocId),

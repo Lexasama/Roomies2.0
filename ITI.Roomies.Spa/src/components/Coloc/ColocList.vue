@@ -81,7 +81,6 @@ export default {
     },
     async refreshList() {
       this.colocList = await getColocListAsync();
-      console.log("colocList", this.colocList);
       this.$colocs.setList(this.colocList);
     }
   } //end methods

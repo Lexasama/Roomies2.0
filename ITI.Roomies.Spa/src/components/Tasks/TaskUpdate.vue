@@ -4,7 +4,6 @@
       <el-form-item label="Task name">
         <el-input v-model="task.taskName" style="width: 75%;" required></el-input>
       </el-form-item>
-
       <el-form-item label="Due Date" required>
         <el-date-picker
           type="datetime"
@@ -23,9 +22,8 @@
           >{{r.firstName}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="Description">
-        <el-input type="textarea" placeholder="Describe your task" v-model="task.taskDes"></el-input>
-      </el-form-item>
+
+      <el-input type="textarea" placeholder="Describe your task" v-model="task.taskDes"></el-input>
       <el-form-item>
         <el-button type="primary" @click="onSubmit($event)">Submit</el-button>
       </el-form-item>

@@ -23,9 +23,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('emailList')"
-            >Submit</el-button
-          >
+          <el-button type="primary" @click="submitForm('emailList')">Submit</el-button>
           <el-button @click="addEmail">New Email</el-button>
           <el-button @click="resetForm('emailList')">Reset</el-button>
         </el-form-item>
@@ -46,8 +44,8 @@ export default {
       emailList: {
         emails: [
           {
-            key: 1,
-            value: "saxelsyeguillaume@gmail.com"
+            key: null,
+            value: ""
           }
         ]
       },
@@ -78,17 +76,14 @@ export default {
           this.emailList.emails.forEach(e => {
             this.list.push(e.value);
           });
-          
 
           this.mailingModel.emails = this.list;
           this.mailingModel.colocId = this.$currentColoc.colocId;
-          console.log("invite result", this.mailingModel);
 
-          var r = await inviteAsync(this.mailingModel);
-          console.log("invite result", r);
+          await inviteAsync(this.mailingModel);
+          this.show("Invitation(s) sent", "success");
           this.list = [];
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -106,6 +101,13 @@ export default {
       this.emailList.emails.push({
         key: Date.now(),
         value: ""
+      });
+    },
+    show(text, type) {
+      this.$message({
+        showClose: true,
+        message: text,
+        type: type
       });
     }
   } //end  methods

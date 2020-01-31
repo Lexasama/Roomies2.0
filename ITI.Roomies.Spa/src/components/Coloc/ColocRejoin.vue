@@ -37,9 +37,9 @@ export default {
       if (errors.length == 0) {
         try {
           var p = await invitedAsync(this.code);
-          console.log(p);
           if (p !== "undefined") {
             this.show("You have been added succesfully", "success");
+            this.$emit("coloc-rejoin");
             this.$router.push("/");
           }
         } catch (e) {
